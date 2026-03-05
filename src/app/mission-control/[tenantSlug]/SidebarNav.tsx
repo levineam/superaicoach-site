@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { MessageSquare, LayoutDashboard, Users, KanbanSquare } from 'lucide-react'
+import { MessageSquare, LayoutDashboard, Users, KanbanSquare, Monitor } from 'lucide-react'
 
 type SidebarNavProps = {
   tenantSlug: string
@@ -38,6 +38,11 @@ export function SidebarNav({ tenantSlug }: SidebarNavProps) {
       label: 'Project Board',
       href: `/mission-control/${tenantSlug}/project-board`,
       icon: KanbanSquare,
+    },
+    {
+      label: 'Builderz MC',
+      href: `/mission-control/${tenantSlug}/builderz-mc`,
+      icon: Monitor,
     },
   ]
 
