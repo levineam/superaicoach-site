@@ -108,7 +108,7 @@ export async function fetchGatewayStatus(
               minProtocol: 3,
               maxProtocol: 3,
               client: {
-                id: 'sessions-api',
+                id: 'cli',
                 displayName: 'Sessions API Route',
                 version: 'dev',
                 platform: process.platform,
