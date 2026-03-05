@@ -3,14 +3,14 @@ import { MapPin } from "lucide-react"
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-start justify-center overflow-hidden pt-16 sm:pt-20">
+    <section className="relative flex items-start justify-center overflow-hidden pt-16 sm:pt-20">
       {/* Background pattern */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(158_60%_40%/0.06),transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(30_20%_85%/0.5),transparent_60%)]" />
       </div>
 
-      <div className="mx-auto max-w-6xl px-6 pb-20 pt-8 text-center sm:pt-10 md:pt-14">
+      <div className="mx-auto max-w-6xl px-6 pb-10 pt-8 text-center sm:pt-10 md:pt-14">
         <h1 className="mx-auto max-w-4xl text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
           Personal AI Coaching
         </h1>
