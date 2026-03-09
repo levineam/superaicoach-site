@@ -36,10 +36,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const projectFilter = searchParams.get('project')
 
-    // Fetch all cards for diagnostics total count
-    const { data: allData, error: allError } = await db
+    // Count all cards for diagnostics (head:true avoids fetching rows)
+    const { count: totalInDb, error: allError } = await db
       .from('project_cards')
-      .select('id', { count: 'exact' })
+      .select('*', { count: 'exact', head: true })
 
     if (allError) {
       return NextResponse.json(
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
       )
     }
 
-    const totalInDb = allData?.length ?? 0
+    const dbTotal = totalInDb ?? 0
 
     // Fetch cards (optionally filtered by project)
     let query = db
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
       return NextResponse.json(
         {
           error: 'Failed to fetch project cards from database',
-          diagnostics: { dbEnabled: true, totalInDb, filtered: 0, error: error.message },
+          diagnostics: { dbEnabled: true, totalInDb: dbTotal, filtered: 0, error: error.message },
         },
         { status: 500 }
       )
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
       },
       diagnostics: {
         dbEnabled: true,
-        totalInDb,
+        totalInDb: dbTotal,
         filtered: allCards.length,
       },
     })
@@ -123,6 +123,44 @@ export async function GET(request: Request) {
           error: error instanceof Error ? error.message : String(error),
         },
       },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(request: Request) {
+  if (!isMissionControlDbEnabled()) {
+    return NextResponse.json({ error: 'Database client not configured' }, { status: 503 })
+  }
+
+  try {
+    const { id, column } = await request.json() as { id: string; column: ColumnId }
+
+    if (!id || !column) {
+      return NextResponse.json({ error: 'Missing id or column' }, { status: 400 })
+    }
+
+    const validColumns: ColumnId[] = ['active', 'in-review', 'needs-you', 'done']
+    if (!validColumns.includes(column)) {
+      return NextResponse.json({ error: 'Invalid column value' }, { status: 400 })
+    }
+
+    const db = getMissionControlDbClient()!
+    const { error } = await db
+      .from('project_cards')
+      .update({ column_id: column })
+      .eq('id', id)
+
+    if (error) {
+      console.error('Error updating project card:', error)
+      return NextResponse.json({ error: 'Failed to update card' }, { status: 500 })
+    }
+
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    console.error('Error in projects PATCH route:', error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

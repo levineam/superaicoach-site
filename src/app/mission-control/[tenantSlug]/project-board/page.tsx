@@ -117,10 +117,14 @@ function TaskModal({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}
+      role="presentation"
     >
       <div
         className="relative w-full max-w-lg rounded-2xl border border-border bg-card shadow-2xl p-6"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`task-modal-title-${card.id}`}
       >
         <button
           onClick={onClose}
@@ -130,7 +134,7 @@ function TaskModal({
         </button>
 
         <p className="text-xs uppercase tracking-widest text-accent/60 mb-1">{card.project}</p>
-        <h2 className="text-lg font-semibold text-foreground leading-snug pr-8">{card.status}</h2>
+        <h2 id={`task-modal-title-${card.id}`} className="text-lg font-semibold text-foreground leading-snug pr-8">{card.status}</h2>
 
         <div className="mt-3 flex items-center gap-2 flex-wrap">
           {lane && (
@@ -208,8 +212,23 @@ export default function ProjectBoardPage() {
     fetchBoard()
   }, [fetchBoard])
 
-  const markDone = (id: string) => {
-    setAllCards((prev) => prev.map((c) => (c.id === id ? { ...c, column: 'done' } : c)))
+  const markDone = async (id: string) => {
+    const prev = allCards
+    setAllCards((cards) => cards.map((c) => (c.id === id ? { ...c, column: 'done' } : c)))
+    try {
+      const res = await fetch('/api/mission-control/projects', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, column: 'done' }),
+      })
+      if (!res.ok) {
+        console.error('Failed to persist markDone:', await res.text())
+        setAllCards(prev)
+      }
+    } catch (err) {
+      console.error('Error persisting markDone:', err)
+      setAllCards(prev)
+    }
   }
 
   // Client-side project filter
