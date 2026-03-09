@@ -106,7 +106,7 @@ export function formatWorkspaceForPrompt(ctx: WorkspaceContext): string {
   if (done.length > 0 && done.length <= 5) {
     sections.push(`\nRecently Done:\n${done.map(formatTask).join('\n')}`)
   } else if (done.length > 5) {
-    sections.push(`\nDone: ${done.length} tasks completed (showing most recent 3)`)
+    sections.push(`\nDone: ${done.length} tasks completed (showing 3)`)
     sections.push(done.slice(-3).map(formatTask).join('\n'))
   }
 
