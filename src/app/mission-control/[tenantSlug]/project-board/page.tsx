@@ -12,6 +12,7 @@ import {
   Info,
   FolderOpen,
 } from 'lucide-react'
+import { ConnectorSidepanel, ConnectorToggleButton } from '@/components/mission-control/connector-sidepanel'
 
 type Priority = 'High' | 'Medium' | 'Low'
 type ColumnId = 'active' | 'in-review' | 'needs-you' | 'done'
@@ -193,6 +194,7 @@ export default function ProjectBoardPage() {
   const [selectedProject, setSelectedProject] = useState<string>(ALL_PROJECTS)
   const [showDiagnostics, setShowDiagnostics] = useState(false)
   const [diagnostics, setDiagnostics] = useState<ApiResponse['diagnostics']>(undefined)
+  const [jarvisOpen, setJarvisOpen] = useState(false)
 
   const fetchBoard = useCallback(async () => {
     try {
@@ -335,6 +337,10 @@ export default function ProjectBoardPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <ConnectorToggleButton
+              isOpen={jarvisOpen}
+              onClick={() => setJarvisOpen((v) => !v)}
+            />
             <button
               onClick={() => setShowDiagnostics(!showDiagnostics)}
               aria-label={showDiagnostics ? 'Hide diagnostics' : 'Show diagnostics'}
@@ -518,6 +524,13 @@ export default function ProjectBoardPage() {
           onMarkDone={markDone}
         />
       )}
+
+      {/* Jarvis connector sidepanel */}
+      <ConnectorSidepanel
+        tenantSlug={tenantSlug}
+        isOpen={jarvisOpen}
+        onClose={() => setJarvisOpen(false)}
+      />
     </div>
   )
 }
