@@ -10,6 +10,12 @@ import type { WorkspaceContext, WorkspaceTask, TaskPriority, TaskColumn } from '
 
 const COLUMN_ORDER: TaskColumn[] = ['needs-you', 'active', 'in-review', 'done']
 const PRIORITY_ORDER: TaskPriority[] = ['High', 'Medium', 'Low']
+const DEFAULT_TENANT_SLUG = process.env.MISSION_CONTROL_DEFAULT_TENANT_SLUG || 'vai'
+
+function quotePromptField(value: string, maxLen = 120): string {
+  const normalized = value.replace(/\s+/g, ' ').trim()
+  return JSON.stringify(normalized.slice(0, maxLen))
+}
 
 export async function readWorkspaceContext(tenantSlug: string): Promise<WorkspaceContext> {
   const fetchedAt = new Date().toISOString()
@@ -23,6 +29,16 @@ export async function readWorkspaceContext(tenantSlug: string): Promise<Workspac
   }
 
   if (!isMissionControlDbEnabled()) {
+    return empty
+  }
+
+  // project_cards is currently a single-tenant table. Fail closed for any
+  // non-default tenant until the DB is tenant-scoped to avoid cross-tenant
+  // prompt leakage.
+  if (tenantSlug !== DEFAULT_TENANT_SLUG) {
+    console.warn(
+      `[connector/workspace] project_cards is not tenant-scoped; returning empty context for tenant "${tenantSlug}"`
+    )
     return empty
   }
 
@@ -87,7 +103,14 @@ export function formatWorkspaceForPrompt(ctx: WorkspaceContext): string {
   const done = ctx.tasks.filter((t) => t.column === 'done')
 
   const formatTask = (t: WorkspaceTask) =>
-    `  - [${t.priority}] ${t.project} / ${t.status}${t.description ? `: ${t.description.slice(0, 120)}` : ''}`
+    [
+      `  - priority=${quotePromptField(t.priority)}`,
+      `project=${quotePromptField(t.project)}`,
+      `status=${quotePromptField(t.status)}`,
+      t.description ? `description=${quotePromptField(t.description)}` : null,
+    ]
+      .filter(Boolean)
+      .join(' ')
 
   const sections: string[] = [
     `[Workspace state as of ${ctx.fetchedAt}]`,
