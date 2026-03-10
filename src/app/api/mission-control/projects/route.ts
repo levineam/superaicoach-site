@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from '@/lib/mission-control/auth'
+import { getTenantBySlug } from '@/lib/mission-control/data-access'
 import { getMissionControlDbClient, isMissionControlDbEnabled } from '@/lib/mission-control/db'
+import { isAdminRole } from '@/lib/mission-control/permissions'
 
 type Priority = 'High' | 'Medium' | 'Low'
 type ColumnId = 'active' | 'in-review' | 'needs-you' | 'done'
@@ -133,6 +136,29 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Database client not configured' }, { status: 503 })
   }
 
+  const session = await getServerSession()
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const requestedSlug = request.headers.get('x-tenant-slug')?.trim()
+  if (!requestedSlug) {
+    return NextResponse.json({ error: 'Missing x-tenant-slug header' }, { status: 400 })
+  }
+
+  const isAdmin = isAdminRole(session.role)
+  const isOwnTenant = session.tenantSlug === requestedSlug
+  if (!isAdmin && !isOwnTenant) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  if (isAdmin && !isOwnTenant) {
+    const tenant = await getTenantBySlug(requestedSlug)
+    if (!tenant) {
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
+    }
+  }
+
   try {
     const { id, column } = await request.json() as { id: string; column: ColumnId }
 
@@ -146,14 +172,20 @@ export async function PATCH(request: Request) {
     }
 
     const db = getMissionControlDbClient()!
-    const { error } = await db
+    const { data, error } = await db
       .from('project_cards')
       .update({ column_id: column })
       .eq('id', id)
+      .select('id')
+      .maybeSingle()
 
     if (error) {
       console.error('Error updating project card:', error)
       return NextResponse.json({ error: 'Failed to update card' }, { status: 500 })
+    }
+
+    if (!data) {
+      return NextResponse.json({ error: 'Card not found' }, { status: 404 })
     }
 
     return NextResponse.json({ ok: true })

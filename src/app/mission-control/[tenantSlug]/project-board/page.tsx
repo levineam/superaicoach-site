@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useParams } from 'next/navigation'
 import {
   X,
   Loader2,
@@ -178,6 +179,10 @@ function TaskModal({
 }
 
 export default function ProjectBoardPage() {
+  const params = useParams()
+  const rawSlug = params.tenantSlug
+  const tenantSlug = typeof rawSlug === 'string' ? rawSlug : ''
+
   const [allCards, setAllCards] = useState<Card[]>([])
   const [allProjects, setAllProjects] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
@@ -213,21 +218,30 @@ export default function ProjectBoardPage() {
   }, [fetchBoard])
 
   const markDone = async (id: string) => {
-    const prev = allCards
+    const previousColumn = allCards.find((c) => c.id === id)?.column
+    if (!previousColumn || previousColumn === 'done') return
+
     setAllCards((cards) => cards.map((c) => (c.id === id ? { ...c, column: 'done' } : c)))
     try {
       const res = await fetch('/api/mission-control/projects', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tenant-slug': tenantSlug,
+        },
         body: JSON.stringify({ id, column: 'done' }),
       })
       if (!res.ok) {
         console.error('Failed to persist markDone:', await res.text())
-        setAllCards(prev)
+        setAllCards((cards) =>
+          cards.map((c) => (c.id === id ? { ...c, column: previousColumn } : c))
+        )
       }
     } catch (err) {
       console.error('Error persisting markDone:', err)
-      setAllCards(prev)
+      setAllCards((cards) =>
+        cards.map((c) => (c.id === id ? { ...c, column: previousColumn } : c))
+      )
     }
   }
 
@@ -248,6 +262,14 @@ export default function ProjectBoardPage() {
 
   const totalVisible = visibleCards.length
   const needsYouCount = visibleCards.filter((c) => c.column === 'needs-you').length
+
+  if (!tenantSlug) {
+    return (
+      <div className="p-6 text-center text-rose-400">
+        Invalid tenant context
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -309,6 +331,7 @@ export default function ProjectBoardPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDiagnostics(!showDiagnostics)}
+              aria-label={showDiagnostics ? 'Hide diagnostics' : 'Show diagnostics'}
               className={`h-8 w-8 flex items-center justify-center rounded-lg border transition-colors ${
                 showDiagnostics
                   ? 'border-accent text-accent bg-accent/10'
@@ -329,9 +352,11 @@ export default function ProjectBoardPage() {
         </div>
 
         {/* Project filter */}
-        <div className="mt-4 flex items-center gap-1.5">
+        <label htmlFor="project-filter" className="mt-4 flex items-center gap-1.5">
           <FolderOpen className="h-4 w-4 text-muted-foreground flex-shrink-0" />
           <select
+            id="project-filter"
+            aria-label="Project filter"
             value={selectedProject}
             onChange={(e) => setSelectedProject(e.target.value)}
             className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-accent"
@@ -343,7 +368,7 @@ export default function ProjectBoardPage() {
               </option>
             ))}
           </select>
-        </div>
+        </label>
 
         {/* Metrics strip */}
         <div className="mt-4 flex items-center gap-2 flex-wrap">
@@ -401,10 +426,13 @@ export default function ProjectBoardPage() {
               <span className="font-medium">Project list:</span> {allProjects.join(', ')}
             </p>
           )}
-          {totalVisible === 0 && diagnostics?.dbEnabled && (
+          {allCards.length === 0 && diagnostics?.dbEnabled && (
             <p className="text-amber-400">
               No rows returned — check that the <code className="font-mono">project_cards</code> table has data.
             </p>
+          )}
+          {selectedProject !== 'all' && totalVisible === 0 && allCards.length > 0 && (
+            <p className="text-amber-400">No cards match the current project filter.</p>
           )}
         </div>
       )}
