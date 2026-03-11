@@ -114,7 +114,7 @@ export function formatWorkspaceForPrompt(ctx: WorkspaceContext): string {
 
   const sections: string[] = [
     `[Workspace state as of ${ctx.fetchedAt}]`,
-    `Projects: ${ctx.projects.join(', ') || 'none'}`,
+    `Projects: ${ctx.projects.map((project) => quotePromptField(project)).join(', ') || 'none'}`,
     `Total tasks: ${ctx.counts.total} | Needs You: ${ctx.counts.needsYou} | Active: ${ctx.counts.active} | Done: ${ctx.counts.done}`,
   ]
 

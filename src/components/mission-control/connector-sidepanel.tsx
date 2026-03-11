@@ -135,9 +135,18 @@ export function ConnectorSidepanel({ tenantSlug, isOpen, onClose }: ConnectorSid
     setInput('')
   }, [setMessages])
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape') onClose()
-  }
+  const handleEscape = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    },
+    [onClose],
+  )
+
+  useEffect(() => {
+    if (!isOpen) return undefined
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [handleEscape, isOpen])
 
   // Combine greeting + chat messages for display
   const displayMessages: Message[] = useMemo(() => {
@@ -180,7 +189,6 @@ export function ConnectorSidepanel({ tenantSlug, isOpen, onClose }: ConnectorSid
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            onKeyDown={handleKeyDown}
           >
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card/50">
