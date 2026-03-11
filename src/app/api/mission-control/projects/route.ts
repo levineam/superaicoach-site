@@ -160,7 +160,15 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const { id, column } = await request.json() as { id: string; column: ColumnId }
+    let body: { id?: string; column?: ColumnId }
+
+    try {
+      body = await request.json() as { id?: string; column?: ColumnId }
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
+
+    const { id, column } = body
 
     if (!id || !column) {
       return NextResponse.json({ error: 'Missing id or column' }, { status: 400 })

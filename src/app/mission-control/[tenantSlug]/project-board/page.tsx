@@ -91,6 +91,8 @@ const priorityStyles: Record<Priority, string> = {
   Low: 'bg-sky-400/10 text-sky-400 ring-1 ring-inset ring-sky-400/20',
 }
 
+const ALL_PROJECTS = '__all__'
+
 function TaskModal({
   card,
   onClose,
@@ -188,7 +190,7 @@ export default function ProjectBoardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedCard, setSelectedCard] = useState<Card | null>(null)
-  const [selectedProject, setSelectedProject] = useState<string>('all')
+  const [selectedProject, setSelectedProject] = useState<string>(ALL_PROJECTS)
   const [showDiagnostics, setShowDiagnostics] = useState(false)
   const [diagnostics, setDiagnostics] = useState<ApiResponse['diagnostics']>(undefined)
 
@@ -203,8 +205,12 @@ export default function ProjectBoardPage() {
         if (data.diagnostics) setDiagnostics(data.diagnostics)
         throw new Error(data.error || `HTTP ${res.status}`)
       }
+      const projects = data.projects ?? []
       setAllCards(data.cards ?? [])
-      setAllProjects(data.projects ?? [])
+      setAllProjects(projects)
+      setSelectedProject((prev) =>
+        prev === ALL_PROJECTS || projects.includes(prev) ? prev : ALL_PROJECTS
+      )
       setDiagnostics(data.diagnostics)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
@@ -247,7 +253,7 @@ export default function ProjectBoardPage() {
 
   // Client-side project filter
   const visibleCards = useMemo(() => {
-    return selectedProject === 'all'
+    return selectedProject === ALL_PROJECTS
       ? allCards
       : allCards.filter((c) => c.project === selectedProject)
   }, [allCards, selectedProject])
@@ -361,7 +367,7 @@ export default function ProjectBoardPage() {
             onChange={(e) => setSelectedProject(e.target.value)}
             className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-accent"
           >
-            <option value="all">All Projects</option>
+            <option value={ALL_PROJECTS}>All Projects</option>
             {allProjects.map((p) => (
               <option key={p} value={p}>
                 {p}
@@ -431,7 +437,7 @@ export default function ProjectBoardPage() {
               No rows returned — check that the <code className="font-mono">project_cards</code> table has data.
             </p>
           )}
-          {selectedProject !== 'all' && totalVisible === 0 && allCards.length > 0 && (
+          {selectedProject !== ALL_PROJECTS && totalVisible === 0 && allCards.length > 0 && (
             <p className="text-amber-400">No cards match the current project filter.</p>
           )}
         </div>
