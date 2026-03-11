@@ -12,6 +12,7 @@ import {
   Info,
   FolderOpen,
 } from 'lucide-react'
+import { ConnectorSidepanel, ConnectorToggleButton } from '@/components/mission-control/connector-sidepanel'
 
 type Priority = 'High' | 'Medium' | 'Low'
 type ColumnId = 'active' | 'in-review' | 'needs-you' | 'done'
@@ -96,11 +97,9 @@ const ALL_PROJECTS = '__all__'
 function TaskModal({
   card,
   onClose,
-  onMarkDone,
 }: {
   card: Card
   onClose: () => void
-  onMarkDone: (id: string) => void
 }) {
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
@@ -163,17 +162,6 @@ function TaskModal({
           >
             Take Action
           </button>
-          {card.column !== 'done' && (
-            <button
-              onClick={() => {
-                onMarkDone(card.id)
-                onClose()
-              }}
-              className="flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-border/20 transition-colors"
-            >
-              Mark as Done
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -193,6 +181,7 @@ export default function ProjectBoardPage() {
   const [selectedProject, setSelectedProject] = useState<string>(ALL_PROJECTS)
   const [showDiagnostics, setShowDiagnostics] = useState(false)
   const [diagnostics, setDiagnostics] = useState<ApiResponse['diagnostics']>(undefined)
+  const [jarvisOpen, setJarvisOpen] = useState(false)
 
   const fetchBoard = useCallback(async () => {
     try {
@@ -335,6 +324,10 @@ export default function ProjectBoardPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <ConnectorToggleButton
+              isOpen={jarvisOpen}
+              onClick={() => setJarvisOpen((v) => !v)}
+            />
             <button
               onClick={() => setShowDiagnostics(!showDiagnostics)}
               aria-label={showDiagnostics ? 'Hide diagnostics' : 'Show diagnostics'}
@@ -515,9 +508,15 @@ export default function ProjectBoardPage() {
         <TaskModal
           card={selectedCard}
           onClose={() => setSelectedCard(null)}
-          onMarkDone={markDone}
         />
       )}
+
+      {/* Jarvis connector sidepanel */}
+      <ConnectorSidepanel
+        tenantSlug={tenantSlug}
+        isOpen={jarvisOpen}
+        onClose={() => setJarvisOpen(false)}
+      />
     </div>
   )
 }
