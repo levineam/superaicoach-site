@@ -21,10 +21,10 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
-  title: 'SuperAIcoach — Personal AI Assistant Coaching',
+  title: 'SuperAIcoach — Your AI Stack, Curated and Ready',
   description:
-    'SuperAIcoach helps busy professionals use ChatGPT and Claude as a practical virtual AI assistant for writing, planning, and repetitive admin work through 1:1 coaching.',
-  keywords: 'personal ai assistant, virtual ai assistant, ai coach, personal ai coach, chatgpt coach, claude coach, ai productivity coaching',
+    'Pre-configured AI skills, daily briefings, and starter kits for busy professionals. Built on OpenClaw. No tinkering required.',
+  keywords: 'AI assistant setup, curated AI skills, OpenClaw configs, AI productivity, AI starter kit, personal AI assistant, AI automation',
   authors: [{ name: 'Andrew Levine', url: 'https://superaicoach.com' }],
   creator: 'SuperAIcoach',
   publisher: 'SuperAIcoach',
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: baseUrl,
-    title: 'SuperAIcoach — Personal AI Assistant Coaching',
-    description: 'SuperAIcoach helps busy professionals use ChatGPT and Claude as a practical virtual AI assistant for writing, planning, and repetitive admin work.',
+    title: 'SuperAIcoach — Your AI Stack, Curated and Ready',
+    description: 'Pre-configured AI skills, daily briefings, and starter kits for busy professionals. Built on OpenClaw. No tinkering required.',
     siteName: 'SuperAIcoach',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SuperAIcoach — Personal AI Assistant Coaching',
-    description: 'SuperAIcoach helps busy professionals use ChatGPT and Claude as a practical virtual AI assistant for writing, planning, and repetitive admin work.',
+    title: 'SuperAIcoach — Your AI Stack, Curated and Ready',
+    description: 'Pre-configured AI skills, daily briefings, and starter kits for busy professionals. Built on OpenClaw. No tinkering required.',
     creator: '@andrewlevine',
   },
   robots: {

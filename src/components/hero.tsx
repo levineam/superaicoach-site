@@ -1,5 +1,8 @@
-import { ConsultationCTA } from "@/components/consultation-cta"
-import { MapPin } from "lucide-react"
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+
+import { WaitlistCTA } from '@/components/waitlist-cta'
+import { Button } from '@/components/ui/button'
 
 export function Hero() {
   return (
@@ -12,27 +15,27 @@ export function Hero() {
 
       <div className="mx-auto max-w-6xl px-6 pb-10 pt-8 text-center sm:pt-10 md:pt-14">
         <h1 className="mx-auto max-w-4xl text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-          Personal AI Coaching
+          Your AI Stack, Curated and Ready
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-foreground/75 md:text-xl">
-          Automate the tedious. Amplify the meaningful.
-          <br className="hidden sm:inline" />{' '}
-          Practical AI coaching that gives you back time for what actually matters.
+          Pre-configured AI skills, daily briefings, and starter kits —{' '}
+          <br className="hidden sm:inline" />
+          built by someone who runs this stack every day, packaged so you
+          don&apos;t have to set it up yourself.
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <ConsultationCTA source="hero" />
+          <WaitlistCTA source="hero" />
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4" />
-          <a
-            href="/philly"
-            className="underline underline-offset-4 transition-colors hover:text-foreground"
-          >
-            In Philadelphia? See in-person options
-          </a>
+        <div className="mt-6 flex items-center justify-center">
+          <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+            <Link href="/resources">
+              Browse Free Resources
+              <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

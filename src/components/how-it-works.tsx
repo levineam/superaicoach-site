@@ -1,28 +1,28 @@
-import { MessageSquare, Video, Zap } from "lucide-react"
+import { UserCheck, Download, TrendingUp } from 'lucide-react'
 
-import { ScrollReveal } from "@/components/scroll-reveal"
+import { ScrollReveal } from '@/components/scroll-reveal'
 
 const steps = [
   {
-    number: "01",
-    icon: MessageSquare,
-    title: "Answer one question",
+    number: '01',
+    icon: UserCheck,
+    title: 'Pick your profile',
     description:
-      "Tell us what you'd most like to use AI for. That's it — no forms, no quizzes, no commitment.",
+      "Tell us what you use AI for — writing, research, content, building. We'll match you to a starter config.",
   },
   {
-    number: "02",
-    icon: Video,
-    title: "Free 15-minute consult",
+    number: '02',
+    icon: Download,
+    title: 'Install & go',
     description:
-      "We'll talk through your goals and show you exactly how coaching works. No sales pitch — just clarity on what's possible.",
+      'Download your config, install the skills, follow the quickstart. Most people are up in under 30 minutes.',
   },
   {
-    number: "03",
-    icon: Zap,
-    title: "Start getting results",
+    number: '03',
+    icon: TrendingUp,
+    title: 'Stay current',
     description:
-      "In a paid virtual session, we build you practical AI workflows you can use the same day. Real tools, real output.",
+      'New skills, updated configs, and a daily briefing land in your inbox. Your AI stack keeps getting better without effort.',
   },
 ]
 
@@ -35,7 +35,7 @@ export function HowItWorks() {
             How it works
           </p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
-            From curious to capable in three steps
+            From signup to running AI assistant in three steps
           </h2>
         </ScrollReveal>
 

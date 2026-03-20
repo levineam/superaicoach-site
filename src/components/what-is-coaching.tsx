@@ -1,28 +1,26 @@
-import { ScrollReveal } from "@/components/scroll-reveal"
+import { ScrollReveal } from '@/components/scroll-reveal'
 
 export function WhatIsCoaching() {
   return (
     <section className="py-24 md:py-32">
       <ScrollReveal className="mx-auto max-w-3xl px-6 text-center">
         <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          What is personal AI coaching?
+          What is a curated AI stack?
         </h2>
         <div className="mt-6 space-y-4 text-pretty text-lg leading-relaxed text-muted-foreground">
           <p>
-            Personal AI coaching is a 1:1 service where a real person helps you
-            learn how to use AI tools — like ChatGPT, Claude, and OpenClaw/clawdbot — for your
-            specific work and life admin tasks. It&apos;s not a course, a community,
-            or a piece of software.
+            Most AI tools ship as blank canvases. You&apos;re supposed to figure out
+            prompts, integrations, and workflows on your own. That&apos;s fine if you
+            have time to tinker — but most people don&apos;t.
           </p>
           <p>
-            Instead of generic tutorials, you get personalized workflows built
-            around the things you actually do every day: writing emails,
-            preparing for meetings, planning projects, or setting up an always-on
-            AI assistant with tools like OpenClaw to handle tasks while you sleep.
+            Super AI Coach packages a working AI assistant setup — the same one we
+            use every day for email, writing, research, scheduling, and automation —
+            into installable skills and configs you can run yourself.
           </p>
           <p>
-            The goal is simple: save you real time, right away, without asking
-            you to become an AI expert or change the way you work.
+            You get the result of thousands of hours of building and testing. We get
+            to keep building because members fund the work. Everyone wins.
           </p>
         </div>
       </ScrollReveal>

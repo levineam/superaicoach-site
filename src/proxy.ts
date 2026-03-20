@@ -5,10 +5,18 @@ import {
   verifySessionTokenEdge,
 } from '@/lib/mission-control/session-edge'
 
+const PROTECTED_PREFIXES = ['/mission-control', '/member']
+
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  )
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname, origin } = request.nextUrl
 
-  if (!pathname.startsWith('/mission-control')) {
+  if (!isProtectedRoute(pathname)) {
     return NextResponse.next()
   }
 
@@ -28,16 +36,19 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  const parts = pathname.split('/').filter(Boolean)
-  const requestedTenantSlug = parts[1]
+  // Mission Control tenant slug enforcement (legacy)
+  if (pathname.startsWith('/mission-control')) {
+    const parts = pathname.split('/').filter(Boolean)
+    const requestedTenantSlug = parts[1]
 
-  if (requestedTenantSlug && requestedTenantSlug !== session.tenantSlug) {
-    return NextResponse.redirect(new URL(`/mission-control/${session.tenantSlug}`, origin))
+    if (requestedTenantSlug && requestedTenantSlug !== session.tenantSlug) {
+      return NextResponse.redirect(new URL(`/mission-control/${session.tenantSlug}`, origin))
+    }
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/mission-control/:path*'],
+  matcher: ['/mission-control/:path*', '/member/:path*'],
 }

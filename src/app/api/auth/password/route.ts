@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       tenantSlug: result.tenantSlug,
       userId: result.userId,
       role: result.role,
+      redirect: '/member',
     })
   } catch (error) {
     console.error('Password auth error:', error)

@@ -1,50 +1,50 @@
 import {
-  FileText,
-  Brain,
+  Package,
+  Mail,
+  Settings,
+  BookOpen,
   Users,
-  ListChecks,
-  Search,
-  RotateCcw,
-} from "lucide-react"
+  RefreshCw,
+} from 'lucide-react'
 
-import { ScrollReveal } from "@/components/scroll-reveal"
+import { ScrollReveal } from '@/components/scroll-reveal'
 
-const cases = [
+const valueProps = [
   {
-    icon: FileText,
-    title: "Write Faster",
+    icon: Package,
+    title: 'Pre-Built AI Skills',
     description:
-      "Emails, docs, proposals — produce better drafts in a fraction of the time with AI as your co-writer.",
+      '40+ tested skills for email, calendar, research, content creation, and automation. Install in one command.',
   },
   {
-    icon: Brain,
-    title: "Think Clearer",
+    icon: Mail,
+    title: 'Daily AI Briefing',
     description:
-      "Make sharper decisions by using AI to map out tradeoffs, weigh options, and pressure-test your thinking.",
+      'A short newsletter every morning: what shipped, what we learned, tips you can use today. Written by the agent, approved by a human.',
+  },
+  {
+    icon: Settings,
+    title: 'Starter Configs',
+    description:
+      'Pick a profile — Productivity, Content Creator, Researcher, Builder — and get a working AI assistant config in minutes.',
+  },
+  {
+    icon: BookOpen,
+    title: 'No-Tinker Setup Guides',
+    description:
+      "Step-by-step instructions that assume you're busy, not a developer. Copy-paste and go.",
   },
   {
     icon: Users,
-    title: "Run Better Meetings",
+    title: 'Community Access',
     description:
-      "Prep agendas, capture action items, and turn notes into next steps — before and after every meeting.",
+      'Discord community of people using the same stack. Ask questions, share workflows, get help.',
   },
   {
-    icon: ListChecks,
-    title: "Plan Effectively",
+    icon: RefreshCw,
+    title: 'Always Improving',
     description:
-      "Break projects into clear priorities and milestones. Get AI to help you build actionable plans fast.",
-  },
-  {
-    icon: Search,
-    title: "Research Smarter",
-    description:
-      "Synthesize articles, reports, and data into concise takeaways you can actually use.",
-  },
-  {
-    icon: RotateCcw,
-    title: "Automate Admin",
-    description:
-      "Recurring tasks, repetitive formatting, tedious follow-ups — hand the busywork to an always-on AI assistant like OpenClaw/clawdbot that works even when you're offline.",
+      'New skills and configs ship weekly. Your membership stays current because the system that builds them runs 24/7.',
   },
 ]
 
@@ -54,30 +54,29 @@ export function UseCases() {
       <div className="mx-auto max-w-6xl px-6">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-accent">
-            What we help you do
+            What you get
           </p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Practical AI for everyday work
+            Everything you need to actually use AI — without the setup headache
           </h2>
           <p className="mt-4 text-muted-foreground text-pretty leading-relaxed">
-            We coach you on specific, real-world workflows — not abstract AI
-            theory. Here are a few areas where our clients see results
-            immediately.
+            We use this stack every day. You get the proven configs, skills, and
+            workflows — ready to install.
           </p>
         </ScrollReveal>
 
         <ScrollReveal delayMs={80} className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {cases.map((c) => (
+          {valueProps.map((v) => (
             <div
-              key={c.title}
+              key={v.title}
               className="group rounded-2xl border border-border/60 bg-card/60 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 motion-reduce:hover:translate-y-0"
             >
               <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <c.icon className="h-5 w-5" />
+                <v.icon className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground">{c.title}</h3>
+              <h3 className="text-lg font-semibold text-foreground">{v.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {c.description}
+                {v.description}
               </p>
             </div>
           ))}

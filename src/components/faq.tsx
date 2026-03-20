@@ -3,40 +3,40 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from '@/components/ui/accordion'
 
-import { ScrollReveal } from "@/components/scroll-reveal"
+import { ScrollReveal } from '@/components/scroll-reveal'
 
 const faqs = [
   {
-    question: "Do I need any technical skills or AI experience?",
+    question: 'Do I need to be technical?',
     answer:
-      "Not at all. Our coaching is designed for people with zero AI experience. If you can use email and a web browser, you can benefit from coaching. We meet you exactly where you are.",
+      "No. If you can install an app and follow a setup guide, you can use this. The whole point is that someone else did the hard part.",
   },
   {
-    question: "Which AI tools do you work with?",
+    question: 'What AI tools does this work with?',
     answer:
-      "We primarily coach on ChatGPT, Claude, and OpenClaw/clawdbot — an open-source AI assistant that runs 24/7 on your behalf. We'll recommend whatever tool fits your specific needs and budget. If a free tool gets the job done, that's what we'll use.",
+      'The stack is built on OpenClaw — an open-source AI agent runtime. Skills work with ChatGPT, Claude, Gmail, Calendar, Apple Notes, Discord, GitHub, and many more.',
   },
   {
-    question: "Do you need access to my accounts or private data?",
+    question: 'What do I actually get as a member?',
     answer:
-      "No. We never ask for login credentials or access to your accounts. During sessions, you share your screen and we guide you through the process. Your data stays yours.",
+      'Access to the full skill catalog with install guides, pre-built starter configs, the daily AI briefing newsletter, Discord community, and new releases as they ship.',
   },
   {
-    question: "What happens after the free 15-minute consult?",
+    question: 'Is there a free tier?',
     answer:
-      "If coaching seems like a good fit, we'll schedule a paid virtual session focused on building you 2-3 practical AI workflows. No subscription, no recurring fees — just book sessions when you need them.",
+      'Yes. The /resources page has free guides and articles. The daily newsletter preview is also free. Full skill catalog, configs, and community require membership.',
   },
   {
-    question: "Is this for individuals or teams?",
+    question: 'How is this different from ChatGPT Plus or Claude Pro?',
     answer:
-      "This service is designed for individuals — professionals who want personalized coaching at their own pace. If you're looking for team training, reach out and we'll discuss options.",
+      "Those are the AI models. This is the layer on top — pre-built workflows, integrations, and configs that make the models actually useful for daily work. Think of it as the difference between buying a car and having a mechanic tune it for your commute.",
   },
   {
-    question: "How long does it take to see results?",
+    question: 'Can I cancel anytime?',
     answer:
-      "Most clients walk away from their very first session with workflows they can use the same day. We focus on practical, immediate outcomes — not abstract theory.",
+      'Yes. No contracts, no commitment. Cancel from your account page.',
   },
 ]
 

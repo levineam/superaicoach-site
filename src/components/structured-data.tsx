@@ -109,11 +109,11 @@ export function ServiceStructuredData(props: ServiceStructuredDataProps) {
     ...(props.serviceType && { serviceType: props.serviceType }),
     offers: {
       '@type': 'Offer',
-      name: 'Free 15-minute AI coaching consult',
+      name: 'Curated AI stack membership',
       price: '0',
       priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: 'https://calendly.com/andrew-superaicoach/30min',
+      availability: 'https://schema.org/PreOrder',
+      url: 'https://superaicoach.com/#cta',
     },
   }
 
@@ -185,7 +185,7 @@ export const DEFAULT_ORGANIZATION_DATA: OrganizationData = {
   type: 'Organization',
   name: 'SuperAIcoach',
   description:
-    'SuperAIcoach helps busy professionals turn ChatGPT and Claude into a practical virtual AI assistant for writing, planning, and repetitive admin work.',
+    'Pre-configured AI skills, daily briefings, and starter kits for busy professionals. Built on OpenClaw. No tinkering required.',
   url: 'https://superaicoach.com',
   email: 'hello@superaicoach.com',
   founder: {
@@ -194,58 +194,59 @@ export const DEFAULT_ORGANIZATION_DATA: OrganizationData = {
   },
   areaServed: ['United States', 'Philadelphia'],
   serviceType: [
-    'AI Training',
-    'Personal Coaching',
-    'Technology Consulting',
-    'Productivity Coaching',
+    'AI Productivity Membership',
+    'Curated AI Skills',
+    'AI Automation',
+    'AI Starter Kits',
   ],
   sameAs: ['https://x.com/andrewlevine'],
 }
 
 export const DEFAULT_FAQ_ITEMS: FAQItem[] = [
   {
-    question: 'Do I need any technical skills or AI experience?',
+    question: 'Do I need to be technical?',
     answer:
-      'Not at all. Coaching is designed for people starting from zero AI experience. If you can use email and a web browser, you can use this system. We focus on practical workflows you can run immediately, not technical jargon.',
+      'No. If you can install an app and follow a setup guide, you can use this. The whole point is that someone else did the hard part.',
   },
   {
-    question: 'Which AI tools do you work with?',
+    question: 'What AI tools does this work with?',
     answer:
-      'Most clients use ChatGPT and Claude, and some also use OpenClaw for 24/7 agent support. We match tools to your workflow and budget first. If a simple low-cost setup works, we recommend that over unnecessary complexity.',
+      'The stack is built on OpenClaw — an open-source AI agent runtime. Skills work with ChatGPT, Claude, Gmail, Calendar, Apple Notes, Discord, GitHub, and many more.',
   },
   {
-    question: 'Do you need access to my accounts or private data?',
+    question: 'What do I actually get as a member?',
     answer:
-      'No. You keep full control of your accounts and data. During sessions, you share your screen while we coach step-by-step. We never require your passwords or direct account access.',
+      'Access to the full skill catalog with install guides, pre-built starter configs, the daily AI briefing newsletter, Discord community, and new releases as they ship.',
   },
   {
-    question: 'What happens after the free 15-minute consult?',
+    question: 'Is there a free tier?',
     answer:
-      'You leave with a clear plan. If it is a fit, we book a paid coaching session focused on building 2-3 repeatable workflows around your real tasks. No subscription is required.',
+      'Yes. The /resources page has free guides and articles. The daily newsletter preview is also free. Full skill catalog, configs, and community require membership.',
   },
   {
-    question: 'How long does it take to see results?',
+    question: 'How is this different from ChatGPT Plus or Claude Pro?',
     answer:
-      'Most clients get useful workflow wins in the first session. The goal is immediate application: writing faster, planning better, and reducing repetitive admin work the same day.',
+      'Those are the AI models. This is the layer on top — pre-built workflows, integrations, and configs that make the models actually useful for daily work.',
+  },
+  {
+    question: 'Can I cancel anytime?',
+    answer:
+      'Yes. No contracts, no commitment. Cancel from your account page.',
   },
 ]
 
 export const DEFAULT_HOW_TO_STEPS: HowToStep[] = [
   {
-    name: 'Book a free consult',
-    text: 'Start by booking a free 15-minute call to define the highest-value AI workflow for your current work.',
+    name: 'Pick your profile',
+    text: "Tell us what you use AI for — writing, research, content, building. We'll match you to a starter config.",
   },
   {
-    name: 'Share your real use case',
-    text: 'Bring one real writing, planning, research, or admin task. We use your live workflow instead of a generic demo.',
+    name: 'Install & go',
+    text: 'Download your config, install the skills, follow the quickstart. Most people are up in under 30 minutes.',
   },
   {
-    name: 'Build your AI workflow',
-    text: 'In session, we configure prompts, process steps, and guardrails so the workflow is practical and repeatable.',
-  },
-  {
-    name: 'Run it immediately',
-    text: 'Before you leave, you run the workflow yourself and leave with next steps to keep momentum.',
+    name: 'Stay current',
+    text: 'New skills, updated configs, and a daily briefing land in your inbox. Your AI stack keeps getting better without effort.',
   },
 ]
 

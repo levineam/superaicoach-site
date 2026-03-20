@@ -1,17 +1,16 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
-import { Button } from "@/components/ui/button"
-import { Menu, X, ArrowRight } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Button } from '@/components/ui/button'
+import { Menu, X, ArrowRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { label: "What We Help With", href: "/#use-cases" },
-  { label: "How It Works", href: "/#how-it-works" },
-  { label: "For Businesses", href: "/business" },
-  { label: "FAQ", href: "/#faq" },
+  { label: 'Resources', href: '/resources' },
+  { label: 'How It Works', href: '/#how-it-works' },
+  { label: 'FAQ', href: '/#faq' },
 ]
 
 export function Navbar() {
@@ -20,17 +19,17 @@ export function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         scrolled
-          ? "bg-background/80 backdrop-blur-lg border-b border-border shadow-sm"
-          : "bg-transparent"
+          ? 'bg-background/80 backdrop-blur-lg border-b border-border shadow-sm'
+          : 'bg-transparent',
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -58,7 +57,7 @@ export function Navbar() {
             className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-5"
           >
             <Link href="/#cta">
-              Free 15-min consult
+              Join Waitlist
               <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Link>
           </Button>
@@ -68,7 +67,7 @@ export function Navbar() {
         <button
           className="md:hidden text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
         >
           {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -98,7 +97,7 @@ export function Navbar() {
               className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full w-full"
             >
               <Link href="/#cta" onClick={() => setMobileOpen(false)}>
-                Free 15-min consult
+                Join Waitlist
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Link>
             </Button>
