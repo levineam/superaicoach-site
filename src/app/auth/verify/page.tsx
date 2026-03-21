@@ -32,7 +32,7 @@ async function verifyMagicLink(formData: FormData) {
     maxAge: 60 * 60 * 8, // 8 hours
   })
 
-  redirect(`/mission-control/${result.tenantSlug}`)
+  redirect('/member')
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -57,7 +57,7 @@ export default async function VerifyPage({
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-foreground">One-click login</h1>
           <p className="text-sm text-muted-foreground">
-            Click the button below to sign in to Mission Control.
+            Click the button below to sign in to your member area.
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default async function VerifyPage({
             type="submit"
             className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-opacity"
           >
-            Log in to Mission Control
+            Log in to your member area
           </button>
         </form>
 

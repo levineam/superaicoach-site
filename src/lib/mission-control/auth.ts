@@ -117,6 +117,54 @@ interface PasswordAuthResult {
   role: SessionPayload['role']
 }
 
+export async function registerWithPassword(
+  email: string,
+  password: string,
+): Promise<PasswordAuthResult | { error: string }> {
+  const normalizedEmail = email.trim().toLowerCase()
+  const existingUser = await findUserByEmail(normalizedEmail)
+
+  if (existingUser?.passwordHash) {
+    return { error: 'An account with this email already exists. Sign in instead.' }
+  }
+
+  const user = existingUser ?? await findOrCreateUserByEmail(normalizedEmail)
+  const passwordHash = await hashPassword(password)
+  const updatedUser = await setUserPassword(user.id, passwordHash)
+
+  if (!updatedUser) {
+    return { error: 'Failed to create your account' }
+  }
+
+  const membership = await getDefaultMembershipForUser(user.id)
+
+  if (!membership) {
+    return { error: 'No tenant membership found for this user' }
+  }
+
+  const tenant = await getTenantById(membership.tenantId)
+
+  if (!tenant) {
+    return { error: 'Tenant not found' }
+  }
+
+  const sessionToken = createSessionToken({
+    userId: user.id,
+    tenantId: tenant.id,
+    tenantSlug: tenant.slug,
+    role: membership.role,
+    email: user.email,
+  })
+
+  return {
+    sessionToken,
+    tenantSlug: tenant.slug,
+    userId: user.id,
+    tenantId: tenant.id,
+    role: membership.role,
+  }
+}
+
 export async function authenticateWithPassword(
   email: string,
   password: string,
