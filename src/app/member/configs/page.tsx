@@ -1,6 +1,9 @@
-import { Settings } from 'lucide-react'
+import { getConfigs } from '@/data/configs'
+import { ConfigCard } from '@/components/member/config-card'
 
 export default function ConfigsPage() {
+  const configs = getConfigs()
+
   return (
     <div className="space-y-6">
       <div>
@@ -8,20 +11,23 @@ export default function ConfigsPage() {
           Starter Configs
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Pre-built OpenClaw configuration packages — pick a profile and get a working AI
-          assistant in minutes.
+          Pre-built OpenClaw configuration packages. Pick a profile, copy the config,
+          and get a working AI assistant in minutes.
         </p>
       </div>
 
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
-        <Settings className="mb-4 h-12 w-12 text-muted-foreground/40" />
-        <h2 className="text-lg font-semibold text-foreground">
-          Coming soon
-        </h2>
-        <p className="mt-2 max-w-md text-sm text-muted-foreground">
-          Four starter configs — Productivity, Content Creator, Researcher, and Builder —
-          are being packaged. Each includes curated skills, a sample config, and a
-          quickstart guide.
+      <div className="grid gap-4 sm:grid-cols-2">
+        {configs.map((config) => (
+          <ConfigCard key={config.slug} config={config} />
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-border/60 bg-muted/30 px-5 py-4">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Not sure which to pick?</span>{' '}
+          Start with <span className="font-medium">Productivity Assistant</span> — it
+          connects to the tools you already use and has the simplest setup. You can
+          always add skills from other configs later.
         </p>
       </div>
     </div>
