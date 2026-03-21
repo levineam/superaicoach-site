@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MessageSquare, LayoutDashboard, Users, KanbanSquare } from 'lucide-react'
 
+import { isMissionControlArchived } from '@/lib/mission-control/archive'
+
 type SidebarNavProps = {
   tenantSlug: string
 }
@@ -17,6 +19,10 @@ type NavItem = {
 
 export function SidebarNav({ tenantSlug }: SidebarNavProps) {
   const pathname = usePathname()
+
+  if (isMissionControlArchived()) {
+    return null
+  }
 
   const navItems: NavItem[] = [
     {

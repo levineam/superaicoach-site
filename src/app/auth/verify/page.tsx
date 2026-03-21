@@ -2,6 +2,10 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { consumeMagicLinkAndCreateSession } from '@/lib/mission-control/auth'
+import {
+  getMissionControlRedirectPath,
+  isMissionControlArchived,
+} from '@/lib/mission-control/archive'
 import { SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -32,7 +36,11 @@ async function verifyMagicLink(formData: FormData) {
     maxAge: 60 * 60 * 8, // 8 hours
   })
 
-  redirect('/member')
+  if (isMissionControlArchived()) {
+    redirect(getMissionControlRedirectPath())
+  }
+
+  redirect(`/mission-control/${result.tenantSlug}`)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -57,7 +65,7 @@ export default async function VerifyPage({
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-foreground">One-click login</h1>
           <p className="text-sm text-muted-foreground">
-            Click the button below to sign in to your member area.
+            Click the button below to sign in to Mission Control.
           </p>
         </div>
 
@@ -67,7 +75,7 @@ export default async function VerifyPage({
             type="submit"
             className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-opacity"
           >
-            Log in to your member area
+            Log in to Mission Control
           </button>
         </form>
 

@@ -4,20 +4,20 @@ import {
   SESSION_COOKIE_NAME,
   verifySessionTokenEdge,
 } from '@/lib/mission-control/session-edge'
-
-const PROTECTED_PREFIXES = ['/mission-control', '/member']
-
-function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  )
-}
+import {
+  getMissionControlRedirectPath,
+  isMissionControlArchived,
+} from '@/lib/mission-control/archive'
 
 export async function proxy(request: NextRequest) {
   const { pathname, origin } = request.nextUrl
 
-  if (!isProtectedRoute(pathname)) {
+  if (!pathname.startsWith('/mission-control')) {
     return NextResponse.next()
+  }
+
+  if (isMissionControlArchived()) {
+    return NextResponse.redirect(new URL(getMissionControlRedirectPath(), origin))
   }
 
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value
@@ -36,19 +36,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Mission Control tenant slug enforcement (legacy)
-  if (pathname.startsWith('/mission-control')) {
-    const parts = pathname.split('/').filter(Boolean)
-    const requestedTenantSlug = parts[1]
+  const parts = pathname.split('/').filter(Boolean)
+  const requestedTenantSlug = parts[1]
 
-    if (requestedTenantSlug && requestedTenantSlug !== session.tenantSlug) {
-      return NextResponse.redirect(new URL(`/mission-control/${session.tenantSlug}`, origin))
-    }
+  if (requestedTenantSlug && requestedTenantSlug !== session.tenantSlug) {
+    return NextResponse.redirect(new URL(`/mission-control/${session.tenantSlug}`, origin))
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/mission-control/:path*', '/member/:path*'],
+  matcher: ['/mission-control/:path*'],
 }

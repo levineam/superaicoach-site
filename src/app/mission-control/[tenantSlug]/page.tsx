@@ -1,12 +1,15 @@
 import { redirect } from 'next/navigation'
 
-import { CustomerMissionControlShell } from '@/components/mission-control/customer-shell'
 import { getServerSession } from '@/lib/mission-control/auth'
 import {
   getMissionControlSnapshot,
   getMissionControlSnapshotForTenant,
 } from '@/lib/mission-control/dashboard'
 import { isAdminRole } from '@/lib/mission-control/permissions'
+import {
+  getMissionControlRedirectPath,
+  isMissionControlArchived,
+} from '@/lib/mission-control/archive'
 
 type TenantMissionControlPageProps = {
   params: Promise<{
@@ -17,6 +20,10 @@ type TenantMissionControlPageProps = {
 export default async function TenantMissionControlPage({
   params,
 }: TenantMissionControlPageProps) {
+  if (isMissionControlArchived()) {
+    redirect(getMissionControlRedirectPath())
+  }
+
   const { tenantSlug } = await params
   const session = await getServerSession()
 

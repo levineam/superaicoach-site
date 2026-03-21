@@ -12,6 +12,7 @@ import {
 
 import { ConsultationCTA } from "@/components/consultation-cta"
 import { ScrollReveal } from "@/components/scroll-reveal"
+import { isMissionControlArchived } from "@/lib/mission-control/archive"
 
 export const metadata: Metadata = {
   title: "For Businesses — Super AI Coach",
@@ -356,12 +357,14 @@ export default function BusinessPage() {
             source="business-page"
             label="Book a Free Consultation"
           />
-          <Link
-            href="/mission-control"
-            className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/5 px-8 py-4 text-base font-semibold text-accent transition-all hover:bg-accent/10 hover:border-accent/60"
-          >
-            Meet Jarvis →
-          </Link>
+          {!isMissionControlArchived() ? (
+            <Link
+              href="/mission-control"
+              className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/5 px-8 py-4 text-base font-semibold text-accent transition-all hover:bg-accent/10 hover:border-accent/60"
+            >
+              Meet Jarvis →
+            </Link>
+          ) : null}
           <p className="text-sm text-muted-foreground">
             Or reach out at{" "}
             <a

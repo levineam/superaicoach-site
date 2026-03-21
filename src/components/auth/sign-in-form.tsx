@@ -6,6 +6,10 @@ import { FormEvent, useMemo, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  getMissionControlRedirectPath,
+  isMissionControlArchived,
+} from '@/lib/mission-control/archive'
 
 type MagicLinkResponse = {
   ok?: boolean
@@ -65,9 +69,12 @@ export function SignInForm({
 
         const payload = (await apiResponse.json()) as PasswordResponse
 
-        if (payload.ok) {
-          // Redirect to member area (or the requested next path)
-          router.push(nextPath || '/member')
+        if (payload.ok && payload.tenantSlug) {
+          if (isMissionControlArchived()) {
+            router.push(getMissionControlRedirectPath())
+          } else {
+            router.push(`/mission-control/${payload.tenantSlug}`)
+          }
         } else {
           setPasswordResponse(payload)
         }
