@@ -1,6 +1,10 @@
-import type { NextConfig } from "next";
+import path from 'path'
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
   async redirects() {
     return [
       {
@@ -28,8 +32,8 @@ const nextConfig: NextConfig = {
         destination: '/mission-control/andrew/dashboard',
         permanent: false,
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
