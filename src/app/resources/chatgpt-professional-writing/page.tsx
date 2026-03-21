@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
-import { ConsultationCTA } from '@/components/consultation-cta'
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
 
@@ -117,17 +116,18 @@ export default function ChatGPTWritingGuide() {
 
           <div className="mt-16 rounded-2xl border border-border/60 bg-card/40 p-8 backdrop-blur-xl">
             <h3 className="text-lg font-semibold text-foreground">
-              Want personalized guidance?
+              Browse the full library
             </h3>
             <p className="mt-2 text-muted-foreground">
-              This guide covers the basics, but every professional has unique writing needs. In a 1:1 coaching session, we can set up custom templates and workflows that match your specific role and communication style.
+              This guide is part of a growing collection of practical AI resources and weekly roundups designed for busy people who want signal, not fluff.
             </p>
             <div className="mt-4">
-              <ConsultationCTA
-                source="chatgpt-writing-guide"
-                label="Book a consultation"
-                buttonClassName="border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
-              />
+              <a
+                href="/resources"
+                className="inline-flex items-center justify-center rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                Explore the resource library
+              </a>
             </div>
           </div>
         </article>

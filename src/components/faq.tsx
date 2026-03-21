@@ -3,40 +3,40 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion'
+} from "@/components/ui/accordion"
 
-import { ScrollReveal } from '@/components/scroll-reveal'
+import { ScrollReveal } from "@/components/scroll-reveal"
 
 const faqs = [
   {
-    question: 'Do I need to be technical?',
+    question: "Do I need to pay to read the resources?",
     answer:
-      "No. If you can install an app and follow a setup guide, you can use this. The whole point is that someone else did the hard part.",
+      "No. The public library is designed to be useful on its own. The broader offer is a curated resources membership, which means some pieces can stay free while deeper collections, roundups, and implementation notes can live behind the membership over time.",
   },
   {
-    question: 'What AI tools does this work with?',
+    question: "What kind of resources are included?",
     answer:
-      'The stack is built on OpenClaw — an open-source AI agent runtime. Skills work with ChatGPT, Claude, Gmail, Calendar, Apple Notes, Discord, GitHub, and many more.',
+      "We publish practical AI guides, workflow breakdowns, prompt patterns, and curated roundups of the best tools and ideas we find each week. The goal is not more noise. It is to save you from digging through endless AI content on your own.",
   },
   {
-    question: 'What do I actually get as a member?',
+    question: "How often do you publish new material?",
     answer:
-      'Access to the full skill catalog with install guides, pre-built starter configs, the daily AI briefing newsletter, Discord community, and new releases as they ship.',
+      "The cadence is simple: a daily newsletter captures what is worth paying attention to, one new evergreen resource article is published each week, and the best ideas from the week are distilled into a weekly roundup.",
   },
   {
-    question: 'Is there a free tier?',
+    question: "Is this coaching, a course, or a membership?",
     answer:
-      'Yes. The /resources page has free guides and articles. The daily newsletter preview is also free. Full skill catalog, configs, and community require membership.',
+      "The main offer here is the curated resources membership. Think of it as a practical research desk for busy people who want high-signal AI help without turning this into a full-time hobby. Coaching can still exist around the edges, but the core product is the library and weekly curation.",
   },
   {
-    question: 'How is this different from ChatGPT Plus or Claude Pro?',
+    question: "Who is this for?",
     answer:
-      "Those are the AI models. This is the layer on top — pre-built workflows, integrations, and configs that make the models actually useful for daily work. Think of it as the difference between buying a car and having a mechanic tune it for your commute.",
+      "Busy professionals, founders, operators, and curious people who want to use AI well without becoming AI obsessives. If you want useful workflows, sharp explanations, and fewer rabbit holes, you are in the right place.",
   },
   {
-    question: 'Can I cancel anytime?',
+    question: "How do you decide what makes the cut?",
     answer:
-      'Yes. No contracts, no commitment. Cancel from your account page.',
+      "We look for resources that are practical, trustworthy, and immediately usable. If something is flashy but not helpful in real work, it does not make the library. The bar is simple: it should save time, improve judgment, or unlock a workflow you can actually use.",
   },
 ]
 
@@ -49,7 +49,7 @@ export function FAQ() {
             FAQ
           </p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Common questions
+            Questions about the resource library
           </h2>
         </ScrollReveal>
 
@@ -61,10 +61,10 @@ export function FAQ() {
                 value={`item-${i}`}
                 className="border-border/60"
               >
-                <AccordionTrigger className="text-left text-base font-medium text-foreground hover:no-underline hover:text-accent transition-colors py-5">
+                <AccordionTrigger className="py-5 text-left text-base font-medium text-foreground transition-colors hover:text-accent hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed text-base">
+                <AccordionContent className="text-base leading-relaxed text-muted-foreground">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>

@@ -109,11 +109,11 @@ export function ServiceStructuredData(props: ServiceStructuredDataProps) {
     ...(props.serviceType && { serviceType: props.serviceType }),
     offers: {
       '@type': 'Offer',
-      name: 'Curated AI stack membership',
+      name: 'Free 15-minute AI coaching consult',
       price: '0',
       priceCurrency: 'USD',
-      availability: 'https://schema.org/PreOrder',
-      url: 'https://superaicoach.com/#cta',
+      availability: 'https://schema.org/InStock',
+      url: 'https://calendly.com/andrew-superaicoach/30min',
     },
   }
 
@@ -185,7 +185,7 @@ export const DEFAULT_ORGANIZATION_DATA: OrganizationData = {
   type: 'Organization',
   name: 'SuperAIcoach',
   description:
-    'Pre-configured AI skills, daily briefings, and starter kits for busy professionals. Built on OpenClaw. No tinkering required.',
+    'SuperAIcoach helps busy professionals turn ChatGPT and Claude into a practical virtual AI assistant for writing, planning, and repetitive admin work.',
   url: 'https://superaicoach.com',
   email: 'hello@superaicoach.com',
   founder: {
@@ -194,59 +194,63 @@ export const DEFAULT_ORGANIZATION_DATA: OrganizationData = {
   },
   areaServed: ['United States', 'Philadelphia'],
   serviceType: [
-    'AI Productivity Membership',
-    'Curated AI Skills',
-    'AI Automation',
-    'AI Starter Kits',
+    'AI Training',
+    'Personal Coaching',
+    'Technology Consulting',
+    'Productivity Coaching',
   ],
   sameAs: ['https://x.com/andrewlevine'],
 }
 
 export const DEFAULT_FAQ_ITEMS: FAQItem[] = [
   {
-    question: 'Do I need to be technical?',
+    question: 'Do I need to pay to read the resources?',
     answer:
-      'No. If you can install an app and follow a setup guide, you can use this. The whole point is that someone else did the hard part.',
+      'No. The public library is designed to be useful on its own. The broader offer is a curated resources membership, which means some pieces can stay free while deeper collections, roundups, and implementation notes can live behind the membership over time.',
   },
   {
-    question: 'What AI tools does this work with?',
+    question: 'What kind of resources are included?',
     answer:
-      'The stack is built on OpenClaw — an open-source AI agent runtime. Skills work with ChatGPT, Claude, Gmail, Calendar, Apple Notes, Discord, GitHub, and many more.',
+      'We publish practical AI guides, workflow breakdowns, prompt patterns, and curated roundups of the best tools and ideas we find each week. The goal is not more noise. It is to save you from digging through endless AI content on your own.',
   },
   {
-    question: 'What do I actually get as a member?',
+    question: 'How often do you publish new material?',
     answer:
-      'Access to the full skill catalog with install guides, pre-built starter configs, the daily AI briefing newsletter, Discord community, and new releases as they ship.',
+      'The cadence is simple: a daily newsletter captures what is worth paying attention to, one new evergreen resource article is published each week, and the best ideas from the week are distilled into a weekly roundup.',
   },
   {
-    question: 'Is there a free tier?',
+    question: 'Is this coaching, a course, or a membership?',
     answer:
-      'Yes. The /resources page has free guides and articles. The daily newsletter preview is also free. Full skill catalog, configs, and community require membership.',
+      'The main offer here is the curated resources membership. Think of it as a practical research desk for busy people who want high-signal AI help without turning this into a full-time hobby. Coaching can still exist around the edges, but the core product is the library and weekly curation.',
   },
   {
-    question: 'How is this different from ChatGPT Plus or Claude Pro?',
+    question: 'Who is this for?',
     answer:
-      'Those are the AI models. This is the layer on top — pre-built workflows, integrations, and configs that make the models actually useful for daily work.',
+      'Busy professionals, founders, operators, and curious people who want to use AI well without becoming AI obsessives. If you want useful workflows, sharp explanations, and fewer rabbit holes, you are in the right place.',
   },
   {
-    question: 'Can I cancel anytime?',
+    question: 'How do you decide what makes the cut?',
     answer:
-      'Yes. No contracts, no commitment. Cancel from your account page.',
+      'We look for resources that are practical, trustworthy, and immediately usable. If something is flashy but not helpful in real work, it does not make the library. The bar is simple: it should save time, improve judgment, or unlock a workflow you can actually use.',
   },
 ]
 
 export const DEFAULT_HOW_TO_STEPS: HowToStep[] = [
   {
-    name: 'Pick your profile',
-    text: "Tell us what you use AI for — writing, research, content, building. We'll match you to a starter config.",
+    name: 'Book a free consult',
+    text: 'Start by booking a free 15-minute call to define the highest-value AI workflow for your current work.',
   },
   {
-    name: 'Install & go',
-    text: 'Download your config, install the skills, follow the quickstart. Most people are up in under 30 minutes.',
+    name: 'Share your real use case',
+    text: 'Bring one real writing, planning, research, or admin task. We use your live workflow instead of a generic demo.',
   },
   {
-    name: 'Stay current',
-    text: 'New skills, updated configs, and a daily briefing land in your inbox. Your AI stack keeps getting better without effort.',
+    name: 'Build your AI workflow',
+    text: 'In session, we configure prompts, process steps, and guardrails so the workflow is practical and repeatable.',
+  },
+  {
+    name: 'Run it immediately',
+    text: 'Before you leave, you run the workflow yourself and leave with next steps to keep momentum.',
   },
 ]
 
