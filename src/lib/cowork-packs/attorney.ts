@@ -1,63 +1,49 @@
 import type { CoworkPack } from './index'
 
 export const attorneyPack: CoworkPack = {
-  profession: 'attorney',
+  id: 'attorney',
   label: 'Attorney',
-  tagline: 'An AI assistant built around attorney work product.',
+  customInstructions:
+    'You are a lawyer\u2019s AI assistant. All output is attorney work product and preliminary only \u2014 never a substitute for professional legal judgment. Use clear, precise language. Flag jurisdiction-specific analysis needs. Use plain English for client communications. Always note that outputs require attorney review before sending. Do not make legal conclusions.',
   skillCards: [
     {
-      icon: 'ClipboardList',
-      title: 'Client Intake Summaries',
-      description: 'Turn raw intake notes into structured summaries with key facts, dates, and parties.',
+      title: 'Client intake summaries from raw notes',
+      description: 'Transform raw intake notes into a structured client summary ready for file creation.',
     },
     {
-      icon: 'Briefcase',
-      title: 'Matter Status Reports',
-      description: 'Generate concise status updates across your active matters from case files.',
+      title: 'Matter status reports from case files',
+      description: 'Generate concise status updates on open matters from case notes, filings, and correspondence.',
     },
     {
-      icon: 'BookOpen',
-      title: 'Research Brief Structure',
-      description: 'Organize source documents into a structured research brief with citations.',
+      title: 'Research brief structure from source documents',
+      description: 'Outline a research brief with key issues, applicable law, and open questions from uploaded sources.',
     },
     {
-      icon: 'CheckSquare',
-      title: 'Contract Review Checklist',
-      description: 'Generate a review checklist from any contract, flagging key terms and missing clauses.',
+      title: 'Contract review checklist generation',
+      description: 'Produce a prioritized review checklist for any contract type, flagging risk areas for attorney attention.',
     },
     {
-      icon: 'Mail',
-      title: 'Client Update Emails',
-      description: 'Draft plain-language client updates that translate legal status into clear next steps.',
+      title: 'Client update email drafting (plain language)',
+      description: 'Draft plain-language client updates that explain legal developments without jargon.',
     },
     {
-      icon: 'Clock',
-      title: 'Deadline Extraction',
-      description: 'Pull deadlines, filing dates, and task requirements from documents automatically.',
+      title: 'Deadline and task extraction from documents',
+      description: 'Extract all dates, deadlines, and action items from filings, orders, and correspondence.',
     },
-  ],
-  customInstructions:
-    'You are a lawyer\'s AI assistant. All output is attorney work product and preliminary only — never a substitute for professional legal judgment. Use clear, precise language. Flag jurisdiction-specific analysis needs. Use plain English for client communications. Always note that outputs require attorney review before sending. Do not make legal conclusions.',
-  folderStructure: [
-    '📁 Client Intake',
-    '📁 Active Matters',
-    '📁 Research & Briefs',
-    '📁 Contract Reviews',
-    '📁 Client Communications',
   ],
   workflows: [
-    {
-      name: 'Weekly Open Matter Tasks & Deadlines',
-      description: 'Every Monday, scan your active matters folder and produce a prioritized list of upcoming deadlines, filing dates, and open tasks.',
-    },
-    {
-      name: 'Pre-Call Matter History Summary',
-      description: 'Before a client call, generate a one-page summary covering: matter status, recent filings, key dates, and open questions.',
-    },
-    {
-      name: 'Post-Call Action Items + Client Update Draft',
-      description: 'After a call, extract decisions and next steps, then draft a plain-language client update email.',
-    },
+    'Weekly open matter tasks and deadlines',
+    'Pre-call matter history summary',
+    'Post-call action items + client update draft',
   ],
   connectors: ['Google Drive', 'Gmail'],
+  folderStructure: [
+    'Matters/',
+    'Matters/[Client — Matter Name]/',
+    'Intake Notes/',
+    'Research/',
+    'Contracts/',
+    'Correspondence/',
+    'Workflows/',
+  ],
 }
