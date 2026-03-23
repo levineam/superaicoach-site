@@ -5,9 +5,31 @@ import {
   verifySessionTokenEdge,
 } from '@/lib/mission-control/session-edge'
 
+// Lightweight cookie-presence check for /member routes
+// (full HMAC verification happens server-side in the layout)
+const MEMBER_PREFIXES = ['/member']
+
+function isMemberRoute(pathname: string): boolean {
+  return MEMBER_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  )
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname, origin } = request.nextUrl
 
+  // ── /member auth gate (cookie-presence only) ──
+  if (isMemberRoute(pathname)) {
+    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value
+    if (!sessionToken) {
+      const signInUrl = new URL('/sign-in', origin)
+      signInUrl.searchParams.set('next', pathname)
+      return NextResponse.redirect(signInUrl)
+    }
+    return NextResponse.next()
+  }
+
+  // ── /mission-control auth gate (full edge verification) ──
   if (!pathname.startsWith('/mission-control')) {
     return NextResponse.next()
   }
@@ -39,5 +61,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/mission-control/:path*'],
+  matcher: ['/member/:path*', '/mission-control/:path*'],
 }
