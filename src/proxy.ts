@@ -16,14 +16,16 @@ function isMemberRoute(pathname: string): boolean {
 }
 
 export async function proxy(request: NextRequest) {
-  const { pathname, origin } = request.nextUrl
+  const { pathname, search, origin } = request.nextUrl
+  /** Reconstruct the full path + query so redirects preserve query params. */
+  const fullPath = search ? `${pathname}${search}` : pathname
 
   // ── /member auth gate (cookie-presence only) ──
   if (isMemberRoute(pathname)) {
     const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value
     if (!sessionToken) {
       const signInUrl = new URL('/sign-in', origin)
-      signInUrl.searchParams.set('next', pathname)
+      signInUrl.searchParams.set('next', fullPath)
       return NextResponse.redirect(signInUrl)
     }
     return NextResponse.next()
@@ -38,7 +40,7 @@ export async function proxy(request: NextRequest) {
 
   if (!sessionCookie) {
     const redirectUrl = new URL('/sign-in', origin)
-    redirectUrl.searchParams.set('next', pathname)
+    redirectUrl.searchParams.set('next', fullPath)
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -46,7 +48,7 @@ export async function proxy(request: NextRequest) {
 
   if (!session) {
     const redirectUrl = new URL('/sign-in?error=session-expired', origin)
-    redirectUrl.searchParams.set('next', pathname)
+    redirectUrl.searchParams.set('next', fullPath)
     return NextResponse.redirect(redirectUrl)
   }
 

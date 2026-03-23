@@ -5,7 +5,7 @@ create table if not exists public.cowork_leads (
   id          uuid        primary key default gen_random_uuid(),
   email       text        not null,
   profession  text        not null check (profession in ('financial-advisor', 'attorney', 'executive')),
-  source      text        not null default 'unknown',
+  source      text        not null default 'cowork' check (source in ('cowork', 'landing', 'referral')),
   created_at  timestamptz not null default now()
 );
 

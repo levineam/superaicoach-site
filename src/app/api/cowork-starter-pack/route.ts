@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { packRegistry, VALID_PROFESSIONS } from '@/lib/cowork-packs/index'
 import type { ProfessionId } from '@/lib/cowork-packs/index'
+import { getMissionControlDbClient } from '@/lib/mission-control/db'
 
 interface Payload {
   email?: string
@@ -25,6 +26,30 @@ function getResend(): Resend {
 const FROM_ADDRESS = 'noreply@superaicoach.com'
 const DESTINATION_ADDRESS = 'hello@superaicoach.com'
 
+/** Allowed source values — must match the CHECK constraint in the cowork_leads migration. */
+const VALID_SOURCES = ['cowork', 'landing', 'referral'] as const
+type SourceId = (typeof VALID_SOURCES)[number]
+
+function isValidSource(value: unknown): value is SourceId {
+  return typeof value === 'string' && (VALID_SOURCES as readonly string[]).includes(value)
+}
+
+/* ── Simple in-memory rate limiter (per-IP, 5 requests / 15 min) ── */
+const RATE_WINDOW_MS = 15 * 60 * 1000
+const RATE_MAX = 5
+const ipHits = new Map<string, { count: number; resetAt: number }>()
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const entry = ipHits.get(ip)
+  if (!entry || now > entry.resetAt) {
+    ipHits.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS })
+    return false
+  }
+  entry.count += 1
+  return entry.count > RATE_MAX
+}
+
 function isValidEmail(value: unknown): value is string {
   if (typeof value !== 'string') return false
   return /^\S+@\S+\.\S+$/.test(value)
@@ -34,13 +59,23 @@ function isValidProfession(value: unknown): value is ProfessionId {
   return typeof value === 'string' && (VALID_PROFESSIONS as readonly string[]).includes(value)
 }
 
+/** Escape a string for safe embedding in HTML. */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function buildInternalNotificationHtml(email: string, profession: string, source: string): string {
   return `
 <div style="font-family: -apple-system, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; color: #0f172a;">
   <h2 style="font-size: 20px; margin-bottom: 12px;">New Cowork starter pack request</h2>
-  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px;"><strong>Email:</strong> ${email}</p>
-  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px;"><strong>Profession:</strong> ${profession}</p>
-  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px;"><strong>Source:</strong> ${source}</p>
+  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px;"><strong>Email:</strong> ${escapeHtml(email)}</p>
+  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px;"><strong>Profession:</strong> ${escapeHtml(profession)}</p>
+  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 8px;"><strong>Source:</strong> ${escapeHtml(source)}</p>
   <p style="font-size: 13px; color: #64748b; margin-top: 24px;">Sent automatically from the SuperAIcoach Cowork funnel.</p>
 </div>
 `.trim()
@@ -133,6 +168,16 @@ function buildPackEmailHtml(profession: ProfessionId): string {
 }
 
 export async function POST(request: Request) {
+  /* ── Rate-limit check ── */
+  const forwarded = request.headers.get('x-forwarded-for')
+  const ip = forwarded?.split(',')[0]?.trim() || 'unknown'
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { ok: false, error: 'Too many requests. Please try again later.' },
+      { status: 429 },
+    )
+  }
+
   let body: Payload
 
   try {
@@ -143,7 +188,7 @@ export async function POST(request: Request) {
 
   const email = body.email?.trim().toLowerCase()
   const profession = body.profession?.trim().toLowerCase()
-  const source = body.source?.trim() || 'unknown'
+  const source: SourceId = isValidSource(body.source?.trim()) ? body.source!.trim() as SourceId : 'cowork'
 
   if (!isValidEmail(email)) {
     return NextResponse.json({ ok: false, error: 'A valid email is required.' }, { status: 400 })
@@ -159,10 +204,16 @@ export async function POST(request: Request) {
     )
   }
 
-  // TODO: Insert lead into cowork_leads table once migration is applied.
-  // Example:
-  //   await supabaseAdmin.from('cowork_leads').insert({ email, profession, source, created_at: new Date().toISOString() })
-  // Do NOT add Supabase imports or code here until the migration is ready.
+  /* ── Persist lead (best-effort — email delivery is the priority) ── */
+  const db = getMissionControlDbClient()
+  if (db) {
+    const { error: dbError } = await db
+      .from('cowork_leads')
+      .insert({ email, profession, source, created_at: new Date().toISOString() })
+    if (dbError) {
+      console.error('[cowork-starter-pack] cowork_leads insert error:', dbError)
+    }
+  }
 
   try {
     const resend = getResend()

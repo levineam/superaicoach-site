@@ -47,6 +47,7 @@ export function ProfessionSelector() {
   const [email, setEmail] = React.useState('')
   const [status, setStatus] = React.useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = React.useState('')
+  const tabRefs = React.useRef<Map<ProfessionId, HTMLButtonElement | null>>(new Map())
 
   const pack: CoworkPack = packRegistry[activeProfession]
 
@@ -55,6 +56,31 @@ export function ProfessionSelector() {
     setStatus('idle')
     setMessage('')
     trackEvent('cowork_profession_select', { profession })
+  }
+
+  function handleTabKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    const currentIndex = VALID_PROFESSIONS.indexOf(activeProfession)
+    let nextIndex = -1
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      nextIndex = (currentIndex + 1) % VALID_PROFESSIONS.length
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      nextIndex = (currentIndex - 1 + VALID_PROFESSIONS.length) % VALID_PROFESSIONS.length
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      nextIndex = 0
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      nextIndex = VALID_PROFESSIONS.length - 1
+    }
+
+    if (nextIndex >= 0) {
+      const nextId = VALID_PROFESSIONS[nextIndex]
+      handleTabChange(nextId)
+      tabRefs.current.get(nextId)?.focus()
+    }
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -111,10 +137,14 @@ export function ProfessionSelector() {
           return (
             <button
               key={id}
+              ref={(el) => { tabRefs.current.set(id, el) }}
+              id={`profession-tab-${id}`}
               role="tab"
               aria-selected={isActive}
               aria-controls={`profession-panel-${id}`}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => handleTabChange(id)}
+              onKeyDown={handleTabKeyDown}
               className={cn(
                 'flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                 isActive
@@ -133,8 +163,9 @@ export function ProfessionSelector() {
       <div
         id={`profession-panel-${activeProfession}`}
         role="tabpanel"
+        aria-labelledby={`profession-tab-${activeProfession}`}
+        tabIndex={0}
         className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        aria-label={`${pack.label} skill cards`}
       >
         {pack.skillCards.map((card, index) => {
           const Icon = SKILL_ICONS[index % SKILL_ICONS.length]
