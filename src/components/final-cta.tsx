@@ -1,24 +1,28 @@
-import { ConsultationCTA } from "@/components/consultation-cta"
-import { ScrollReveal } from "@/components/scroll-reveal"
+import Link from 'next/link'
+
+import { MembershipWaitlistForm } from '@/components/membership-waitlist-form'
+import { ScrollReveal } from '@/components/scroll-reveal'
 
 export function FinalCTA() {
   return (
     <section id="cta" className="py-24 md:py-32">
       <ScrollReveal className="mx-auto max-w-3xl px-6 text-center">
         <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-          Ready to save hours every week with AI?
+          Stop configuring. Start using.
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-          Free 15-minute consults are opening soon. Click below to see how to get
-          early access.
+        <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
+          Join the waitlist and be first to get a curated AI stack that actually works.
         </p>
 
-        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <ConsultationCTA source="final-cta" />
+        <div className="mt-10 flex justify-center">
+          <MembershipWaitlistForm source="final-cta" buttonLabel="Join the Waitlist" />
         </div>
 
         <p className="mt-6 text-sm text-muted-foreground">
-          Prefer email? <a className="underline underline-offset-4 hover:text-foreground" href="mailto:hello@superaicoach.com?subject=Free%2015-min%20consult">hello@superaicoach.com</a>
+          Questions?{' '}
+          <Link className="underline underline-offset-4 hover:text-foreground" href="mailto:hello@superaicoach.com">
+            hello@superaicoach.com
+          </Link>
         </p>
       </ScrollReveal>
     </section>
