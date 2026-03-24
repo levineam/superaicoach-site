@@ -5,9 +5,33 @@ import {
   verifySessionTokenEdge,
 } from '@/lib/mission-control/session-edge'
 
-export async function proxy(request: NextRequest) {
-  const { pathname, origin } = request.nextUrl
+// Lightweight cookie-presence check for /member routes
+// (full HMAC verification happens server-side in the layout)
+const MEMBER_PREFIXES = ['/member']
 
+function isMemberRoute(pathname: string): boolean {
+  return MEMBER_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  )
+}
+
+export async function proxy(request: NextRequest) {
+  const { pathname, search, origin } = request.nextUrl
+  /** Reconstruct the full path + query so redirects preserve query params. */
+  const fullPath = search ? `${pathname}${search}` : pathname
+
+  // ── /member auth gate (cookie-presence only) ──
+  if (isMemberRoute(pathname)) {
+    const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value
+    if (!sessionToken) {
+      const signInUrl = new URL('/sign-in', origin)
+      signInUrl.searchParams.set('next', fullPath)
+      return NextResponse.redirect(signInUrl)
+    }
+    return NextResponse.next()
+  }
+
+  // ── /mission-control auth gate (full edge verification) ──
   if (!pathname.startsWith('/mission-control')) {
     return NextResponse.next()
   }
@@ -16,7 +40,7 @@ export async function proxy(request: NextRequest) {
 
   if (!sessionCookie) {
     const redirectUrl = new URL('/sign-in', origin)
-    redirectUrl.searchParams.set('next', pathname)
+    redirectUrl.searchParams.set('next', fullPath)
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -24,7 +48,7 @@ export async function proxy(request: NextRequest) {
 
   if (!session) {
     const redirectUrl = new URL('/sign-in?error=session-expired', origin)
-    redirectUrl.searchParams.set('next', pathname)
+    redirectUrl.searchParams.set('next', fullPath)
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -39,5 +63,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/mission-control/:path*'],
+  matcher: ['/member/:path*', '/mission-control/:path*'],
 }
