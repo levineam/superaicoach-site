@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 import * as LucideIcons from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -30,27 +31,29 @@ const categoryColors: Record<string, string> = {
 }
 
 export function SkillCard({ skill }: { skill: Skill }) {
-  const Icon = getIcon(skill.icon)
   const badgeColor = categoryColors[skill.category] ?? 'bg-muted text-muted-foreground'
+  const iconNode = React.createElement(getIcon(skill.icon), {
+    className: 'h-5 w-5 text-accent',
+  })
 
   return (
     <Link href={`/member/skills/${skill.slug}`}>
-      <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+      <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">
         <CardContent className="p-6">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="mb-3 flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10">
-              <Icon className="h-5 w-5 text-accent" />
+              {iconNode}
             </div>
             <div className="min-w-0">
-              <h3 className="font-semibold text-foreground truncate">{skill.name}</h3>
+              <h3 className="truncate font-semibold text-foreground">{skill.name}</h3>
               <span
-                className={`inline-block mt-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium ${badgeColor}`}
+                className={`mt-0.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${badgeColor}`}
               >
                 {skill.category}
               </span>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-2">{skill.oneLiner}</p>
+          <p className="line-clamp-2 text-sm text-muted-foreground">{skill.oneLiner}</p>
           {skill.envVars.length > 0 && (
             <p className="mt-3 text-xs text-muted-foreground/60">
               Requires: {skill.envVars.map((e) => e.name).join(', ')}
