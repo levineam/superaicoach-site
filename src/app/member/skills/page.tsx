@@ -1,7 +1,8 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
-import { Bot, Search } from 'lucide-react'
+import { ArrowRight, Bot, Search } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -26,20 +27,40 @@ export default function SkillsCatalog() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Skills Catalog</h1>
-        <p className="mt-2 text-muted-foreground">
-          Discover and install AI skills for your stack. Each skill adds new capabilities to your
-          agent.
-        </p>
+      <div className="mb-8 space-y-4">
+        <div>
+          <p className="text-sm font-medium text-accent">Secondary library</p>
+          <h1 className="text-3xl font-bold text-foreground">Tool library</h1>
+          <p className="mt-2 max-w-3xl text-muted-foreground">
+            Browse every tool in the stack when you want to go deeper. If you want the quickest
+            recommendation, start on the profession-first page and come back here only when you
+            need more control.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-dashed border-border/70 bg-muted/30 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-medium text-foreground">Want the simplest starting point?</h2>
+              <p className="text-sm text-muted-foreground">
+                Use the starter page to get a profession + platform recommendation first.
+              </p>
+            </div>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/member">
+                Go to Start here
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </div>
 
-      {/* Search and filter */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search skills..."
+            placeholder="Search tools..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -59,7 +80,6 @@ export default function SkillsCatalog() {
         </div>
       </div>
 
-      {/* Skills grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((skill) => (
           <SkillCard key={skill.slug} skill={skill} />
@@ -69,7 +89,7 @@ export default function SkillsCatalog() {
       {filtered.length === 0 && (
         <div className="py-12 text-center">
           <Bot className="mx-auto h-12 w-12 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-medium text-foreground">No skills found</h3>
+          <h3 className="mt-4 text-lg font-medium text-foreground">No tools found</h3>
           <p className="mt-2 text-muted-foreground">Try adjusting your search or filter.</p>
         </div>
       )}

@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: ConfigDetailPageProps) {
   const config = configs.find((c) => c.slug === slug)
   if (!config) return { title: 'Config Not Found' }
   return {
-    title: `${config.name} Config | SuperAIcoach`,
+    title: `${config.name} Setup | SuperAIcoach`,
     description: config.description,
   }
 }
@@ -64,7 +64,7 @@ export default async function ConfigDetailPage({
         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Configs
+        Back to Setup Library
       </Link>
 
       {/* Header */}
@@ -163,7 +163,7 @@ export default async function ConfigDetailPage({
       {/* CTA */}
       <div className="flex justify-center gap-4">
         <Button asChild>
-          <Link href="/member/skills">Browse All Skills</Link>
+          <Link href="/member/skills">Browse Tool Library</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href="/member/community">Get Help</Link>

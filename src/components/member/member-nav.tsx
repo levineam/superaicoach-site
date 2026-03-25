@@ -2,14 +2,22 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Package, Settings, Mail, Users, User, LayoutDashboard, LogOut } from 'lucide-react'
+import {
+  FolderKanban,
+  LayoutDashboard,
+  Library,
+  LogOut,
+  Mail,
+  User,
+  Users,
+} from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
 const memberLinks = [
-  { label: 'Dashboard', href: '/member', icon: LayoutDashboard },
-  { label: 'Skills', href: '/member/skills', icon: Package },
-  { label: 'Configs', href: '/member/configs', icon: Settings },
+  { label: 'Start here', href: '/member', icon: LayoutDashboard },
+  { label: 'Tool library', href: '/member/skills', icon: Library },
+  { label: 'Setup library', href: '/member/configs', icon: FolderKanban },
   { label: 'Newsletter', href: '/member/newsletter', icon: Mail },
   { label: 'Community', href: '/member/community', icon: Users },
   { label: 'Account', href: '/member/account', icon: User },
@@ -64,7 +72,6 @@ export function MemberNav() {
         </form>
       </div>
 
-      {/* Mobile nav */}
       <div className="flex items-center gap-1 overflow-x-auto px-6 pb-2 md:hidden">
         {memberLinks.map((link) => (
           <Link

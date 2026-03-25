@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Briefcase, Code, PenTool, Search } from 'lucide-react'
+import { ArrowRight, Briefcase, Code, FolderKanban, PenTool, Search } from 'lucide-react'
 
 import {
   Card,
@@ -19,26 +19,47 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 }
 
 export const metadata = {
-  title: 'Starter Configs | SuperAIcoach',
-  description: 'Pre-built agent configurations for different use cases',
+  title: 'Setup Library | SuperAIcoach',
+  description: 'Browse the full library of starter setups and building blocks',
 }
 
 export default function ConfigsPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Starter Configs
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Pre-built configurations that bundle the right skills for your
-          workflow. Pick one, customize it, and start working.
-        </p>
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm font-medium text-accent">Secondary library</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Setup library
+          </h1>
+          <p className="mt-2 max-w-3xl text-muted-foreground">
+            These are the underlying starter setups and building blocks behind the recommended
+            paths. If you want the quickest answer, start on the profession-first page first.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-dashed border-border/70 bg-muted/30 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-medium text-foreground">Start with the shortest path</h2>
+              <p className="text-sm text-muted-foreground">
+                Pick your profession and platform first, then use this library only if you want to
+                customize the recommendation.
+              </p>
+            </div>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/member">
+                Go to Start here
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         {configs.map((config) => {
-          const Icon = iconMap[config.icon] || Briefcase
+          const Icon = iconMap[config.icon] || FolderKanban
           return (
             <Link key={config.slug} href={`/member/configs/${config.slug}`}>
               <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">
@@ -50,7 +71,7 @@ export default function ConfigsPage() {
                     <div>
                       <CardTitle>{config.name}</CardTitle>
                       <CardDescription>
-                        {config.skills.length} skills included
+                        {config.skills.length} tools included
                       </CardDescription>
                     </div>
                   </div>
@@ -70,7 +91,7 @@ export default function ConfigsPage() {
                     ))}
                   </div>
                   <Button variant="outline" size="sm" className="w-full">
-                    View Details
+                    View setup details
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </CardContent>
