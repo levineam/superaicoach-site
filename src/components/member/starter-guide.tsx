@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -20,10 +20,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  DEFAULT_PLATFORM,
+  DEFAULT_PROFESSION,
+  rememberStarterVisit,
+  readPreviousStarterVisit,
+  trackStarterLibraryBrowseClicked,
+  trackStarterPageView,
+  trackStarterPlatformSelected,
+  trackStarterProfessionSelected,
+  trackStarterReturnVisit,
+  trackStarterWorkflowStarted,
+  type StarterPlatformKey as PlatformKey,
+  type StarterProfessionKey as ProfessionKey,
+} from '@/lib/analytics/starter-page'
 import { cn } from '@/lib/utils'
-
-type ProfessionKey = 'consultant' | 'wealth-manager' | 'attorney'
-type PlatformKey = 'openclaw' | 'claude'
 
 type ToolRecommendation = {
   slug: string
@@ -351,14 +362,52 @@ const platformOptions: { key: PlatformKey; label: string; description: string }[
 ]
 
 export function StarterGuide({ displayName }: { displayName?: string }) {
-  const [profession, setProfession] = useState<ProfessionKey>('consultant')
-  const [platform, setPlatform] = useState<PlatformKey>('openclaw')
+  const [profession, setProfession] = useState<ProfessionKey>(DEFAULT_PROFESSION)
+  const [platform, setPlatform] = useState<PlatformKey>(DEFAULT_PLATFORM)
+
+  useEffect(() => {
+    trackStarterPageView({
+      profession: DEFAULT_PROFESSION,
+      platform: DEFAULT_PLATFORM,
+    })
+
+    const previousVisitAt = readPreviousStarterVisit()
+    if (previousVisitAt) {
+      trackStarterReturnVisit({
+        profession: DEFAULT_PROFESSION,
+        platform: DEFAULT_PLATFORM,
+        previousVisitAt,
+      })
+    }
+
+    rememberStarterVisit()
+  }, [])
 
   const professionConfig = professionRecommendations[profession]
   const activeTrack = useMemo(
     () => professionConfig[platform],
     [platform, professionConfig],
   )
+
+  function handleProfessionChange(nextProfession: ProfessionKey) {
+    if (nextProfession === profession) return
+
+    setProfession(nextProfession)
+    trackStarterProfessionSelected({
+      profession: nextProfession,
+      platform,
+    })
+  }
+
+  function handlePlatformChange(nextPlatform: PlatformKey) {
+    if (nextPlatform === platform) return
+
+    setPlatform(nextPlatform)
+    trackStarterPlatformSelected({
+      profession,
+      platform: nextPlatform,
+    })
+  }
 
   return (
     <div className="space-y-8">
@@ -412,7 +461,7 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
                   <button
                     key={key}
                     type="button"
-                    onClick={() => setProfession(key)}
+                    onClick={() => handleProfessionChange(key)}
                     aria-pressed={isActive}
                     className={cn(
                       'w-full rounded-2xl border p-4 text-left transition-all',
@@ -452,7 +501,7 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
                       <button
                         key={option.key}
                         type="button"
-                        onClick={() => setPlatform(option.key)}
+                        onClick={() => handlePlatformChange(option.key)}
                         aria-pressed={isActive}
                         className={cn(
                           'rounded-full border px-4 py-2 text-sm font-medium transition-colors',
@@ -487,7 +536,16 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
               </CardHeader>
               <CardContent>
                 <Button asChild className="w-full justify-between rounded-full">
-                  <Link href={activeTrack.setupHref}>
+                  <Link
+                    href={activeTrack.setupHref}
+                    onClick={() =>
+                      trackStarterWorkflowStarted({
+                        profession,
+                        platform,
+                        targetHref: activeTrack.setupHref,
+                      })
+                    }
+                  >
                     {activeTrack.setupCta}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -574,13 +632,33 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
         </CardHeader>
         <CardContent className="flex flex-col gap-3 sm:flex-row">
           <Button asChild variant="outline" className="rounded-full">
-            <Link href="/member/skills">
+            <Link
+              href="/member/skills"
+              onClick={() =>
+                trackStarterLibraryBrowseClicked({
+                  profession,
+                  platform,
+                  library: 'tool_library',
+                  targetHref: '/member/skills',
+                })
+              }
+            >
               Tool library
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
           <Button asChild variant="outline" className="rounded-full">
-            <Link href="/member/configs">
+            <Link
+              href="/member/configs"
+              onClick={() =>
+                trackStarterLibraryBrowseClicked({
+                  profession,
+                  platform,
+                  library: 'setup_library',
+                  targetHref: '/member/configs',
+                })
+              }
+            >
               Setup library
               <FolderKanban className="h-4 w-4" />
             </Link>
