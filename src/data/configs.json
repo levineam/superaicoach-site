@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "productivity",
+    "name": "Productivity",
+    "description": "Your AI-powered daily driver. Email management, calendar scheduling, task tracking, and note-taking all wired into one cohesive workflow.",
+    "icon": "Briefcase",
+    "skills": ["gog", "apple-notes", "apple-reminders", "obsidian"],
+    "quickstart": "1. Install the Productivity config:\n```bash\nopenclaw config install productivity\n```\n\n2. Authenticate Google Workspace:\n```bash\ngog auth login\n```\n\n3. Set your Obsidian vault path in `openclaw.json`:\n```json\n{\n  \"skills\": [\"gog\", \"apple-notes\", \"apple-reminders\", \"obsidian\"],\n  \"config\": {\n    \"obsidian\": {\n      \"vaultPath\": \"~/Documents/ObsidianVault\"\n    }\n  }\n}\n```\n\n4. Start your agent:\n```bash\nopenclaw start\n```"
+  },
+  {
+    "slug": "content-creator",
+    "name": "Content Creator",
+    "description": "Write, polish, and publish content that sounds human. Blog posts, social media, newsletters — with built-in humanization and video transcript extraction.",
+    "icon": "PenTool",
+    "skills": ["humanizer", "video-transcript", "web-search", "obsidian"],
+    "quickstart": "1. Install the Content Creator config:\n```bash\nopenclaw config install content-creator\n```\n\n2. Install video tools:\n```bash\nbrew install yt-dlp ffmpeg\n```\n\n3. Get a Brave Search API key from https://brave.com/search/api/\n\n4. Configure:\n```json\n{\n  \"skills\": [\"humanizer\", \"video-transcript-downloader\", \"web-search\", \"obsidian\"],\n  \"env\": {\n    \"BRAVE_SEARCH_API_KEY\": \"your_key\"\n  }\n}\n```\n\n5. Start creating:\n```bash\nopenclaw start\n```"
+  },
+  {
+    "slug": "researcher",
+    "name": "Researcher",
+    "description": "Deep research and knowledge synthesis. Web search, content extraction, note-taking, and context engineering for thorough investigation of any topic.",
+    "icon": "Search",
+    "skills": ["web-search", "context-engineering", "obsidian", "video-transcript"],
+    "quickstart": "1. Install the Researcher config:\n```bash\nopenclaw config install researcher\n```\n\n2. Set up search:\n```bash\nexport BRAVE_SEARCH_API_KEY=your_key\n```\n\n3. Configure:\n```json\n{\n  \"skills\": [\"web-search\", \"context-engineering\", \"obsidian\", \"video-transcript-downloader\"],\n  \"config\": {\n    \"obsidian\": {\n      \"vaultPath\": \"~/Documents/Research\"\n    }\n  }\n}\n```\n\n4. Start researching:\n```bash\nopenclaw start\n```"
+  },
+  {
+    "slug": "builder",
+    "name": "Builder",
+    "description": "Ship code faster. GitHub integration, context-aware development, code review, and CI monitoring for developers who want an AI pair programmer.",
+    "icon": "Code",
+    "skills": ["github", "context-engineering", "web-search", "discord"],
+    "quickstart": "1. Install the Builder config:\n```bash\nopenclaw config install builder\n```\n\n2. Authenticate GitHub:\n```bash\ngh auth login\n```\n\n3. Configure:\n```json\n{\n  \"skills\": [\"github\", \"context-engineering\", \"web-search\", \"discord\"],\n  \"env\": {\n    \"GITHUB_TOKEN\": \"your_token\"\n  }\n}\n```\n\n4. Start building:\n```bash\nopenclaw start\n```"
+  }
+]

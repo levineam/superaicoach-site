@@ -65,9 +65,8 @@ export function SignInForm({
 
         const payload = (await apiResponse.json()) as PasswordResponse
 
-        if (payload.ok && payload.tenantSlug) {
-          // Redirect to mission control
-          router.push(`/mission-control/${payload.tenantSlug}`)
+        if (payload.ok) {
+          router.push(nextPath || '/member')
         } else {
           setPasswordResponse(payload)
         }

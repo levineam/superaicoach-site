@@ -1,0 +1,399 @@
+[
+  {
+    "slug": "gog",
+    "name": "Gmail & Calendar (gog)",
+    "category": "Productivity",
+    "oneLiner": "Full Google Workspace CLI — Gmail, Calendar, Drive, Contacts, Sheets, and Docs.",
+    "icon": "Mail",
+    "description": "Full Google Workspace CLI integration — Gmail, Calendar, Drive, Contacts, Sheets, and Docs. Read emails, create events, search files, and manage your entire Google Workspace from your AI agent.",
+    "useCases": [
+      "Check and summarize unread emails",
+      "Create calendar events with attendees",
+      "Search Google Drive for documents",
+      "Draft and send emails on your behalf"
+    ],
+    "installSteps": [
+      "Install the gog CLI:\n```bash\nnpm install -g @anthropic/gog\n```",
+      "Configure Google OAuth credentials:\n```bash\ngog auth login\n```",
+      "Add to your OpenClaw skill config:\n```json\n{\n  \"skills\": [\"gog\"]\n}\n```"
+    ],
+    "envVars": [
+      { "name": "GOG_CREDENTIALS_PATH", "description": "Path to your Google OAuth credentials JSON file" }
+    ],
+    "relatedSlugs": ["apple-reminders", "apple-notes"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "apple-reminders",
+    "name": "Apple Reminders",
+    "category": "Productivity",
+    "oneLiner": "Manage Apple Reminders via remindctl — add, complete, list, and organize tasks.",
+    "icon": "Bell",
+    "description": "Manage Apple Reminders via the remindctl CLI. List, add, edit, complete, and delete reminders. Supports lists, date filters, and JSON output.",
+    "useCases": [
+      "Add reminders from conversation context",
+      "Check upcoming tasks and deadlines",
+      "Complete or reschedule reminders",
+      "Organize reminders into lists"
+    ],
+    "installSteps": [
+      "Install remindctl (macOS only):\n```bash\nbrew install remindctl\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"apple-reminders\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["gog", "apple-notes"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "apple-notes",
+    "name": "Apple Notes",
+    "category": "Productivity",
+    "oneLiner": "Create, search, edit, and organize Apple Notes from your agent.",
+    "icon": "StickyNote",
+    "description": "Manage Apple Notes via the memo CLI on macOS — create, view, edit, delete, search, move, and export notes. Full integration with your Notes.app folders and content.",
+    "useCases": [
+      "Create and organize notes from conversations",
+      "Search existing notes for information",
+      "Move notes between folders",
+      "Export notes for backup or sharing"
+    ],
+    "installSteps": [
+      "Install the memo CLI (macOS only):\n```bash\nbrew install memo\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"apple-notes\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["obsidian", "apple-reminders"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "weather",
+    "name": "Weather",
+    "category": "Productivity",
+    "oneLiner": "Current weather and forecasts for any location — no API key needed.",
+    "icon": "Cloud",
+    "description": "Get current weather and forecasts via wttr.in or Open-Meteo. No API key needed. Quick weather checks for any location worldwide.",
+    "useCases": [
+      "Check current weather before heading out",
+      "Get multi-day forecasts",
+      "Weather-aware scheduling suggestions",
+      "Travel weather planning"
+    ],
+    "installSteps": [
+      "Weather is a built-in skill with no dependencies. Add to your agent config:\n```json\n{\n  \"skills\": [\"weather\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["gog"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "obsidian",
+    "name": "Obsidian Vault",
+    "category": "Research",
+    "oneLiner": "Read, write, search, and organize your Obsidian knowledge base.",
+    "icon": "BookOpen",
+    "description": "Work with Obsidian vaults (plain Markdown notes) and automate via obsidian-cli. Read, write, search, and organize your knowledge base.",
+    "useCases": [
+      "Search and retrieve notes from your vault",
+      "Create new notes with proper linking",
+      "Organize and tag existing notes",
+      "Generate daily notes and templates"
+    ],
+    "installSteps": [
+      "Ensure your Obsidian vault is accessible:\n```bash\nls ~/Documents/ObsidianVault\n```",
+      "Add to your agent config with vault path:\n```json\n{\n  \"skills\": [\"obsidian\"],\n  \"config\": {\n    \"obsidian\": {\n      \"vaultPath\": \"~/Documents/ObsidianVault\"\n    }\n  }\n}\n```"
+    ],
+    "envVars": [
+      { "name": "OBSIDIAN_VAULT_PATH", "description": "Path to your Obsidian vault directory" }
+    ],
+    "relatedSlugs": ["apple-notes", "qmd"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "humanizer",
+    "name": "Humanizer",
+    "category": "Content",
+    "oneLiner": "Remove signs of AI-generated writing and make text sound natural.",
+    "icon": "Pen",
+    "description": "Remove signs of AI-generated writing from text. Detects and fixes patterns including inflated symbolism, promotional language, AI vocabulary words, em dash overuse, rule of three, and more. Based on Wikipedia's comprehensive guide.",
+    "useCases": [
+      "Clean up AI-drafted blog posts",
+      "Make marketing copy sound natural",
+      "Edit newsletter content for authenticity",
+      "Review and polish social media posts"
+    ],
+    "installSteps": [
+      "Humanizer is a built-in skill. Add to your agent config:\n```json\n{\n  \"skills\": [\"humanizer\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["x-post"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "x-post",
+    "name": "X Post Drafter",
+    "category": "Content",
+    "oneLiner": "Draft engaging X (Twitter) posts and save to your Obsidian vault.",
+    "icon": "Share2",
+    "description": "Draft X (Twitter) posts for your audience. Creates accessible, engaging content and saves drafts to your Obsidian vault for review before publishing.",
+    "useCases": [
+      "Draft tweet threads from research notes",
+      "Repurpose blog content into social posts",
+      "Schedule and organize post ideas",
+      "Get feedback on draft posts before publishing"
+    ],
+    "installSteps": [
+      "X Post Drafter is a built-in skill. Add to your agent config:\n```json\n{\n  \"skills\": [\"x-post\"]\n}\n```",
+      "Optionally configure an Obsidian vault for draft storage:\n```json\n{\n  \"config\": {\n    \"obsidian\": {\n      \"vaultPath\": \"~/Documents/ObsidianVault\"\n    }\n  }\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["humanizer", "obsidian"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "video-transcript",
+    "name": "Video Transcript Downloader",
+    "category": "Media",
+    "oneLiner": "Download videos, audio, subtitles, and clean transcripts from YouTube and more.",
+    "icon": "Video",
+    "description": "Download videos, audio, subtitles, and clean paragraph-style transcripts from YouTube and any yt-dlp supported site. Supports multiple formats and languages.",
+    "useCases": [
+      "Get transcripts from YouTube videos",
+      "Download audio for offline listening",
+      "Extract subtitles in multiple languages",
+      "Convert video content to text for analysis"
+    ],
+    "installSteps": [
+      "Install yt-dlp and ffmpeg:\n```bash\nbrew install yt-dlp ffmpeg\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"video-transcript-downloader\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["openai-whisper-api"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "lastxdays",
+    "name": "Last X Days",
+    "category": "Research",
+    "oneLiner": "Research and summarize what happened in a topic over the last N days.",
+    "icon": "CalendarDays",
+    "description": "Research and summarize what happened in the last N days (or a date range) about any topic. Optionally uses Reddit API and X ingestion with graceful fallback to web search.",
+    "useCases": [
+      "Catch up on a topic you missed for a week",
+      "Summarize recent developments in a project",
+      "Track competitor or industry news over time",
+      "Generate weekly recap reports"
+    ],
+    "installSteps": [
+      "Last X Days is a built-in skill. Add to your agent config:\n```json\n{\n  \"skills\": [\"lastxdays\"]\n}\n```",
+      "Optionally configure API keys for richer data sources:\n```bash\nexport REDDIT_CLIENT_ID=your_id\nexport REDDIT_CLIENT_SECRET=your_secret\n```"
+    ],
+    "envVars": [
+      { "name": "REDDIT_CLIENT_ID", "description": "Reddit API client ID (optional, for Reddit search)" },
+      { "name": "REDDIT_CLIENT_SECRET", "description": "Reddit API client secret (optional)" }
+    ],
+    "relatedSlugs": ["web-search", "obsidian"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "qmd",
+    "name": "QMD Note Search",
+    "category": "Research",
+    "oneLiner": "Local hybrid search for markdown notes and docs across indexed collections.",
+    "icon": "SearchCode",
+    "description": "Local hybrid search for markdown notes and docs. Search across indexed collections using semantic and keyword matching to find related content quickly.",
+    "useCases": [
+      "Find related notes across large vaults",
+      "Search documentation by meaning, not just keywords",
+      "Retrieve context for ongoing projects",
+      "Cross-reference research across collections"
+    ],
+    "installSteps": [
+      "Install qmd:\n```bash\nnpm install -g qmd\n```",
+      "Index your markdown collections:\n```bash\nqmd index ~/Documents/notes\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"qmd\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["obsidian", "lastxdays"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "github",
+    "name": "GitHub",
+    "category": "AI/Dev",
+    "oneLiner": "Issues, PRs, CI runs, code review, and API queries via the gh CLI.",
+    "icon": "Github",
+    "description": "GitHub operations via gh CLI — issues, PRs, CI runs, code review, API queries. Full integration with your GitHub workflow for repository management.",
+    "useCases": [
+      "Check PR status and CI results",
+      "Create and manage issues",
+      "Review code changes",
+      "Monitor repository activity"
+    ],
+    "installSteps": [
+      "Install the GitHub CLI:\n```bash\nbrew install gh\n```",
+      "Authenticate with your account:\n```bash\ngh auth login\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"github\"]\n}\n```"
+    ],
+    "envVars": [
+      { "name": "GITHUB_TOKEN", "description": "GitHub personal access token (or use gh auth login)" }
+    ],
+    "relatedSlugs": ["gh-issues", "workflow-execution"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "gh-issues",
+    "name": "GitHub Issues Automation",
+    "category": "AI/Dev",
+    "oneLiner": "Fetch issues, spawn agents to implement fixes, open PRs, and monitor reviews.",
+    "icon": "GitPullRequest",
+    "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Supports labels, milestones, assignees, forks, and cron scheduling.",
+    "useCases": [
+      "Auto-fix labeled issues and open PRs",
+      "Monitor and respond to PR review comments",
+      "Batch-process issue backlogs with sub-agents",
+      "Schedule periodic issue triage runs"
+    ],
+    "installSteps": [
+      "Ensure gh CLI is installed and authenticated:\n```bash\nbrew install gh && gh auth login\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"gh-issues\"]\n}\n```",
+      "Run with options:\n```bash\n/gh-issues owner/repo --label bug --limit 5\n```"
+    ],
+    "envVars": [
+      { "name": "GITHUB_TOKEN", "description": "GitHub personal access token" }
+    ],
+    "relatedSlugs": ["github", "workflow-execution"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "workflow-execution",
+    "name": "Workflow Execution",
+    "category": "AI/Dev",
+    "oneLiner": "Plan-first workflow with subagent routing, verification, and lessons loop.",
+    "icon": "Workflow",
+    "description": "Execute non-trivial work with a plan-first workflow, default subagent routing, required verification evidence, and a lessons loop. Use for multi-step tasks, architecture decisions, risky edits, or iterative bug-fixing.",
+    "useCases": [
+      "Multi-step feature implementation with verification",
+      "Architecture and strategy decision workflows",
+      "Iterative bug-fixing with evidence collection",
+      "Complex refactoring with rollback safety"
+    ],
+    "installSteps": [
+      "Workflow Execution is a built-in skill. Add to your agent config:\n```json\n{\n  \"skills\": [\"workflow-execution\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["github", "gh-issues"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "openai-whisper-api",
+    "name": "OpenAI Whisper Transcription",
+    "category": "Media",
+    "oneLiner": "Transcribe audio files via the OpenAI Whisper API.",
+    "icon": "Mic",
+    "description": "Transcribe audio via OpenAI Audio Transcriptions API (Whisper). Supports various audio formats and produces accurate text transcriptions.",
+    "useCases": [
+      "Transcribe meeting recordings",
+      "Convert voice memos to text",
+      "Generate subtitles for video content",
+      "Process podcast episodes into searchable text"
+    ],
+    "installSteps": [
+      "Set your OpenAI API key:\n```bash\nexport OPENAI_API_KEY=sk-your-key-here\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"openai-whisper-api\"]\n}\n```"
+    ],
+    "envVars": [
+      { "name": "OPENAI_API_KEY", "description": "OpenAI API key for Whisper transcription access" }
+    ],
+    "relatedSlugs": ["video-transcript"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "context-engineering",
+    "name": "Context Engineering",
+    "category": "AI/Dev",
+    "oneLiner": "Optimize context windows, multi-agent patterns, memory, and evaluation frameworks.",
+    "icon": "Brain",
+    "description": "Comprehensive context engineering guidance for AI agent systems. Routes to specialized sub-skills for production agent work including context optimization, multi-agent patterns, memory systems, and evaluation frameworks.",
+    "useCases": [
+      "Optimize token costs and context windows",
+      "Design multi-agent systems",
+      "Implement memory and filesystem-backed context",
+      "Debug agent failures and context degradation"
+    ],
+    "installSteps": [
+      "Context Engineering is a built-in skill. Add to your agent config:\n```json\n{\n  \"skills\": [\"context-engineering\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["workflow-execution"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "imsg",
+    "name": "iMessage",
+    "category": "Communication",
+    "oneLiner": "Read, search, and send iMessages and SMS from your agent.",
+    "icon": "MessageSquare",
+    "description": "iMessage/SMS CLI for listing chats, viewing message history, and sending messages via Messages.app on macOS.",
+    "useCases": [
+      "Read recent messages from contacts",
+      "Send quick replies",
+      "Search message history",
+      "List active conversations"
+    ],
+    "installSteps": [
+      "Grant Full Disk Access to your terminal app in System Settings > Privacy & Security.",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"imsg\"]\n}\n```"
+    ],
+    "envVars": [],
+    "relatedSlugs": ["discord"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "web-search",
+    "name": "Web Search & Fetch",
+    "category": "Research",
+    "oneLiner": "Search the web and extract readable content from any URL.",
+    "icon": "Globe",
+    "description": "Search the web using Brave Search API and fetch readable content from URLs. Supports region-specific and localized search with customizable result counts.",
+    "useCases": [
+      "Research topics and gather information",
+      "Fact-check claims with current sources",
+      "Extract content from web pages",
+      "Find documentation and tutorials"
+    ],
+    "installSteps": [
+      "Get a Brave Search API key from https://brave.com/search/api/",
+      "Add your API key to the environment:\n```bash\nexport BRAVE_SEARCH_API_KEY=your_key_here\n```",
+      "Add to your agent config:\n```json\n{\n  \"skills\": [\"web-search\"]\n}\n```"
+    ],
+    "envVars": [
+      { "name": "BRAVE_SEARCH_API_KEY", "description": "Brave Search API key for web searches" }
+    ],
+    "relatedSlugs": ["lastxdays", "qmd"],
+    "updatedAt": "2026-03-24"
+  },
+  {
+    "slug": "discord",
+    "name": "Discord",
+    "category": "Communication",
+    "oneLiner": "Send messages, manage channels, and interact with Discord servers.",
+    "icon": "MessageCircle",
+    "description": "Discord operations via the message tool. Send messages, manage channels, and interact with Discord servers through your AI agent.",
+    "useCases": [
+      "Send updates to Discord channels",
+      "Monitor and respond to messages",
+      "Manage server notifications",
+      "Post automated reports"
+    ],
+    "installSteps": [
+      "Create a Discord bot at https://discord.com/developers",
+      "Add bot token to your config:\n```json\n{\n  \"messaging\": {\n    \"discord\": {\n      \"token\": \"your_bot_token\"\n    }\n  }\n}\n```",
+      "Add the skill:\n```json\n{\n  \"skills\": [\"discord\"]\n}\n```"
+    ],
+    "envVars": [
+      { "name": "DISCORD_BOT_TOKEN", "description": "Discord bot token for API access" }
+    ],
+    "relatedSlugs": ["imsg"],
+    "updatedAt": "2026-03-24"
+  }
+]

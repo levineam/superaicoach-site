@@ -1,4 +1,27 @@
-import { Settings } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, Briefcase, Code, PenTool, Search } from 'lucide-react'
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import configs from '@/data/configs.json'
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Briefcase,
+  PenTool,
+  Search,
+  Code,
+}
+
+export const metadata = {
+  title: 'Starter Configs | SuperAIcoach',
+  description: 'Pre-built agent configurations for different use cases',
+}
 
 export default function ConfigsPage() {
   return (
@@ -8,21 +31,53 @@ export default function ConfigsPage() {
           Starter Configs
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Pre-built OpenClaw configuration packages — pick a profile and get a working AI
-          assistant in minutes.
+          Pre-built configurations that bundle the right skills for your
+          workflow. Pick one, customize it, and start working.
         </p>
       </div>
 
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
-        <Settings className="mb-4 h-12 w-12 text-muted-foreground/40" />
-        <h2 className="text-lg font-semibold text-foreground">
-          Coming soon
-        </h2>
-        <p className="mt-2 max-w-md text-sm text-muted-foreground">
-          Four starter configs — Productivity, Content Creator, Researcher, and Builder —
-          are being packaged. Each includes curated skills, a sample config, and a
-          quickstart guide.
-        </p>
+      <div className="grid gap-6 md:grid-cols-2">
+        {configs.map((config) => {
+          const Icon = iconMap[config.icon] || Briefcase
+          return (
+            <Link key={config.slug} href={`/member/configs/${config.slug}`}>
+              <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
+                      <Icon className="h-6 w-6 text-accent" />
+                    </div>
+                    <div>
+                      <CardTitle>{config.name}</CardTitle>
+                      <CardDescription>
+                        {config.skills.length} skills included
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    {config.description}
+                  </p>
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {config.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <Button variant="outline" size="sm" className="w-full">
+                    View Details
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )
