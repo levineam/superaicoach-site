@@ -61,42 +61,42 @@ export default function ConfigsPage() {
         {configs.map((config) => {
           const Icon = iconMap[config.icon] || FolderKanban
           return (
-            <Link key={config.slug} href={`/member/configs/${config.slug}`}>
-              <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
-                      <Icon className="h-6 w-6 text-accent" />
-                    </div>
-                    <div>
-                      <CardTitle>{config.name}</CardTitle>
-                      <CardDescription>
-                        {config.skills.length} tools included
-                      </CardDescription>
-                    </div>
+            <Card key={config.slug} className="h-full transition-shadow hover:shadow-md">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
+                    <Icon className="h-6 w-6 text-accent" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    {config.description}
-                  </p>
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    {config.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                  <div>
+                    <CardTitle>{config.name}</CardTitle>
+                    <CardDescription>
+                      {config.skills.length} tools included
+                    </CardDescription>
                   </div>
-                  <Button variant="outline" size="sm" className="w-full">
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="mb-4 text-sm text-muted-foreground">
+                  {config.description}
+                </p>
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {config.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+                <Button asChild variant="outline" size="sm" className="w-full">
+                  <Link href={`/member/configs/${config.slug}`}>
                     View setup details
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </Link>
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
           )
         })}
       </div>
