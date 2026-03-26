@@ -269,38 +269,25 @@ function StepBundleCatalog({
   const bundles = getBundlesForSelection(profession as Profession, platform)
   const [activated, setActivated] = useState<Set<string>>(new Set())
   const allActivated = bundles.length > 0 && bundles.every((b) => activated.has(b.id))
+  const selectedCount = activated.size
 
   const profLabel =
     professionBundles[profession as Profession]?.label ??
     PROFESSION_LABELS[profession]
   const platformLabel = platform === 'claude' ? 'Claude' : 'OpenClaw'
-
-  function setupHref(bundle: Bundle): string {
-    if (bundle.platform === 'OpenClaw') return '/member/configs/productivity'
-    if (bundle.platform === 'Claude') return '/member/skills'
-    // Claude & OpenClaw — route based on user's chosen platform
-    return platform === 'claude' ? '/member/skills' : '/member/configs/productivity'
-  }
+  const setupHref = platform === 'claude' ? '/member/skills' : '/member/configs/productivity'
 
   function handleActivate(bundle: Bundle) {
-    if (activated.has(bundle.id)) return
-    setActivated((prev) => new Set(prev).add(bundle.id))
-    onSetupClick(setupHref(bundle))
+    setActivated((prev) => {
+      if (prev.has(bundle.id)) return prev
+      return new Set(prev).add(bundle.id)
+    })
   }
 
   function handleSelectAll() {
     if (allActivated) return
 
-    const next = new Set(activated)
-    for (const b of bundles) {
-      next.add(b.id)
-    }
-    setActivated(next)
-
-    const firstBundle = bundles[0]
-    if (firstBundle) {
-      onSetupClick(setupHref(firstBundle))
-    }
+    setActivated(new Set(bundles.map((bundle) => bundle.id)))
   }
 
   return (
@@ -321,7 +308,7 @@ function StepBundleCatalog({
       {/* Select All bar */}
       <div className="flex items-center justify-between rounded-lg border bg-muted/50 px-4 py-3">
         <span className="text-sm font-medium">
-          Add all {bundles.length} bundles to my setup
+          Select all {bundles.length} bundles for my setup
         </span>
         <Button
           size="sm"
@@ -333,7 +320,7 @@ function StepBundleCatalog({
           {allActivated ? (
             <>
               <Check className="mr-1.5 h-4 w-4" />
-              All added
+              All selected
             </>
           ) : (
             'Select All'
@@ -351,6 +338,28 @@ function StepBundleCatalog({
             onActivate={() => handleActivate(bundle)}
           />
         ))}
+      </div>
+
+      <div className="flex flex-col gap-3 rounded-lg border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <p className="text-sm font-medium">
+            {selectedCount > 0
+              ? `${selectedCount} bundle${selectedCount === 1 ? '' : 's'} selected`
+              : 'Select the bundles you want to explore first'}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Continue to the {platformLabel} library to finish setup.
+          </p>
+        </div>
+        <Button
+          size="lg"
+          className="min-w-[220px]"
+          disabled={selectedCount === 0}
+          onClick={() => onSetupClick(setupHref)}
+        >
+          Continue to {platformLabel}
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
       </div>
     </div>
   )
@@ -455,7 +464,7 @@ function BundleCard({
           </div>
         </div>
 
-        {/* Activate button — pinned to bottom */}
+        {/* Selection button — pinned to bottom */}
         <div className="mt-auto pt-1">
           <Button
             size="sm"
@@ -471,10 +480,10 @@ function BundleCard({
             {isActivated ? (
               <>
                 <Check className="mr-1.5 h-4 w-4" />
-                Added
+                Selected
               </>
             ) : (
-              'Activate'
+              'Select'
             )}
           </Button>
         </div>
