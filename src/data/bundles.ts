@@ -174,6 +174,22 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         platform: 'OpenClaw',
         setupTime: '2 minutes',
       },
+      {
+        id: 'wm-compliance-trail-claude',
+        name: 'Compliance Paper Trail',
+        tagline:
+          'Every AI-assisted output is logged, timestamped, and ready for audit — automatically.',
+        description:
+          'When you use AI to help draft communications or meeting notes, there’s a record. Your Compliance Paper Trail bundle captures what was generated, when, and what you approved.',
+        bullets: [
+          'Every AI-assisted draft logged with a timestamp and your approval status',
+          'A simple review checklist before anything goes to a client — one click to confirm',
+          'Your archive is organized by client and date, searchable when you need it',
+          'Peace of mind that your AI use is documented the way regulators expect',
+        ],
+        platform: 'Claude',
+        setupTime: '2 minutes',
+      },
     ],
   },
 

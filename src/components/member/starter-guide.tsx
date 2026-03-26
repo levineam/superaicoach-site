@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ArrowRight, Check, CheckCircle2, ChevronDown } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -64,6 +65,7 @@ type AnimState = 'active' | 'exiting' | 'entering'
 /* ------------------------------------------------------------------ */
 
 export function StarterGuide({ displayName }: { displayName: string }) {
+  const router = useRouter()
   const [step, setStep] = useState<WizardStep>(1)
   const [animState, setAnimState] = useState<AnimState>('active')
   const [platform, setPlatform] = useState<PlatformKey | null>(null)
@@ -127,6 +129,7 @@ export function StarterGuide({ displayName }: { displayName: string }) {
       platform: platform ?? DEFAULT_PLATFORM,
       targetHref: href,
     })
+    router.push(href)
   }
 
   // --- Animation class ---
@@ -287,14 +290,17 @@ function StepBundleCatalog({
 
   function handleSelectAll() {
     if (allActivated) return
+
     const next = new Set(activated)
     for (const b of bundles) {
-      if (!next.has(b.id)) {
-        onSetupClick(setupHref(b))
-      }
       next.add(b.id)
     }
     setActivated(next)
+
+    const firstBundle = bundles[0]
+    if (firstBundle) {
+      onSetupClick(setupHref(firstBundle))
+    }
   }
 
   return (
@@ -364,13 +370,15 @@ function BundleCard({
   onActivate: () => void
 }) {
   const [expanded, setExpanded] = useState(false)
+  const detailsId = `bundle-details-${bundle.id}`
+  const isPlatformSpecific = bundle.platform !== 'Claude & OpenClaw'
 
   return (
     <Card
       className={cn(
         'flex flex-col transition-colors duration-200',
         bundle.isFlagship && 'border-primary/40',
-        bundle.isCrossProfession && !bundle.isFlagship && 'border-violet-500/30',
+        isPlatformSpecific && !bundle.isFlagship && 'border-violet-500/30',
         isActivated && 'border-green-500/40 bg-green-50/30 dark:bg-green-950/10',
       )}
     >
@@ -382,7 +390,7 @@ function BundleCard({
                 Flagship
               </span>
             )}
-            {bundle.isCrossProfession && !bundle.isFlagship && (
+            {isPlatformSpecific && !bundle.isFlagship && (
               <span className="mb-1 inline-block rounded bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
                 Platform
               </span>
@@ -406,9 +414,11 @@ function BundleCard({
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
+          aria-expanded={expanded}
+          aria-controls={detailsId}
           className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
-          Learn more
+          {expanded ? 'Show less' : 'Learn more'}
           <ChevronDown
             className={cn(
               'h-3 w-3 transition-transform duration-200',
@@ -418,6 +428,8 @@ function BundleCard({
         </button>
 
         <div
+          id={detailsId}
+          aria-hidden={!expanded}
           className={cn(
             'grid transition-[grid-template-rows] duration-200',
             expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
