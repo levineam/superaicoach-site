@@ -1,0 +1,13 @@
+Failed to parse JSON message: [outbound-hygiene] Plugin loaded - monitoring outbound messages SyntaxError: Unexpected token 'o', "[outbound-h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Failed to parse JSON message: [plugins] [system-guard] plugin loaded — before_tool_call enforcement active SyntaxError: Unexpected token 'p', "[plugins] ["... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Failed to parse JSON message: [plugins] [lcm] Plugin loaded (enabled=true, db=/Users/andrew/.openclaw/lcm.db, threshold=0.75) SyntaxError: Unexpected token 'p', "[plugins] ["... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Timed out after 1200000ms
