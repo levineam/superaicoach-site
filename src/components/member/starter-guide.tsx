@@ -66,6 +66,12 @@ type ProfessionRecommendation = {
   claude: TrackRecommendation
 }
 
+type TrustCueConfig = {
+  eyebrow: string
+  title: string
+  badges: string[]
+}
+
 const professionRecommendations: Record<ProfessionKey, ProfessionRecommendation> = {
   consultant: {
     label: 'Consultant',
@@ -361,6 +367,42 @@ const platformOptions: { key: PlatformKey; label: string; description: string }[
   },
 ]
 
+const timeToValueLabels: Record<ProfessionKey, Record<PlatformKey, string>> = {
+  consultant: {
+    openclaw: 'Ready in about 10 minutes',
+    claude: 'Ready in about 5 minutes',
+  },
+  'wealth-manager': {
+    openclaw: 'Ready in about 12 minutes',
+    claude: 'Ready in about 6 minutes',
+  },
+  attorney: {
+    openclaw: 'Ready in about 12 minutes',
+    claude: 'Ready in about 6 minutes',
+  },
+}
+
+const trustCueByProfession: Partial<Record<ProfessionKey, TrustCueConfig>> = {
+  'wealth-manager': {
+    eyebrow: 'Trust-first workflow',
+    title: 'Use AI to prep and draft, then make the recommendation yourself.',
+    badges: [
+      'Human review required',
+      'Compliance-sensitive language',
+      'Verify client-specific details',
+    ],
+  },
+  attorney: {
+    eyebrow: 'Professional review required',
+    title: 'Use AI to accelerate prep and drafting, never to replace legal judgment.',
+    badges: [
+      'Attorney review required',
+      'Matter-specific facts first',
+      'No client-facing draft without review',
+    ],
+  },
+}
+
 export function StarterGuide({ displayName }: { displayName?: string }) {
   const [profession, setProfession] = useState<ProfessionKey>(DEFAULT_PROFESSION)
   const [platform, setPlatform] = useState<PlatformKey>(DEFAULT_PLATFORM)
@@ -388,6 +430,10 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
     () => professionConfig[platform],
     [platform, professionConfig],
   )
+  const timeToValueLabel = timeToValueLabels[profession][platform]
+  const trustCue = trustCueByProfession[profession]
+  const activePlatformLabel =
+    platformOptions.find((option) => option.key === platform)?.label ?? platform
 
   function handleProfessionChange(nextProfession: ProfessionKey) {
     if (nextProfession === profession) return
@@ -517,13 +563,63 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-                  {activeTrack.eyebrow}
-                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+                    {activeTrack.eyebrow}
+                  </p>
+                  <span className="rounded-full border border-accent/20 bg-background/80 px-3 py-1 text-xs font-medium text-foreground">
+                    {timeToValueLabel}
+                  </span>
+                </div>
                 <h2 className="mt-2 text-2xl font-semibold text-foreground">{activeTrack.title}</h2>
                 <p className="mt-3 max-w-3xl text-muted-foreground">{activeTrack.summary}</p>
+              </div>
+
+              <div className="grid gap-3 lg:grid-cols-3">
+                <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    Step 1
+                  </p>
+                  <div className="mt-2 flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    <div>
+                      <p className="font-medium text-foreground">Pick your profession</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {professionConfig.shortLabel} is selected right now.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    Step 2
+                  </p>
+                  <div className="mt-2 flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    <div>
+                      <p className="font-medium text-foreground">Pick your platform</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {activePlatformLabel} is selected for this path.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-accent/20 bg-accent/5 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+                    Step 3
+                  </p>
+                  <div className="mt-2 flex items-start gap-2">
+                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    <div>
+                      <p className="font-medium text-foreground">Start the recommended workflow</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Open the suggested setup below when you want the fastest useful start.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -607,7 +703,25 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
                   Especially important in trust-sensitive work.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                {trustCue ? (
+                  <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-200">
+                      {trustCue.eyebrow}
+                    </p>
+                    <p className="mt-2 font-medium text-foreground">{trustCue.title}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {trustCue.badges.map((badge) => (
+                        <span
+                          key={badge}
+                          className="rounded-full border border-amber-500/20 bg-background/80 px-3 py-1 text-xs font-medium text-foreground"
+                        >
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
                 <ul className="space-y-3 text-sm text-muted-foreground">
                   {activeTrack.reviewPoints.map((point) => (
                     <li key={point} className="flex gap-3">
