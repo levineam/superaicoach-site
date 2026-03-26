@@ -370,6 +370,7 @@ function BundleCard({
       className={cn(
         'flex flex-col transition-colors duration-200',
         bundle.isFlagship && 'border-primary/40',
+        bundle.isCrossProfession && !bundle.isFlagship && 'border-violet-500/30',
         isActivated && 'border-green-500/40 bg-green-50/30 dark:bg-green-950/10',
       )}
     >
@@ -379,6 +380,11 @@ function BundleCard({
             {bundle.isFlagship && (
               <span className="mb-1 inline-block rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
                 Flagship
+              </span>
+            )}
+            {bundle.isCrossProfession && !bundle.isFlagship && (
+              <span className="mb-1 inline-block rounded bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+                Platform
               </span>
             )}
             <h3 className="text-base font-semibold leading-tight">

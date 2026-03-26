@@ -11,6 +11,7 @@ export interface Bundle {
   platform: Platform
   setupTime: string
   isFlagship?: boolean
+  isCrossProfession?: boolean
 }
 
 export interface ProfessionBundleSet {
@@ -40,6 +41,47 @@ const jarvOS: Bundle = {
   setupTime: '10 minutes',
   isFlagship: true,
 }
+
+/* ------------------------------------------------------------------ */
+/*  Cross-profession bundles (OpenClaw only)                           */
+/* ------------------------------------------------------------------ */
+
+const infiniteMemory: Bundle = {
+  id: 'infinite-memory',
+  name: 'Infinite Memory',
+  tagline: 'Your AI never forgets. Every conversation, every decision, every preference — perfectly recalled.',
+  description:
+    'Most AI assistants start from scratch every conversation. With Infinite Memory, yours doesn\u2019t. Every client discussion, every decision you\u2019ve made, every preference you\u2019ve shared — your AI carries it forward. Months of context, instantly available.',
+  bullets: [
+    'Your AI remembers conversations from weeks and months ago — no re-explaining context',
+    'Client decisions, preferences, and history carried forward automatically across every session',
+    'Important details never slip through the cracks — your AI surfaces what\u2019s relevant when it matters',
+    'Your memory stays private and on your machine — no cloud storage of your conversation history',
+  ],
+  platform: 'OpenClaw',
+  setupTime: '5 minutes',
+  isCrossProfession: true,
+}
+
+const projectCommandCenter: Bundle = {
+  id: 'project-command-center',
+  name: 'Project Command Center',
+  tagline: 'Stop managing AI with chat. Assign work, track progress, get results.',
+  description:
+    'What if your AI assistant could manage a whole team of AI workers? Project Command Center turns your AI from a single chatbot into a managed workforce. Assign tasks, track progress, and get results — while you focus on the work that actually requires your judgment.',
+  bullets: [
+    'Assign tasks to AI agents and track them like you\u2019d manage a junior team member',
+    'Multiple tasks running in parallel — your AI doesn\u2019t need to wait for you between steps',
+    'Progress visible at a glance — what\u2019s done, what\u2019s in progress, what needs your input',
+    'Your AI escalates decisions to you and handles everything else autonomously',
+  ],
+  platform: 'OpenClaw',
+  setupTime: '5 minutes',
+  isCrossProfession: true,
+}
+
+/** Cross-profession bundles shown for OpenClaw users after jarvOS, before profession-specific */
+const crossProfessionBundles: Bundle[] = [infiniteMemory, projectCommandCenter]
 
 /* ------------------------------------------------------------------ */
 /*  Profession bundle sets                                             */
@@ -407,17 +449,32 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
 /*  Helper                                                             */
 /* ------------------------------------------------------------------ */
 
-/** Return bundles for a profession filtered by the selected platform */
+/** Return bundles for a profession filtered by the selected platform.
+ *  For OpenClaw users: jarvOS → cross-profession bundles → profession-specific.
+ *  For Claude users: jarvOS → profession-specific (cross-profession bundles are OpenClaw-only). */
 export function getBundlesForSelection(
   profession: Profession,
   selectedPlatform: 'openclaw' | 'claude',
 ): Bundle[] {
   const set = professionBundles[profession]
   if (!set) return []
-  return set.bundles.filter((b) => {
+
+  const platformFilter = (b: Bundle) => {
     if (b.platform === 'Claude & OpenClaw') return true
     if (selectedPlatform === 'openclaw' && b.platform === 'OpenClaw') return true
     if (selectedPlatform === 'claude' && b.platform === 'Claude') return true
     return false
-  })
+  }
+
+  // Split into flagship (jarvOS) and profession-specific
+  const flagship = set.bundles.filter((b) => b.isFlagship && platformFilter(b))
+  const professionSpecific = set.bundles.filter((b) => !b.isFlagship && platformFilter(b))
+
+  // Insert cross-profession bundles between flagship and profession-specific for OpenClaw
+  const cross =
+    selectedPlatform === 'openclaw'
+      ? crossProfessionBundles.filter(platformFilter)
+      : []
+
+  return [...flagship, ...cross, ...professionSpecific]
 }
