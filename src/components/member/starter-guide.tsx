@@ -34,9 +34,11 @@ type ProfessionKey = 'wealth-manager' | 'consultant' | 'attorney' | 'other'
 type PlatformKey = 'openclaw' | 'claude'
 
 type PackageContent = {
+  eyebrow: string
+  packageName: string
   description: string
   workflows: string[]
-  setupHref: Record<PlatformKey, string>
+  setupHref: string
   detailHref: string
 }
 
@@ -44,66 +46,122 @@ type PackageContent = {
 /*  Package data                                                       */
 /* ------------------------------------------------------------------ */
 
-const PACKAGES: Record<ProfessionKey, PackageContent> = {
-  'wealth-manager': {
-    description:
-      'A focused AI setup for wealth managers who need clean client prep, compliant communication drafts, and organized follow-through — without spending the day on prompts.',
-    workflows: [
-      'Prepare client meeting briefs with portfolio context',
-      'Draft compliant follow-up emails and summaries',
-      'Organize action items across client relationships',
-      'Research market themes for client conversations',
-    ],
-    setupHref: {
-      openclaw: '/member/configs/productivity',
-      claude: '/member/skills',
+const PACKAGES: Record<PlatformKey, Record<ProfessionKey, PackageContent>> = {
+  claude: {
+    'wealth-manager': {
+      eyebrow: 'Claude package',
+      packageName: 'Wealth Manager Client Prep Pack',
+      description:
+        'A Claude-centered package for wealth managers who want cleaner client prep, clearer follow-up drafts, and faster research synthesis without heavier workflow automation.',
+      workflows: [
+        'Turn meeting notes into cleaner prep briefs and talking points',
+        'Draft client recap emails and follow-up language faster',
+        'Condense market or planning research into usable summaries',
+        'Keep planning conversations organized before human review',
+      ],
+      setupHref: '/member/skills',
+      detailHref: '/member/skills',
     },
-    detailHref: '/member/skills',
+    consultant: {
+      eyebrow: 'Claude package',
+      packageName: 'Consultant Drafting & Delivery Pack',
+      description:
+        'A Claude-first package for consultants who want sharper thinking, faster first drafts, and cleaner client-facing output while keeping execution lightweight.',
+      workflows: [
+        'Turn rough ideas into proposals, briefs, and client emails',
+        'Refine positioning before workshops and discovery calls',
+        'Summarize research into cleaner recommendation decks',
+        'Translate messy notes into structured next steps',
+      ],
+      setupHref: '/member/skills',
+      detailHref: '/member/skills',
+    },
+    attorney: {
+      eyebrow: 'Claude package',
+      packageName: 'Attorney Research & Drafting Pack',
+      description:
+        'A Claude-based package for legal professionals who need stronger research acceleration, cleaner document prep, and more polished client communication drafts.',
+      workflows: [
+        'Summarize legal research into faster internal working notes',
+        'Draft client status updates and meeting prep documents',
+        'Turn review notes into clearer issue lists and next actions',
+        'Prepare structured first-pass language for internal refinement',
+      ],
+      setupHref: '/member/skills',
+      detailHref: '/member/skills',
+    },
+    other: {
+      eyebrow: 'Claude package',
+      packageName: 'Professional Writing & Planning Pack',
+      description:
+        'A Claude package for professionals who want faster writing, cleaner meeting prep, and better synthesis without adding a more operational AI stack yet.',
+      workflows: [
+        'Draft follow-up emails and summaries with less friction',
+        'Prepare for meetings with clearer notes and talking points',
+        'Condense research into action-oriented summaries',
+        'Turn rough thoughts into structured plans and checklists',
+      ],
+      setupHref: '/member/skills',
+      detailHref: '/member/skills',
+    },
   },
-  consultant: {
-    description:
-      'An AI assistant tuned for consulting workflows — fast client follow-through, polished deliverables, and structured thinking without the prompt overhead.',
-    workflows: [
-      'Prep for calls with meeting context and prior notes',
-      'Turn rough ideas into proposals and follow-up emails',
-      'Research industry context before client conversations',
-      'Keep actions organized across multiple engagements',
-    ],
-    setupHref: {
-      openclaw: '/member/configs/productivity',
-      claude: '/member/skills',
+  openclaw: {
+    'wealth-manager': {
+      eyebrow: 'OpenClaw package',
+      packageName: 'Wealth Manager Productivity Package',
+      description:
+        'An OpenClaw package for wealth managers who want client prep, compliant follow-through, and research support wired into one reviewable operating workflow.',
+      workflows: [
+        'Prepare for client reviews with organized context and action items',
+        'Draft follow-up emails and recap notes after planning conversations',
+        'Keep client tasks, notes, and scheduling aligned in one workflow',
+        'Pull supporting context before meetings without losing review control',
+      ],
+      setupHref: '/member/configs/productivity',
+      detailHref: '/member/configs/productivity',
     },
-    detailHref: '/member/skills',
-  },
-  attorney: {
-    description:
-      'AI assistance designed for legal professionals — structured document review prep, research acceleration, and client communication drafts that respect the need for human judgment.',
-    workflows: [
-      'Generate contract review checklists by agreement type',
-      'Draft client status updates and engagement letters',
-      'Accelerate legal research with structured summaries',
-      'Organize case notes and track follow-up items',
-    ],
-    setupHref: {
-      openclaw: '/member/configs/productivity',
-      claude: '/member/skills',
+    consultant: {
+      eyebrow: 'OpenClaw package',
+      packageName: 'Consultant Workflow Package',
+      description:
+        'An OpenClaw package for consultants who want proposal drafting, meeting prep, and follow-through connected across email, notes, and research workflows.',
+      workflows: [
+        'Prep for calls with prior notes, context, and follow-up tasks',
+        'Turn deliverables into a more repeatable operating workflow',
+        'Keep proposals, notes, and next steps from getting scattered',
+        'Research account context before client conversations',
+      ],
+      setupHref: '/member/configs/productivity',
+      detailHref: '/member/configs/productivity',
     },
-    detailHref: '/member/skills',
-  },
-  other: {
-    description:
-      'A professional AI setup that helps with the work that eats your day — email follow-through, meeting prep, research, and keeping your notes organized.',
-    workflows: [
-      'Draft and manage email follow-ups',
-      'Prepare for meetings with context and action items',
-      'Research topics quickly with structured summaries',
-      'Keep notes and decisions organized',
-    ],
-    setupHref: {
-      openclaw: '/member/configs/productivity',
-      claude: '/member/skills',
+    attorney: {
+      eyebrow: 'OpenClaw package',
+      packageName: 'Attorney Operations Package',
+      description:
+        'An OpenClaw package for attorneys who want research support, document prep, and client follow-through handled inside a more structured day-to-day workflow.',
+      workflows: [
+        'Organize matter notes, tasks, and follow-up items in one place',
+        'Draft client updates and internal summaries faster',
+        'Prepare review checklists and issue lists before document work',
+        'Gather background context before meetings and drafting sessions',
+      ],
+      setupHref: '/member/configs/productivity',
+      detailHref: '/member/configs/productivity',
     },
-    detailHref: '/member/skills',
+    other: {
+      eyebrow: 'OpenClaw package',
+      packageName: 'Professional Productivity Package',
+      description:
+        'An OpenClaw package for professionals who want their email, meetings, notes, and follow-through tied together in one practical daily operating system.',
+      workflows: [
+        'Draft and manage follow-up work across the day',
+        'Prepare for meetings with notes, context, and open actions',
+        'Keep decisions and working notes organized automatically',
+        'Research topics quickly without losing the thread of execution',
+      ],
+      setupHref: '/member/configs/productivity',
+      detailHref: '/member/configs/productivity',
+    },
   },
 }
 
@@ -333,15 +391,17 @@ function StepPackage({
   profession: ProfessionKey
   onSetupClick: (href: string) => void
 }) {
-  const pkg = PACKAGES[profession]
-  const setupHref = pkg.setupHref[platform]
+  const pkg = PACKAGES[platform][profession]
   const ctaLabel = platform === 'claude' ? 'Set up in Claude' : 'Set up in OpenClaw'
 
   return (
     <Card className="w-full">
       <CardHeader className="space-y-3 pb-4">
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          {pkg.eyebrow}
+        </p>
         <CardTitle className="text-2xl font-semibold tracking-tight">
-          Your recommended setup
+          {pkg.packageName}
         </CardTitle>
         <CardDescription className="text-base leading-relaxed">
           {pkg.description}
@@ -349,25 +409,26 @@ function StepPackage({
       </CardHeader>
 
       <CardContent className="space-y-8">
-        {/* Workflows */}
         <div className="space-y-3">
           <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
             What this helps with
           </h3>
           <ul className="space-y-2">
-            {pkg.workflows.map((w) => (
-              <li key={w} className="flex items-start gap-2 text-sm leading-relaxed">
+            {pkg.workflows.map((workflow) => (
+              <li
+                key={workflow}
+                className="flex items-start gap-2 text-sm leading-relaxed"
+              >
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>{w}</span>
+                <span>{workflow}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* CTAs */}
         <div className="flex flex-col gap-3">
-          <Button asChild size="lg" className="w-full" onClick={() => onSetupClick(setupHref)}>
-            <Link href={setupHref}>
+          <Button asChild size="lg" className="w-full" onClick={() => onSetupClick(pkg.setupHref)}>
+            <Link href={pkg.setupHref}>
               {ctaLabel}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
