@@ -434,6 +434,10 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
   const trustCue = trustCueByProfession[profession]
   const activePlatformLabel =
     platformOptions.find((option) => option.key === platform)?.label ?? platform
+  const stepThreeDescription =
+    activeTrack.setupHref === '/member/skills'
+      ? 'Browse the supporting tools below when you want the fastest useful start.'
+      : 'Open the suggested setup below when you want the fastest useful start.'
 
   function handleProfessionChange(nextProfession: ProfessionKey) {
     if (nextProfession === profession) return
@@ -615,7 +619,7 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
                     <div>
                       <p className="font-medium text-foreground">Start the recommended workflow</p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        Open the suggested setup below when you want the fastest useful start.
+                        {stepThreeDescription}
                       </p>
                     </div>
                   </div>
@@ -706,7 +710,7 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
               <CardContent className="space-y-4">
                 {trustCue ? (
                   <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-200">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700 dark:text-amber-200">
                       {trustCue.eyebrow}
                     </p>
                     <p className="mt-2 font-medium text-foreground">{trustCue.title}</p>
