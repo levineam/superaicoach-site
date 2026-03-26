@@ -382,6 +382,11 @@ const timeToValueLabels: Record<ProfessionKey, Record<PlatformKey, string>> = {
   },
 }
 
+const stepThreeDescriptionByPlatform: Record<PlatformKey, string> = {
+  openclaw: 'Open the suggested setup below when you want the fastest useful start.',
+  claude: 'Browse the supporting tools below when you want the fastest useful start.',
+}
+
 const trustCueByProfession: Partial<Record<ProfessionKey, TrustCueConfig>> = {
   'wealth-manager': {
     eyebrow: 'Trust-first workflow',
@@ -434,10 +439,7 @@ export function StarterGuide({ displayName }: { displayName?: string }) {
   const trustCue = trustCueByProfession[profession]
   const activePlatformLabel =
     platformOptions.find((option) => option.key === platform)?.label ?? platform
-  const stepThreeDescription =
-    activeTrack.setupHref === '/member/skills'
-      ? 'Browse the supporting tools below when you want the fastest useful start.'
-      : 'Open the suggested setup below when you want the fastest useful start.'
+  const stepThreeDescription = stepThreeDescriptionByPlatform[platform]
 
   function handleProfessionChange(nextProfession: ProfessionKey) {
     if (nextProfession === profession) return
