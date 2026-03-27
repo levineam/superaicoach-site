@@ -160,6 +160,13 @@ export function SignInForm({
         </button>
       </div>
 
+      <p className="mt-4 text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?{' '}
+        <Link href="/sign-up" className="font-medium text-foreground underline underline-offset-4 hover:text-primary">
+          Sign up
+        </Link>
+      </p>
+
       {magicLinkResponse?.magicLinkPreview ? (
         <div className="mt-4 rounded-md border border-emerald-600/30 bg-emerald-600/10 p-3 text-sm text-emerald-100">
           <p className="font-medium text-emerald-200">Magic link generated.</p>
