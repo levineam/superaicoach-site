@@ -1,9 +1,8 @@
+import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
 import { SESSION_COOKIE_NAME } from './session-constants'
 
 async function createHash(input: string, saltRounds: number = 10): Promise<string> {
-  // Use bcrypt directly
-  const bcrypt = await import('bcrypt')
   return bcrypt.hash(input, saltRounds)
 }
 
@@ -25,7 +24,7 @@ async function authenticateWithMock(email: string, password: string) {
   console.log('🔐 Using mock authentication for:', email)
   
   // Mock user data - in production this would come from Supabase
-  const bcrypt = await import('bcrypt')
+  // bcrypt imported at top level
   const mockUser = {
     id: 'mock-user-id',
     email: email,
@@ -76,7 +75,7 @@ export async function authenticateWithPassword(email: string, password: string) 
     }
 
     // Verify password
-    const bcrypt = await import('bcrypt')
+    // bcrypt imported at top level
     const isPasswordValid = await bcrypt.compare(password, user.hashed_password)
 
     if (!isPasswordValid) {
@@ -102,9 +101,10 @@ export async function authenticateWithPassword(email: string, password: string) 
 
     return {
       sessionToken,
-      tenantSlug: user.tenant_slug,
+      tenantSlug: user.tenant_slug || 'default',
       userId: user.id,
       role: user.role,
+      email: user.email,
     }
   } catch (error) {
     console.error('Authentication error:', error)
@@ -128,8 +128,7 @@ export async function validateSession(sessionToken: string) {
         users (
           id,
           email,
-          role,
-          tenant_slug
+          role
         )
       `)
       .eq('token', sessionToken)
@@ -143,7 +142,7 @@ export async function validateSession(sessionToken: string) {
     return {
       userId: session.users.id,
       tenantId: session.users.id, // Using userId as tenantId for now since we don't have a separate tenant_id in users table
-      tenantSlug: session.users.tenant_slug,
+      tenantSlug: 'default',
       role: session.users.role,
       email: session.users.email,
       expiresAt: session.expires_at,
@@ -174,7 +173,7 @@ export async function setPasswordForUser(userId: string, password: string) {
   }
 }
 
-export async function createUser(email: string, password: string, role = 'user', tenantSlug = null) {
+export async function createUser(email: string, password: string, role = 'user') {
   try {
     const hashedPassword = await createHash(password, 10)
     
@@ -184,7 +183,6 @@ export async function createUser(email: string, password: string, role = 'user',
         email,
         hashed_password: hashedPassword,
         role,
-        tenant_slug: tenantSlug,
         status: 'active'
       })
       .select()
@@ -261,7 +259,7 @@ export async function changePassword(userId: string, currentPassword: string, ne
       return { error: 'User not found' }
     }
 
-    const bcrypt = await import('bcrypt')
+    // bcrypt imported at top level
     const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.hashed_password)
     if (!isCurrentPasswordValid) {
       return { error: 'Current password is incorrect' }
@@ -329,7 +327,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     return {
       sessionToken,
       tenantId: user.id, // Using userId as tenantId for now
-      tenantSlug: user.tenant_slug,
+      tenantSlug: 'default',
       userId: user.id,
       role: user.role,
       email: user.email,
