@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Check, CheckCircle2, ChevronDown } from 'lucide-react'
+import { ArrowRight, ChevronDown, CheckCircle2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +14,7 @@ import {
   getBundlesForSelection,
   professionBundles,
   type Bundle,
+  type BundleComponent,
   type Profession,
 } from '@/data/bundles'
 import {
@@ -254,7 +255,7 @@ function StepProfession({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 3 — Bundle Catalog                                            */
+/*  Step 3 — Bundle Catalog (component checkboxes)                    */
 /* ------------------------------------------------------------------ */
 
 function StepBundleCatalog({
@@ -267,9 +268,42 @@ function StepBundleCatalog({
   onSetupClick: (href: string) => void
 }) {
   const bundles = getBundlesForSelection(profession as Profession, platform)
-  const [activated, setActivated] = useState<Set<string>>(new Set())
-  const allActivated = bundles.length > 0 && bundles.every((b) => activated.has(b.id))
-  const selectedCount = activated.size
+
+  // componentId → checked state; default all checked
+  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {}
+    for (const bundle of bundles) {
+      for (const comp of bundle.components) {
+        initial[comp.id] = true
+      }
+    }
+    return initial
+  })
+
+  const [installed, setInstalled] = useState(false)
+
+  // Recompute when bundles change (shouldn't happen mid-render, but be safe)
+  useEffect(() => {
+    const initial: Record<string, boolean> = {}
+    for (const bundle of bundles) {
+      for (const comp of bundle.components) {
+        initial[comp.id] = true
+      }
+    }
+    setChecked(initial)
+    setInstalled(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [platform, profession])
+
+  const allComponents = bundles.flatMap((b) => b.components)
+  // Deduplicate by id (same component may appear in multiple bundles)
+  const uniqueComponentIds = Array.from(new Set(allComponents.map((c) => c.id)))
+  const totalCount = uniqueComponentIds.length
+  const selectedCount = uniqueComponentIds.filter((id) => checked[id]).length
+
+  function toggleComponent(id: string) {
+    setChecked((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
 
   const profLabel =
     professionBundles[profession as Profession]?.label ??
@@ -277,18 +311,16 @@ function StepBundleCatalog({
   const platformLabel = platform === 'claude' ? 'Claude' : 'OpenClaw'
   const setupHref = platform === 'claude' ? '/member/skills' : '/member/configs/productivity'
 
-  function handleActivate(bundle: Bundle) {
-    setActivated((prev) => {
-      if (prev.has(bundle.id)) return prev
-      return new Set(prev).add(bundle.id)
-    })
-  }
-
-  function handleSelectAll() {
-    if (allActivated) return
-
-    setActivated(new Set(bundles.map((bundle) => bundle.id)))
-  }
+  const installButton = (
+    <Button
+      size="lg"
+      className="min-w-[220px]"
+      onClick={() => setInstalled(true)}
+    >
+      Install bundle
+      <ArrowRight className="ml-2 h-4 w-4" />
+    </Button>
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -305,78 +337,75 @@ function StepBundleCatalog({
         </span>
       </div>
 
-      {/* Select All bar */}
-      <div className="flex items-center justify-between rounded-lg border bg-muted/50 px-4 py-3">
+      {/* Component count + top install button */}
+      <div className="flex flex-col items-start gap-3 rounded-lg border bg-muted/50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-sm font-medium">
-          Select all {bundles.length} bundles for my setup
+          {selectedCount} of {totalCount} components selected
         </span>
-        <Button
-          size="sm"
-          variant={allActivated ? 'secondary' : 'default'}
-          onClick={handleSelectAll}
-          disabled={allActivated}
-          className="min-w-[110px] transition-all duration-200"
-        >
-          {allActivated ? (
-            <>
-              <Check className="mr-1.5 h-4 w-4" />
-              All selected
-            </>
-          ) : (
-            'Select All'
-          )}
-        </Button>
+        {installButton}
       </div>
 
-      {/* Bundle grid */}
+      {/* Success banner */}
+      {installed && (
+        <div className="flex items-start gap-3 rounded-lg border border-green-500/30 bg-green-50 px-4 py-3 text-green-800 dark:bg-green-950/20 dark:text-green-300">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600 dark:text-green-400" />
+          <p className="text-sm font-medium">
+            Coming soon — we&apos;ll notify you when bundle installation is ready.
+          </p>
+        </div>
+      )}
+
+      {/* Bundle cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {bundles.map((bundle) => (
           <BundleCard
             key={bundle.id}
             bundle={bundle}
-            isActivated={activated.has(bundle.id)}
-            onActivate={() => handleActivate(bundle)}
+            checked={checked}
+            onToggle={toggleComponent}
           />
         ))}
       </div>
 
+      {/* Bottom install bar */}
       <div className="flex flex-col gap-3 rounded-lg border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <p className="text-sm font-medium">
-            {selectedCount > 0
-              ? `${selectedCount} bundle${selectedCount === 1 ? '' : 's'} selected`
-              : 'Select the bundles you want to explore first'}
+            {selectedCount} of {totalCount} components selected
           </p>
           <p className="text-sm text-muted-foreground">
             Continue to the {platformLabel} library to finish setup.
           </p>
         </div>
-        <Button
-          size="lg"
-          className="min-w-[220px]"
-          disabled={selectedCount === 0}
-          onClick={() => onSetupClick(setupHref)}
-        >
-          Continue to {platformLabel}
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          {installButton}
+          <Button
+            size="lg"
+            variant="outline"
+            className="min-w-[160px]"
+            onClick={() => onSetupClick(setupHref)}
+          >
+            Open library
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/*  Bundle Card                                                        */
+/*  Bundle Card (with component checkboxes)                           */
 /* ------------------------------------------------------------------ */
 
 function BundleCard({
   bundle,
-  isActivated,
-  onActivate,
+  checked,
+  onToggle,
 }: {
   bundle: Bundle
-  isActivated: boolean
-  onActivate: () => void
+  checked: Record<string, boolean>
+  onToggle: (id: string) => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const detailsId = `bundle-details-${bundle.id}`
@@ -388,7 +417,6 @@ function BundleCard({
         'flex flex-col transition-colors duration-200',
         bundle.isFlagship && 'border-primary/40',
         isPlatformSpecific && !bundle.isFlagship && 'border-violet-500/30',
-        isActivated && 'border-green-500/40 bg-green-50/30 dark:bg-green-950/10',
       )}
     >
       <CardHeader className="space-y-1.5 pb-2">
@@ -418,6 +446,13 @@ function BundleCard({
         <p className="text-xs text-muted-foreground">
           Ready in {bundle.setupTime}
         </p>
+
+        {/* Component checkboxes */}
+        <ComponentCheckboxList
+          components={bundle.components}
+          checked={checked}
+          onToggle={onToggle}
+        />
 
         {/* Learn more expand/collapse */}
         <button
@@ -463,31 +498,48 @@ function BundleCard({
             </div>
           </div>
         </div>
-
-        {/* Selection button — pinned to bottom */}
-        <div className="mt-auto pt-1">
-          <Button
-            size="sm"
-            variant={isActivated ? 'secondary' : 'default'}
-            className={cn(
-              'w-full transition-all duration-200',
-              isActivated &&
-                'border-green-500/30 bg-green-50 text-green-700 hover:bg-green-50 dark:bg-green-950/20 dark:text-green-400',
-            )}
-            disabled={isActivated}
-            onClick={onActivate}
-          >
-            {isActivated ? (
-              <>
-                <Check className="mr-1.5 h-4 w-4" />
-                Selected
-              </>
-            ) : (
-              'Select'
-            )}
-          </Button>
-        </div>
       </CardContent>
     </Card>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Component checkbox list                                            */
+/* ------------------------------------------------------------------ */
+
+function ComponentCheckboxList({
+  components,
+  checked,
+  onToggle,
+}: {
+  components: BundleComponent[]
+  checked: Record<string, boolean>
+  onToggle: (id: string) => void
+}) {
+  if (components.length === 0) return null
+
+  return (
+    <div className="space-y-2">
+      {components.map((comp) => (
+        <label
+          key={comp.id}
+          className="flex cursor-pointer items-start gap-2.5 rounded-md px-1 py-0.5 hover:bg-muted/40"
+        >
+          <input
+            type="checkbox"
+            checked={!!checked[comp.id]}
+            onChange={() => onToggle(comp.id)}
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
+          />
+          <div className="min-w-0">
+            <span className="text-sm font-medium leading-tight">{comp.name}</span>
+            <span className="text-muted-foreground"> — </span>
+            <span className="text-sm leading-tight text-muted-foreground">
+              {comp.description}
+            </span>
+          </div>
+        </label>
+      ))}
+    </div>
   )
 }

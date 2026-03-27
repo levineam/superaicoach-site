@@ -2,6 +2,12 @@ export type Platform = 'Claude & OpenClaw' | 'Claude' | 'OpenClaw'
 
 export type Profession = 'wealth-manager' | 'consultant' | 'attorney' | 'other'
 
+export interface BundleComponent {
+  id: string
+  name: string
+  description: string
+}
+
 export interface Bundle {
   id: string
   name: string
@@ -12,6 +18,7 @@ export interface Bundle {
   setupTime: string
   isFlagship?: boolean
   isCrossProfession?: boolean
+  components: BundleComponent[]
 }
 
 export interface ProfessionBundleSet {
@@ -19,6 +26,78 @@ export interface ProfessionBundleSet {
   label: string
   selectorDescription: string
   bundles: Bundle[]
+}
+
+/* ------------------------------------------------------------------ */
+/*  Shared component definitions (skill → user-facing)                */
+/* ------------------------------------------------------------------ */
+
+const C = {
+  personalMemory: {
+    id: 'personal-memory',
+    name: 'Personal Memory',
+    description: 'Your AI remembers your clients, projects, and preferences',
+  } as BundleComponent,
+  emailCalendar: {
+    id: 'email-calendar',
+    name: 'Email & Calendar',
+    description: 'Connect Gmail and Google Calendar for meeting prep and follow-ups',
+  } as BundleComponent,
+  voiceCalibration: {
+    id: 'voice-calibration',
+    name: 'Voice Calibration',
+    description: 'Your AI learns your writing style and tone',
+  } as BundleComponent,
+  knowledgeLibrary: {
+    id: 'knowledge-library',
+    name: 'Knowledge Library',
+    description: 'Save and search your notes, research, and client files',
+  } as BundleComponent,
+  taskCapture: {
+    id: 'task-capture',
+    name: 'Task Capture',
+    description: 'Capture action items from conversations',
+  } as BundleComponent,
+  conversationMemory: {
+    id: 'conversation-memory',
+    name: 'Conversation Memory',
+    description: 'Every conversation preserved and searchable',
+  } as BundleComponent,
+  meetingTranscription: {
+    id: 'meeting-transcription',
+    name: 'Meeting Transcription',
+    description: 'Transcribe client calls and meetings',
+  } as BundleComponent,
+  smartSummaries: {
+    id: 'smart-summaries',
+    name: 'Smart Summaries',
+    description: 'Generate structured summaries from any content',
+  } as BundleComponent,
+  researchSynthesis: {
+    id: 'research-synthesis',
+    name: 'Research Synthesis',
+    description: 'Synthesize recent news and developments',
+  } as BundleComponent,
+  semanticSearch: {
+    id: 'semantic-search',
+    name: 'Semantic Search',
+    description: 'Find relevant content across your knowledge base',
+  } as BundleComponent,
+  videoRecordingImport: {
+    id: 'video-recording-import',
+    name: 'Video & Recording Import',
+    description: 'Import transcripts from Zoom, Teams, and recorded calls',
+  } as BundleComponent,
+  aiTaskManagement: {
+    id: 'ai-task-management',
+    name: 'AI Task Management',
+    description: 'Assign and track work across AI agents',
+  } as BundleComponent,
+  technicalDelegation: {
+    id: 'technical-delegation',
+    name: 'Technical Delegation',
+    description: 'Delegate technical tasks to specialized AI agents',
+  } as BundleComponent,
 }
 
 /* ------------------------------------------------------------------ */
@@ -40,6 +119,13 @@ const jarvOS: Bundle = {
   platform: 'Claude & OpenClaw',
   setupTime: '10 minutes',
   isFlagship: true,
+  components: [
+    C.personalMemory,
+    C.emailCalendar,
+    C.voiceCalibration,
+    C.knowledgeLibrary,
+    C.taskCapture,
+  ],
 }
 
 /* ------------------------------------------------------------------ */
@@ -61,6 +147,9 @@ const infiniteMemory: Bundle = {
   platform: 'OpenClaw',
   setupTime: '5 minutes',
   isCrossProfession: true,
+  components: [
+    C.conversationMemory,
+  ],
 }
 
 const projectCommandCenter: Bundle = {
@@ -78,6 +167,10 @@ const projectCommandCenter: Bundle = {
   platform: 'OpenClaw',
   setupTime: '5 minutes',
   isCrossProfession: true,
+  components: [
+    C.aiTaskManagement,
+    C.technicalDelegation,
+  ],
 }
 
 /** Cross-profession bundles shown for OpenClaw users after jarvOS, before profession-specific */
@@ -109,6 +202,12 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.meetingTranscription,
+          C.smartSummaries,
+          C.emailCalendar,
+          C.knowledgeLibrary,
+        ],
       },
       {
         id: 'wm-client-communication',
@@ -125,6 +224,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.voiceCalibration,
+          C.emailCalendar,
+          C.personalMemory,
+        ],
       },
       {
         id: 'wm-market-briefing',
@@ -141,6 +245,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.researchSynthesis,
+          C.voiceCalibration,
+          C.emailCalendar,
+        ],
       },
       {
         id: 'wm-pre-meeting-prep',
@@ -157,6 +266,13 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.emailCalendar,
+          C.knowledgeLibrary,
+          C.semanticSearch,
+          C.researchSynthesis,
+          C.personalMemory,
+        ],
       },
       {
         id: 'wm-compliance-trail',
@@ -173,6 +289,10 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'OpenClaw',
         setupTime: '2 minutes',
+        components: [
+          C.knowledgeLibrary,
+          C.emailCalendar,
+        ],
       },
       {
         id: 'wm-compliance-trail-claude',
@@ -180,7 +300,7 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         tagline:
           'Every AI-assisted output is logged, timestamped, and ready for audit — automatically.',
         description:
-          'When you use AI to help draft communications or meeting notes, there’s a record. Your Compliance Paper Trail bundle captures what was generated, when, and what you approved.',
+          'When you use AI to help draft communications or meeting notes, there\u2019s a record. Your Compliance Paper Trail bundle captures what was generated, when, and what you approved.',
         bullets: [
           'Every AI-assisted draft logged with a timestamp and your approval status',
           'A simple review checklist before anything goes to a client — one click to confirm',
@@ -189,6 +309,10 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude',
         setupTime: '2 minutes',
+        components: [
+          C.knowledgeLibrary,
+          C.emailCalendar,
+        ],
       },
     ],
   },
@@ -214,6 +338,12 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.knowledgeLibrary,
+          C.semanticSearch,
+          C.voiceCalibration,
+          C.meetingTranscription,
+        ],
       },
       {
         id: 'con-client-intel',
@@ -230,6 +360,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.researchSynthesis,
+          C.semanticSearch,
+          C.personalMemory,
+        ],
       },
       {
         id: 'con-proposal-machine',
@@ -246,6 +381,12 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '7 minutes',
+        components: [
+          C.knowledgeLibrary,
+          C.semanticSearch,
+          C.voiceCalibration,
+          C.emailCalendar,
+        ],
       },
       {
         id: 'con-meeting-to-action',
@@ -262,6 +403,13 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.meetingTranscription,
+          C.videoRecordingImport,
+          C.smartSummaries,
+          C.emailCalendar,
+          C.knowledgeLibrary,
+        ],
       },
       {
         id: 'con-research-synthesizer',
@@ -278,6 +426,12 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.researchSynthesis,
+          C.semanticSearch,
+          C.smartSummaries,
+          C.knowledgeLibrary,
+        ],
       },
     ],
   },
@@ -303,6 +457,10 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.knowledgeLibrary,
+          C.semanticSearch,
+        ],
       },
       {
         id: 'atty-client-correspondence',
@@ -319,6 +477,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.voiceCalibration,
+          C.emailCalendar,
+          C.knowledgeLibrary,
+        ],
       },
       {
         id: 'atty-legal-research',
@@ -335,6 +498,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.researchSynthesis,
+          C.semanticSearch,
+          C.smartSummaries,
+        ],
       },
       {
         id: 'atty-client-transcripts',
@@ -351,6 +519,13 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.meetingTranscription,
+          C.videoRecordingImport,
+          C.smartSummaries,
+          C.knowledgeLibrary,
+          C.emailCalendar,
+        ],
       },
       {
         id: 'atty-time-entries',
@@ -367,6 +542,9 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '2 minutes',
+        components: [
+          C.knowledgeLibrary,
+        ],
       },
     ],
   },
@@ -392,6 +570,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.voiceCalibration,
+          C.emailCalendar,
+          C.personalMemory,
+        ],
       },
       {
         id: 'pro-meeting-summarizer',
@@ -408,6 +591,12 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '5 minutes',
+        components: [
+          C.meetingTranscription,
+          C.smartSummaries,
+          C.emailCalendar,
+          C.knowledgeLibrary,
+        ],
       },
       {
         id: 'pro-research-assistant',
@@ -424,6 +613,12 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.researchSynthesis,
+          C.smartSummaries,
+          C.semanticSearch,
+          C.knowledgeLibrary,
+        ],
       },
       {
         id: 'pro-weekly-briefing',
@@ -440,6 +635,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '3 minutes',
+        components: [
+          C.researchSynthesis,
+          C.voiceCalibration,
+          C.emailCalendar,
+        ],
       },
       {
         id: 'pro-document-review',
@@ -456,6 +656,11 @@ export const professionBundles: Record<Profession, ProfessionBundleSet> = {
         ],
         platform: 'Claude & OpenClaw',
         setupTime: '2 minutes',
+        components: [
+          C.smartSummaries,
+          C.knowledgeLibrary,
+          C.semanticSearch,
+        ],
       },
     ],
   },
