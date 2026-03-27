@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { ArrowRight, ChevronDown, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, Check, CheckCircle2, ChevronDown, Package } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -11,10 +10,16 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   getBundlesForSelection,
   professionBundles,
   type Bundle,
-  type BundleComponent,
   type Profession,
 } from '@/data/bundles'
 import {
@@ -65,8 +70,7 @@ type AnimState = 'active' | 'exiting' | 'entering'
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export function StarterGuide({ displayName }: { displayName: string }) {
-  const router = useRouter()
+export function StarterGuide() {
   const [step, setStep] = useState<WizardStep>(1)
   const [animState, setAnimState] = useState<AnimState>('active')
   const [platform, setPlatform] = useState<PlatformKey | null>(null)
@@ -124,13 +128,12 @@ export function StarterGuide({ displayName }: { displayName: string }) {
     advanceTo(3)
   }
 
-  function handleSetupClick(href: string) {
+  function handleInstallClick() {
     trackStarterWorkflowStarted({
       profession: toAnalyticsProfession(profession),
       platform: platform ?? DEFAULT_PLATFORM,
-      targetHref: href,
+      targetHref: '#coming-soon',
     })
-    router.push(href)
   }
 
   // --- Animation class ---
@@ -152,7 +155,7 @@ export function StarterGuide({ displayName }: { displayName: string }) {
         )}
       >
         {step === 1 && (
-          <StepPlatform displayName={displayName} onSelect={handlePlatformSelect} />
+          <StepPlatform onSelect={handlePlatformSelect} />
         )}
         {step === 2 && (
           <StepProfession
@@ -162,10 +165,10 @@ export function StarterGuide({ displayName }: { displayName: string }) {
           />
         )}
         {step === 3 && platform && (
-          <StepBundleCatalog
+          <StepBundleDetail
             platform={platform}
             profession={profession}
-            onSetupClick={handleSetupClick}
+            onInstallClick={handleInstallClick}
           />
         )}
       </div>
@@ -178,18 +181,13 @@ export function StarterGuide({ displayName }: { displayName: string }) {
 /* ------------------------------------------------------------------ */
 
 function StepPlatform({
-  displayName,
   onSelect,
 }: {
-  displayName: string
   onSelect: (p: PlatformKey) => void
 }) {
-  const greeting = displayName ? `Welcome, ${displayName}` : 'Welcome'
-
   return (
     <div className="flex flex-col items-center gap-10">
-      <p className="text-base text-muted-foreground">{greeting}</p>
-      <h1 className="-mt-6 text-center text-3xl font-semibold tracking-tight sm:text-4xl">
+      <h1 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">
         Pick your preferred platform
       </h1>
 
@@ -255,206 +253,226 @@ function StepProfession({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 3 — Bundle Catalog (component checkboxes)                    */
+/*  Step 3 — Bundle Detail                                             */
 /* ------------------------------------------------------------------ */
 
-function StepBundleCatalog({
+function StepBundleDetail({
   platform,
   profession,
-  onSetupClick,
+  onInstallClick,
 }: {
   platform: PlatformKey
   profession: ProfessionKey
-  onSetupClick: (href: string) => void
+  onInstallClick: () => void
 }) {
   const bundles = getBundlesForSelection(profession as Profession, platform)
-
-  // componentId → checked state; default all checked
-  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {}
-    for (const bundle of bundles) {
-      for (const comp of bundle.components) {
-        initial[comp.id] = true
-      }
-    }
-    return initial
-  })
-
-  const [installed, setInstalled] = useState(false)
-
-  // Recompute when bundles change (shouldn't happen mid-render, but be safe)
-  useEffect(() => {
-    const initial: Record<string, boolean> = {}
-    for (const bundle of bundles) {
-      for (const comp of bundle.components) {
-        initial[comp.id] = true
-      }
-    }
-    setChecked(initial)
-    setInstalled(false)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [platform, profession])
-
-  const allComponents = bundles.flatMap((b) => b.components)
-  // Deduplicate by id (same component may appear in multiple bundles)
-  const uniqueComponentIds = Array.from(new Set(allComponents.map((c) => c.id)))
-  const totalCount = uniqueComponentIds.length
-  const selectedCount = uniqueComponentIds.filter((id) => checked[id]).length
-
-  function toggleComponent(id: string) {
-    setChecked((prev) => ({ ...prev, [id]: !prev[id] }))
-  }
+  // All components default-selected
+  const [checked, setChecked] = useState<Set<string>>(() => new Set(bundles.map((b) => b.id)))
+  const [showComingSoon, setShowComingSoon] = useState(false)
 
   const profLabel =
     professionBundles[profession as Profession]?.label ??
     PROFESSION_LABELS[profession]
   const platformLabel = platform === 'claude' ? 'Claude' : 'OpenClaw'
-  const setupHref = platform === 'claude' ? '/member/skills' : '/member/configs/productivity'
 
-  const installButton = (
-    <Button
-      size="lg"
-      className="min-w-[220px]"
-      onClick={() => setInstalled(true)}
-    >
-      Install bundle
-      <ArrowRight className="ml-2 h-4 w-4" />
-    </Button>
-  )
+  const selectedCount = checked.size
+
+  function toggleBundle(id: string) {
+    setChecked((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  function handleInstall() {
+    onInstallClick()
+    setShowComingSoon(true)
+  }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Header */}
-      <div className="flex flex-col items-center gap-2 text-center">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
-          Your {profLabel} setup
+    <>
+      <div className="flex flex-col gap-6">
+        {/* Bundle summary header */}
+        <div className="flex flex-col items-center gap-2 text-center">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            Your {profLabel} bundle
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            Here&apos;s what&apos;s included
+          </h1>
+          <p className="mt-1 max-w-md text-base text-muted-foreground">
+            Your {platformLabel} setup — customized for {profLabel}s. Everything below is
+            pre-selected. Uncheck anything you don&apos;t want.
+          </p>
+          <span className="mt-1 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
+            {platformLabel}
+          </span>
+        </div>
+
+        {/* Install button — top */}
+        <InstallButton
+          selectedCount={selectedCount}
+          total={bundles.length}
+          platformLabel={platformLabel}
+          onClick={handleInstall}
+        />
+
+        {/* Component list */}
+        <div className="flex flex-col gap-3">
+          {bundles.map((bundle) => (
+            <BundleComponentRow
+              key={bundle.id}
+              bundle={bundle}
+              isChecked={checked.has(bundle.id)}
+              onToggle={() => toggleBundle(bundle.id)}
+            />
+          ))}
+        </div>
+
+        {/* Install button — bottom */}
+        <InstallButton
+          selectedCount={selectedCount}
+          total={bundles.length}
+          platformLabel={platformLabel}
+          onClick={handleInstall}
+        />
+      </div>
+
+      {/* Coming soon modal */}
+      <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+        <DialogContent className="max-w-md text-center">
+          <DialogHeader>
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <Package className="h-7 w-7 text-primary" />
+            </div>
+            <DialogTitle className="text-xl">Installation coming soon</DialogTitle>
+            <DialogDescription className="mt-2 text-sm leading-relaxed">
+              We&apos;re putting the finishing touches on one-click bundle installation for{' '}
+              {platformLabel}. You&apos;ll be the first to know when it&apos;s ready.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Button onClick={() => setShowComingSoon(false)} className="sm:min-w-[140px]">
+              Got it
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Install Bundle Button                                              */
+/* ------------------------------------------------------------------ */
+
+function InstallButton({
+  selectedCount,
+  total,
+  platformLabel,
+  onClick,
+}: {
+  selectedCount: number
+  total: number
+  platformLabel: string
+  onClick: () => void
+}) {
+  return (
+    <div className="flex flex-col gap-2 rounded-lg border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="space-y-0.5">
+        <p className="text-sm font-medium">
+          {selectedCount === total
+            ? `All ${total} components selected`
+            : selectedCount > 0
+              ? `${selectedCount} of ${total} components selected`
+              : 'No components selected'}
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Here&apos;s what we recommend
-        </h1>
-        <span className="mt-1 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
-          {platformLabel}
-        </span>
+        <p className="text-sm text-muted-foreground">
+          Installs your {platformLabel} setup in minutes.
+        </p>
       </div>
-
-      {/* Component count + top install button */}
-      <div className="flex flex-col items-start gap-3 rounded-lg border bg-muted/50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-sm font-medium">
-          {selectedCount} of {totalCount} components selected
-        </span>
-        {installButton}
-      </div>
-
-      {/* Success banner */}
-      {installed && (
-        <div className="flex items-start gap-3 rounded-lg border border-green-500/30 bg-green-50 px-4 py-3 text-green-800 dark:bg-green-950/20 dark:text-green-300">
-          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600 dark:text-green-400" />
-          <p className="text-sm font-medium">
-            Coming soon — we&apos;ll notify you when bundle installation is ready.
-          </p>
-        </div>
-      )}
-
-      {/* Bundle cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {bundles.map((bundle) => (
-          <BundleCard
-            key={bundle.id}
-            bundle={bundle}
-            checked={checked}
-            onToggle={toggleComponent}
-          />
-        ))}
-      </div>
-
-      {/* Bottom install bar */}
-      <div className="flex flex-col gap-3 rounded-lg border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <p className="text-sm font-medium">
-            {selectedCount} of {totalCount} components selected
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Continue to the {platformLabel} library to finish setup.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          {installButton}
-          <Button
-            size="lg"
-            variant="outline"
-            className="min-w-[160px]"
-            onClick={() => onSetupClick(setupHref)}
-          >
-            Open library
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <Button
+        size="lg"
+        className="min-w-[180px] gap-2"
+        disabled={selectedCount === 0}
+        onClick={onClick}
+      >
+        <Package className="h-4 w-4" />
+        Install bundle
+      </Button>
     </div>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/*  Bundle Card (with component checkboxes)                           */
+/*  Bundle Component Row                                               */
 /* ------------------------------------------------------------------ */
 
-function BundleCard({
+function BundleComponentRow({
   bundle,
-  checked,
+  isChecked,
   onToggle,
 }: {
   bundle: Bundle
-  checked: Record<string, boolean>
-  onToggle: (id: string) => void
+  isChecked: boolean
+  onToggle: () => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const detailsId = `bundle-details-${bundle.id}`
-  const isPlatformSpecific = bundle.platform !== 'Claude & OpenClaw'
 
   return (
     <Card
       className={cn(
         'flex flex-col transition-colors duration-200',
         bundle.isFlagship && 'border-primary/40',
-        isPlatformSpecific && !bundle.isFlagship && 'border-violet-500/30',
+        isChecked && 'border-green-500/30 bg-green-50/20 dark:bg-green-950/10',
+        !isChecked && 'opacity-60',
       )}
     >
-      <CardHeader className="space-y-1.5 pb-2">
-        <div className="flex items-start justify-between gap-2">
+      <CardHeader className="pb-2">
+        <div className="flex items-start gap-3">
+          {/* Checkbox */}
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={isChecked}
+            onClick={onToggle}
+            className={cn(
+              'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              isChecked
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'border-muted-foreground/40 bg-background',
+            )}
+          >
+            {isChecked && <Check className="h-3 w-3" strokeWidth={3} />}
+          </button>
+
+          {/* Title + badges */}
           <div className="min-w-0 flex-1">
-            {bundle.isFlagship && (
-              <span className="mb-1 inline-block rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                Flagship
-              </span>
-            )}
-            {isPlatformSpecific && !bundle.isFlagship && (
-              <span className="mb-1 inline-block rounded bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
-                Platform
-              </span>
-            )}
-            <h3 className="text-base font-semibold leading-tight">
-              {bundle.name}
-            </h3>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {bundle.isFlagship && (
+                <span className="inline-block rounded bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                  Flagship
+                </span>
+              )}
+              <h3 className="text-base font-semibold leading-tight">{bundle.name}</h3>
+            </div>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              {bundle.tagline}
+            </p>
           </div>
         </div>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {bundle.tagline}
-        </p>
       </CardHeader>
 
-      <CardContent className="flex flex-1 flex-col gap-3 pt-0">
-        <p className="text-xs text-muted-foreground">
-          Ready in {bundle.setupTime}
-        </p>
+      <CardContent className="flex flex-col gap-3 pt-0 pl-11">
+        <p className="text-xs text-muted-foreground">Ready in {bundle.setupTime}</p>
 
-        {/* Component checkboxes */}
-        <ComponentCheckboxList
-          components={bundle.components}
-          checked={checked}
-          onToggle={onToggle}
-        />
-
-        {/* Learn more expand/collapse */}
+        {/* Expand/collapse */}
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
@@ -462,7 +480,7 @@ function BundleCard({
           aria-controls={detailsId}
           className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
-          {expanded ? 'Show less' : 'Learn more'}
+          {expanded ? 'Show less' : 'What\'s included'}
           <ChevronDown
             className={cn(
               'h-3 w-3 transition-transform duration-200',
@@ -500,46 +518,5 @@ function BundleCard({
         </div>
       </CardContent>
     </Card>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Component checkbox list                                            */
-/* ------------------------------------------------------------------ */
-
-function ComponentCheckboxList({
-  components,
-  checked,
-  onToggle,
-}: {
-  components: BundleComponent[]
-  checked: Record<string, boolean>
-  onToggle: (id: string) => void
-}) {
-  if (components.length === 0) return null
-
-  return (
-    <div className="space-y-2">
-      {components.map((comp) => (
-        <label
-          key={comp.id}
-          className="flex cursor-pointer items-start gap-2.5 rounded-md px-1 py-0.5 hover:bg-muted/40"
-        >
-          <input
-            type="checkbox"
-            checked={!!checked[comp.id]}
-            onChange={() => onToggle(comp.id)}
-            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
-          />
-          <div className="min-w-0">
-            <span className="text-sm font-medium leading-tight">{comp.name}</span>
-            <span className="text-muted-foreground"> — </span>
-            <span className="text-sm leading-tight text-muted-foreground">
-              {comp.description}
-            </span>
-          </div>
-        </label>
-      ))}
-    </div>
   )
 }
