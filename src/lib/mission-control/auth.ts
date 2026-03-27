@@ -25,6 +25,7 @@ async function authenticateWithMock(email: string, password: string) {
   console.log('🔐 Using mock authentication for:', email)
   
   // Mock user data - in production this would come from Supabase
+  const bcrypt = await import('bcrypt')
   const mockUser = {
     id: 'mock-user-id',
     email: email,
