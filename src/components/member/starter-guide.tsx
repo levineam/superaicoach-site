@@ -64,7 +64,7 @@ type AnimState = 'active' | 'exiting' | 'entering'
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export function StarterGuide({ displayName }: { displayName: string }) {
+export function StarterGuide() {
   const router = useRouter()
   const [step, setStep] = useState<WizardStep>(1)
   const [animState, setAnimState] = useState<AnimState>('active')
@@ -151,7 +151,7 @@ export function StarterGuide({ displayName }: { displayName: string }) {
         )}
       >
         {step === 1 && (
-          <StepPlatform displayName={displayName} onSelect={handlePlatformSelect} />
+          <StepPlatform onSelect={handlePlatformSelect} />
         )}
         {step === 2 && (
           <StepProfession
@@ -177,18 +177,13 @@ export function StarterGuide({ displayName }: { displayName: string }) {
 /* ------------------------------------------------------------------ */
 
 function StepPlatform({
-  displayName,
   onSelect,
 }: {
-  displayName: string
   onSelect: (p: PlatformKey) => void
 }) {
-  const greeting = displayName ? `Welcome, ${displayName}` : 'Welcome'
-
   return (
     <div className="flex flex-col items-center gap-10">
-      <p className="text-base text-muted-foreground">{greeting}</p>
-      <h1 className="-mt-6 text-center text-3xl font-semibold tracking-tight sm:text-4xl">
+      <h1 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">
         Pick your preferred platform
       </h1>
 
