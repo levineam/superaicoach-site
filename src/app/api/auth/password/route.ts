@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { authenticateWithPassword } from '@/lib/mission-control/auth'
-import { SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
+import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,21 +20,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error }, { status: 401 })
     }
 
-    // Set session cookie
+    // Create HMAC-signed session token that the member auth layer can verify
+    const signedToken = createSessionToken({
+      userId: result.userId,
+      tenantId: result.userId,       // simplified — no multi-tenant
+      tenantSlug: result.tenantSlug || 'default',
+      role: (result.role as 'admin' | 'owner' | 'team_member' | 'coach') || 'owner',
+      email: email,
+    })
+
     const cookieStore = await cookies()
-    cookieStore.set(SESSION_COOKIE_NAME, result.sessionToken, {
+    cookieStore.set(SESSION_COOKIE_NAME, signedToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 8, // 8 hours (matches session.ts SESSION_DURATION_MS)
     })
 
     return NextResponse.json({
       ok: true,
-      tenantSlug: result.tenantSlug,
       userId: result.userId,
-      role: result.role,
     })
   } catch (error) {
     console.error('Password auth error:', error)

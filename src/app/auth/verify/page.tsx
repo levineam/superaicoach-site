@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { consumeMagicLinkAndCreateSession } from '@/lib/mission-control/auth'
-import { SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
+import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Server action — only called when the user explicitly clicks "Log in"
@@ -25,17 +25,22 @@ async function verifyMagicLink(formData: FormData) {
   }
 
   const cookieStore = await cookies()
-  if (result.sessionToken) {
-    cookieStore.set(SESSION_COOKIE_NAME, result.sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 8, // 8 hours
-    })
-  }
+  const signedToken = createSessionToken({
+    userId: result.userId,
+    tenantId: result.userId,
+    tenantSlug: result.tenantSlug || 'default',
+    role: (result.role as 'admin' | 'owner' | 'team_member' | 'coach') || 'owner',
+    email: result.email || (email as string),
+  })
+  cookieStore.set(SESSION_COOKIE_NAME, signedToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 8,
+  })
 
-  redirect(`/mission-control/${result.tenantSlug}`)
+  redirect('/member')
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -60,7 +65,7 @@ export default async function VerifyPage({
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-foreground">One-click login</h1>
           <p className="text-sm text-muted-foreground">
-            Click the button below to sign in to Mission Control.
+            Click the button below to sign in.
           </p>
         </div>
 
@@ -71,7 +76,7 @@ export default async function VerifyPage({
             type="submit"
             className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-opacity"
           >
-            Log in to Mission Control
+            Sign in
           </button>
         </form>
 
