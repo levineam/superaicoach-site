@@ -1,15 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
+import { SESSION_COOKIE_NAME } from './session-constants'
 
 async function createHash(input: string, saltRounds: number = 10): Promise<string> {
-  // For Bun runtime, use Bun.password.hash
-  if (typeof Bun !== 'undefined' && Bun.password) {
-    return Bun.password.hash(input, {
-      algorithm: 'bcrypt',
-      cost: saltRounds,
-    })
-  }
-  
-  // Fallback for environments without Bun
+  // Use bcrypt directly
   const bcrypt = await import('bcrypt')
   return bcrypt.hash(input, saltRounds)
 }
@@ -38,8 +31,8 @@ export async function authenticateWithPassword(email: string, password: string) 
     }
 
     // Verify password
-    const passwordMatch = await createHash(password, 10)
-    const isPasswordValid = await Bun.password.verify(password, user.hashed_password)
+    const bcrypt = await import('bcrypt')
+    const isPasswordValid = await bcrypt.compare(password, user.hashed_password)
 
     if (!isPasswordValid) {
       return { error: 'Invalid email or password' }
@@ -88,7 +81,7 @@ export async function validateSession(sessionToken: string) {
         )
       `)
       .eq('token', sessionToken)
-      .eq('expires_at', 'gt', new Date().toISOString())
+      .gt('expires_at', new Date().toISOString())
       .single()
 
     if (error || !session) {
@@ -97,9 +90,11 @@ export async function validateSession(sessionToken: string) {
 
     return {
       userId: session.users.id,
-      email: session.users.email,
-      role: session.users.role,
+      tenantId: session.users.id, // Using userId as tenantId for now since we don't have a separate tenant_id in users table
       tenantSlug: session.users.tenant_slug,
+      role: session.users.role,
+      email: session.users.email,
+      expiresAt: session.expires_at,
     }
   } catch (error) {
     console.error('Session validation error:', error)
@@ -214,7 +209,8 @@ export async function changePassword(userId: string, currentPassword: string, ne
       return { error: 'User not found' }
     }
 
-    const isCurrentPasswordValid = await Bun.password.verify(currentPassword, user.hashed_password)
+    const bcrypt = await import('bcrypt')
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.hashed_password)
     if (!isCurrentPasswordValid) {
       return { error: 'Current password is incorrect' }
     }
@@ -280,9 +276,12 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
 
     return {
       sessionToken,
+      tenantId: user.id, // Using userId as tenantId for now
       tenantSlug: user.tenant_slug,
       userId: user.id,
       role: user.role,
+      email: user.email,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
@@ -291,4 +290,25 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
 }
 
 // Alias for validateSession to match existing imports
-export const getServerSession = validateSession
+export const getServerSession = (request?: any) => {
+  if (request && request.headers) {
+    // Extract session token from cookies
+    const cookieHeader = request.headers.get('cookie')
+    if (cookieHeader) {
+      const cookies = cookieHeader.split(';').reduce((acc: any, cookie: string) => {
+        const [name, value] = cookie.trim().split('=')
+        if (name === SESSION_COOKIE_NAME) {
+          acc.token = value
+        }
+        return acc
+      }, {})
+      
+      if (cookies.token) {
+        return validateSession(cookies.token)
+      }
+    }
+  }
+  
+  // Fallback for server-side session validation
+  return validateSession('') // This will return null if no token
+}

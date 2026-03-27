@@ -30,7 +30,7 @@ export default async function MissionControlJarvisPage({ params }: JarvisPagePro
   }
 
   // Resolve the tenant for cross-tenant admin access
-  let resolvedTenantId = session.tenantId
+  let resolvedTenantId = session.tenantSlug
   let resolvedTenantName = tenantSlug
 
   if (isAdmin && !isOwnTenant) {

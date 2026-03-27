@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Resolve tenant ID
-  let tenantId = session.tenantId
+  let tenantId = session.tenantSlug
   if (isAdmin && !isOwnTenant) {
     const tenant = await getTenantBySlug(requestedSlug)
     if (!tenant) {

@@ -12,25 +12,28 @@ async function verifyMagicLink(formData: FormData) {
   'use server'
 
   const token = formData.get('token')
+  const email = formData.get('email')
 
   if (typeof token !== 'string' || !token) {
     redirect('/sign-in?error=missing-token')
   }
 
-  const result = await consumeMagicLinkAndCreateSession(token)
+  const result = await consumeMagicLinkAndCreateSession(token, email as string)
 
   if (!result) {
     redirect('/sign-in?error=invalid-token')
   }
 
   const cookieStore = await cookies()
-  cookieStore.set(SESSION_COOKIE_NAME, result.sessionToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 8, // 8 hours
-  })
+  if (result.sessionToken) {
+    cookieStore.set(SESSION_COOKIE_NAME, result.sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 8, // 8 hours
+    })
+  }
 
   redirect(`/mission-control/${result.tenantSlug}`)
 }
@@ -43,9 +46,9 @@ async function verifyMagicLink(formData: FormData) {
 export default async function VerifyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ token?: string }>
+  searchParams: Promise<{ token?: string; email?: string }>
 }) {
-  const { token } = await searchParams
+  const { token, email } = await searchParams
 
   if (!token) {
     redirect('/sign-in?error=missing-token')
@@ -63,6 +66,7 @@ export default async function VerifyPage({
 
         <form action={verifyMagicLink}>
           <input type="hidden" name="token" value={token} />
+          <input type="hidden" name="email" value={email || ''} />
           <button
             type="submit"
             className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-opacity"

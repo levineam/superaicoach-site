@@ -16,10 +16,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Session expired or invalid.' }, { status: 401 })
   }
 
-  const events = await getTenantAuditLog(session.tenantId, 25)
+  const events = await getTenantAuditLog(session.tenantSlug, 25)
 
   return NextResponse.json({
-    tenantId: session.tenantId,
+    tenantId: session.tenantSlug,
     events,
   })
 }

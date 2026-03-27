@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
   }
 
   const actionPolicy = CUSTOMER_ACTIONS[body.actionId]
-  const tenant = await getTenantById(session.tenantId)
+  const tenant = await getTenantById(session.tenantSlug)
 
   if (!tenant) {
     return NextResponse.json({ error: 'Tenant not found.' }, { status: 404 })
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
   if (!canRoleRunAction(session.role, actionPolicy.id)) {
     await logCustomerAction({
       requestId,
-      tenantId: session.tenantId,
+      tenantId: session.tenantSlug,
       userId: session.userId,
       role: session.role,
       endpointId: null,
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
   if (tenant.pilotMode && !isPilotModeActionAllowed(actionPolicy.id)) {
     await logCustomerAction({
       requestId,
-      tenantId: session.tenantId,
+      tenantId: session.tenantSlug,
       userId: session.userId,
       role: session.role,
       endpointId: null,
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
   if (actionPolicy.requiresConfirmation && !body.confirmed) {
     await logCustomerAction({
       requestId,
-      tenantId: session.tenantId,
+      tenantId: session.tenantSlug,
       userId: session.userId,
       role: session.role,
       endpointId: null,
@@ -118,14 +118,14 @@ export async function POST(request: NextRequest) {
   }
 
   const routed = await routeTenantAction({
-    tenantId: session.tenantId,
+    tenantId: session.tenantSlug,
     action: actionPolicy.id,
     actor: session.email,
   })
 
   await logCustomerAction({
     requestId,
-    tenantId: session.tenantId,
+    tenantId: session.tenantSlug,
     userId: session.userId,
     role: session.role,
     endpointId: routed.endpointId,

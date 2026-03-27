@@ -17,7 +17,7 @@ export async function getMissionControlSnapshot(
   session: SessionPayload,
 ): Promise<MissionControlDashboardSnapshot | null> {
   const user = await findUserById(session.userId)
-  const tenant = await getTenantById(session.tenantId)
+  const tenant = await getTenantById(session.tenantSlug)
 
   if (!user || !tenant) {
     return null

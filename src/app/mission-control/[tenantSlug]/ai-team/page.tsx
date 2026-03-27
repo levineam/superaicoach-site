@@ -35,7 +35,7 @@ export default async function AITeamPage({ params }: AITeamPageProps) {
   }
 
   // Resolve tenant ID for cross-tenant admin access
-  let resolvedTenantId = session.tenantId
+  let resolvedTenantId = session.tenantSlug
   if (isAdmin && !isOwnTenant) {
     const tenant = await getTenantBySlug(tenantSlug)
     if (!tenant) {
