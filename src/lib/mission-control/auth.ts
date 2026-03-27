@@ -1,5 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
-import { createHash } from 'bcrypt'
+
+async function createHash(input: string, saltRounds: number = 10): Promise<string> {
+  // For Bun runtime, use Bun.password.hash
+  if (typeof Bun !== 'undefined' && Bun.password) {
+    return Bun.password.hash(input, {
+      algorithm: 'bcrypt',
+      cost: saltRounds,
+    })
+  }
+  
+  // Fallback for environments without Bun
+  const bcrypt = await import('bcrypt')
+  return bcrypt.hash(input, saltRounds)
+}
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -159,3 +172,123 @@ export async function getUserByEmail(email: string) {
     return null
   }
 }
+
+export async function issueMagicLink(email: string, origin: string) {
+  try {
+    // Generate a secure random token
+    const magicLinkToken = crypto.randomUUID()
+    const tokenHash = await createHash(magicLinkToken, 10)
+    
+    // Store the magic link token with expiration (30 minutes)
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000)
+    
+    const { error: storeError } = await supabase
+      .from('magic_links')
+      .insert({
+        email,
+        token_hash: tokenHash,
+        expires_at: expiresAt,
+        used: false
+      })
+
+    if (storeError) {
+      console.error('Magic link storage error:', storeError)
+      throw new Error('Failed to create magic link')
+    }
+
+    // Create the magic link URL
+    const magicLinkUrl = `${origin}/auth/verify?token=${magicLinkToken}&email=${encodeURIComponent(email)}`
+
+    return { magicLink: magicLinkUrl }
+  } catch (error) {
+    console.error('Magic link creation error:', error)
+    throw new Error('Failed to create magic link')
+  }
+}
+
+export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
+  try {
+    // Verify current password
+    const user = await getUserByEmail(userId) // This should actually get by userId
+    if (!user) {
+      return { error: 'User not found' }
+    }
+
+    const isCurrentPasswordValid = await Bun.password.verify(currentPassword, user.hashed_password)
+    if (!isCurrentPasswordValid) {
+      return { error: 'Current password is incorrect' }
+    }
+
+    // Update password
+    const { success, error } = await setPasswordForUser(userId, newPassword)
+    if (!success) {
+      return { error: error || 'Failed to update password' }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Password change error:', error)
+    return { error: 'Failed to change password' }
+  }
+}
+
+export async function consumeMagicLinkAndCreateSession(token: string, email: string) {
+  try {
+    // Find the magic link
+    const { data: magicLink, error } = await supabase
+      .from('magic_links')
+      .select('*')
+      .eq('email', email)
+      .eq('token_hash', await createHash(token, 10))
+      .eq('used', false)
+      .gt('expires_at', new Date().toISOString())
+      .single()
+
+    if (error || !magicLink) {
+      return { error: 'Invalid or expired magic link' }
+    }
+
+    // Mark as used
+    await supabase
+      .from('magic_links')
+      .update({ used: true })
+      .eq('id', magicLink.id)
+
+    // Find or create user
+    let user = await getUserByEmail(email)
+    if (!user) {
+      const { success, user: newUser } = await createUser(email, 'temp-password')
+      if (!success || !newUser) {
+        return { error: 'Failed to create user' }
+      }
+      user = newUser
+    }
+
+    // Create session
+    const sessionToken = crypto.randomUUID()
+    const { error: sessionError } = await supabase
+      .from('sessions')
+      .insert({
+        user_id: user.id,
+        token: sessionToken,
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      })
+
+    if (sessionError) {
+      throw sessionError
+    }
+
+    return {
+      sessionToken,
+      tenantSlug: user.tenant_slug,
+      userId: user.id,
+      role: user.role,
+    }
+  } catch (error) {
+    console.error('Magic link consumption error:', error)
+    return { error: 'Failed to create session' }
+  }
+}
+
+// Alias for validateSession to match existing imports
+export const getServerSession = validateSession
