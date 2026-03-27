@@ -2,6 +2,9 @@ export type Platform = 'Claude & OpenClaw' | 'Claude' | 'OpenClaw'
 
 export type Profession = 'wealth-manager' | 'consultant' | 'attorney' | 'other'
 
+/** Alias for Profession — preferred name in new code */
+export type ProfessionId = Profession
+
 export interface BundleComponent {
   id: string
   name: string
@@ -699,3 +702,7 @@ export function getBundlesForSelection(
 
   return [...flagship, ...cross, ...professionSpecific]
 }
+
+/** Alias for professionBundles — used in member-starter.tsx */
+export const PROFESSION_BUNDLES = professionBundles
+export default PROFESSION_BUNDLES
