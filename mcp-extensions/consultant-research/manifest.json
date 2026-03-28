@@ -1,0 +1,51 @@
+{
+  "manifest_version": "0.2",
+  "name": "superai-consultant-research",
+  "display_name": "SuperAI Consultant Research",
+  "version": "1.0.0",
+  "description": "Research and summarize industry news, company backgrounds, and competitive intelligence for client prep. Designed for management consultants.",
+  "author": {
+    "name": "Super AI Coach",
+    "url": "https://superaicoach.com"
+  },
+  "homepage": "https://superaicoach.com/member",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "BRAVE_API_KEY": "${user_config.brave_api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "brave_api_key": {
+      "type": "string",
+      "title": "Brave Search API Key (optional)",
+      "description": "Free API key from https://brave.com/search/api/ — enables real-time web search. Leave blank to use built-in research templates only.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools": [
+    {
+      "name": "research_company",
+      "description": "Research a company: recent news, financial overview, key leadership, strategic priorities, and competitive positioning."
+    },
+    {
+      "name": "prepare_client_brief",
+      "description": "Generate a structured pre-meeting client brief: agenda preparation, talking points, risk areas, and opportunity angles."
+    },
+    {
+      "name": "analyze_industry_trends",
+      "description": "Summarize recent trends in an industry sector for client positioning and strategic advice."
+    },
+    {
+      "name": "competitive_snapshot",
+      "description": "Build a quick competitive snapshot: key players, market share estimates, recent moves, and differentiation factors."
+    }
+  ],
+  "license": "MIT"
+}

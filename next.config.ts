@@ -1,6 +1,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/extensions/:file*.mcpb',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/vnd.anthropic.mcpb',
+          },
+          {
+            key: 'Content-Disposition',
+            value: 'attachment',
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
