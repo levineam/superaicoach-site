@@ -71,7 +71,7 @@ type AnimState = 'active' | 'exiting' | 'entering'
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export function StarterGuide({ userName }: { userName: string }) {
+export function StarterGuide({ userName: _userName }: { userName: string }) {
   const [step, setStep] = useState<WizardStep>(1)
   const [animState, setAnimState] = useState<AnimState>('active')
   const [platform, setPlatform] = useState<PlatformKey | null>(null)
@@ -130,11 +130,22 @@ export function StarterGuide({ userName }: { userName: string }) {
   }
 
   function handleInstallClick() {
+    const currentPlatform = platform ?? DEFAULT_PLATFORM
     trackStarterWorkflowStarted({
       profession: toAnalyticsProfession(profession),
-      platform: platform ?? DEFAULT_PLATFORM,
-      targetHref: '#coming-soon',
+      platform: currentPlatform,
+      targetHref: currentPlatform === 'claude'
+        ? `/install/claude-${profession}.md`
+        : '#coming-soon',
     })
+
+    // Claude platform: trigger file download
+    if (currentPlatform === 'claude') {
+      const link = document.createElement('a')
+      link.href = `/install/claude-${profession}.md`
+      link.download = `superaicoach-${profession}-setup.md`
+      link.click()
+    }
   }
 
   // --- Animation class ---
@@ -156,7 +167,7 @@ export function StarterGuide({ userName }: { userName: string }) {
         )}
       >
         {step === 1 && (
-          <StepPlatform userName={userName} onSelect={handlePlatformSelect} />
+          <StepPlatform onSelect={handlePlatformSelect} />
         )}
         {step === 2 && (
           <StepProfession
@@ -182,18 +193,13 @@ export function StarterGuide({ userName }: { userName: string }) {
 /* ------------------------------------------------------------------ */
 
 function StepPlatform({
-  userName,
   onSelect,
 }: {
-  userName: string
   onSelect: (p: PlatformKey) => void
 }) {
-  const greeting = userName ? `Welcome, ${userName}` : 'Welcome'
-
   return (
     <div className="flex flex-col items-center gap-10">
-      <p className="text-base text-muted-foreground">{greeting}</p>
-      <h1 className="-mt-6 text-center text-3xl font-semibold tracking-tight sm:text-4xl">
+      <h1 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">
         Pick your preferred platform
       </h1>
 
@@ -311,7 +317,10 @@ function StepBundleCatalog({
 
   function handleInstall() {
     onInstallClick()
-    setShowComingSoon(true)
+    // Only show "Coming Soon" for OpenClaw — Claude triggers a file download
+    if (platform !== 'claude') {
+      setShowComingSoon(true)
+    }
   }
 
   const profLabel =
