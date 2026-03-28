@@ -20,12 +20,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error }, { status: 401 })
     }
 
-    // Create HMAC-signed session token that the member auth layer can verify
+    // Create HMAC-signed session token that the member auth layer can verify.
+    // Sanitize the role: only values inside MembershipRole are valid in signed cookies.
+    // Default new/unknown roles (e.g. 'user') to 'owner' (single-tenant self-serve).
+    const allowedRoles = ['admin', 'owner', 'team_member', 'coach'] as const
+    type MembershipRole = (typeof allowedRoles)[number]
+    const safeRole: MembershipRole = (allowedRoles as readonly string[]).includes(result.role)
+      ? (result.role as MembershipRole)
+      : 'owner'
     const signedToken = createSessionToken({
       userId: result.userId,
       tenantId: result.userId,       // simplified — no multi-tenant
       tenantSlug: result.tenantSlug || 'default',
-      role: (result.role as 'admin' | 'owner' | 'team_member' | 'coach') || 'owner',
+      role: safeRole,
       email: email,
     })
 

@@ -115,7 +115,76 @@ create index if not exists idx_tenant_endpoints_tenant_id on public.tenant_openc
 create index if not exists idx_tenant_endpoints_primary on public.tenant_openclaw_endpoints (tenant_id, is_primary);
 
 -- ============================================================
--- 8. Housekeeping
+-- 8. Memberships (user ↔ tenant role assignments)
+-- ============================================================
+create table if not exists public.memberships (
+  id         uuid        primary key default gen_random_uuid(),
+  user_id    uuid        not null references public.users(id) on delete cascade,
+  tenant_id  uuid        not null references public.tenants(id) on delete cascade,
+  role       text        not null default 'owner',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (user_id, tenant_id)
+);
+
+create index if not exists idx_memberships_user_id   on public.memberships (user_id);
+create index if not exists idx_memberships_tenant_id on public.memberships (tenant_id);
+
+-- ============================================================
+-- 9. Mission Control activities (tenant activity log)
+-- ============================================================
+create table if not exists public.mission_control_activities (
+  id         uuid        primary key default gen_random_uuid(),
+  tenant_id  uuid        not null references public.tenants(id) on delete cascade,
+  actor      text        not null,
+  summary    text        not null,
+  outcome    text        not null default 'ok',   -- ok | warning | error
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_mc_activities_tenant_id on public.mission_control_activities (tenant_id);
+create index if not exists idx_mc_activities_created   on public.mission_control_activities (created_at);
+
+-- ============================================================
+-- 10. Audit log (action-level security log)
+-- ============================================================
+create table if not exists public.audit_log (
+  id          uuid        primary key default gen_random_uuid(),
+  request_id  text        not null,
+  tenant_id   uuid        not null references public.tenants(id) on delete cascade,
+  user_id     text,
+  role        text,
+  endpoint_id text,
+  action      text        not null,
+  result      text        not null,   -- allowed | blocked | failed
+  error       text,
+  metadata    jsonb,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists idx_audit_log_tenant_id  on public.audit_log (tenant_id);
+create index if not exists idx_audit_log_created    on public.audit_log (created_at);
+create index if not exists idx_audit_log_request_id on public.audit_log (request_id);
+
+-- ============================================================
+-- 11. Project cards (mission-control kanban board)
+-- ============================================================
+create table if not exists public.project_cards (
+  id          uuid        primary key default gen_random_uuid(),
+  project     text        not null,
+  status      text        not null default 'active',
+  description text,
+  priority    text        not null default 'Medium',  -- High | Medium | Low
+  column_id   text        not null default 'active',  -- needs-you | active | in-review | done
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+create index if not exists idx_project_cards_project   on public.project_cards (project);
+create index if not exists idx_project_cards_column_id on public.project_cards (column_id);
+
+-- ============================================================
+-- 12. Housekeeping
 -- ============================================================
 
 -- updated_at trigger
@@ -139,6 +208,14 @@ create trigger tenant_endpoints_updated_at
   before update on public.tenant_openclaw_endpoints
   for each row execute function update_updated_at();
 
+create trigger memberships_updated_at
+  before update on public.memberships
+  for each row execute function update_updated_at();
+
+create trigger project_cards_updated_at
+  before update on public.project_cards
+  for each row execute function update_updated_at();
+
 -- RLS (service_role bypasses; anon gets nothing)
 alter table public.users                      enable row level security;
 alter table public.sessions                   enable row level security;
@@ -147,6 +224,10 @@ alter table public.leads                      enable row level security;
 alter table public.bundle_activations         enable row level security;
 alter table public.tenants                    enable row level security;
 alter table public.tenant_openclaw_endpoints  enable row level security;
+alter table public.memberships                enable row level security;
+alter table public.mission_control_activities enable row level security;
+alter table public.audit_log                  enable row level security;
+alter table public.project_cards              enable row level security;
 
 -- Service-role key (used by the Next.js server) bypasses RLS,
 -- so no permissive policies needed for the app. Add client-side

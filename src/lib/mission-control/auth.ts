@@ -14,7 +14,7 @@ async function compareHash(input: string, hash: string): Promise<boolean> {
   return bcrypt.compare(input, hash)
 }
 
-const MAGIC_LINK_DURATION_MS = 30 * 60 * 1000
+const MAGIC_LINK_DURATION_MS = 20 * 60 * 1000
 
 // Create Supabase client with fallback for missing env vars
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL

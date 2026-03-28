@@ -25,11 +25,20 @@ async function verifyMagicLink(formData: FormData) {
   }
 
   const cookieStore = await cookies()
+  // Sanitize the role: only values inside MembershipRole are valid in signed cookies.
+  // Default unknown roles (e.g. the DB default 'user') to 'owner' (single-tenant self-serve).
+  const allowedVerifyRoles = ['admin', 'owner', 'team_member', 'coach'] as const
+  type VerifyMembershipRole = (typeof allowedVerifyRoles)[number]
+  const safeVerifyRole: VerifyMembershipRole = (allowedVerifyRoles as readonly string[]).includes(
+    result.role,
+  )
+    ? (result.role as VerifyMembershipRole)
+    : 'owner'
   const signedToken = createSessionToken({
     userId: result.userId,
     tenantId: result.userId,
     tenantSlug: result.tenantSlug || 'default',
-    role: (result.role as 'admin' | 'owner' | 'team_member' | 'coach') || 'owner',
+    role: safeVerifyRole,
     email: result.email || (email as string),
   })
   cookieStore.set(SESSION_COOKIE_NAME, signedToken, {
