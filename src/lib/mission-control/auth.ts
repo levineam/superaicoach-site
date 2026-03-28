@@ -257,6 +257,10 @@ export async function issueMagicLink(email: string, origin: string) {
     // Store the magic link token with expiration (20 minutes)
     const expiresAt = new Date(Date.now() + MAGIC_LINK_DURATION_MS)
 
+    // Normalize email before storing so invalidation and consume queries
+    // both operate on the same canonical form.
+    const normalizedEmail = email.trim().toLowerCase()
+
     // Invalidate any previously issued unused tokens for this email so
     // there is only ever one active magic link per address.  This also
     // means the consume flow can safely scan all candidate rows without
@@ -264,13 +268,13 @@ export async function issueMagicLink(email: string, origin: string) {
     await supabase
       .from('magic_links')
       .update({ used: true })
-      .eq('email', email.trim().toLowerCase())
+      .eq('email', normalizedEmail)
       .eq('used', false)
     
     const { error: storeError } = await supabase
       .from('magic_links')
       .insert({
-        email,
+        email: normalizedEmail,
         token_hash: tokenHash,
         expires_at: expiresAt,
         used: false
@@ -281,8 +285,8 @@ export async function issueMagicLink(email: string, origin: string) {
       throw new Error('Failed to create magic link')
     }
 
-    // Create the magic link URL
-    const magicLinkUrl = `${origin}/auth/verify?token=${magicLinkToken}&email=${encodeURIComponent(email)}`
+    // Create the magic link URL (use normalizedEmail so verify-page query matches stored row)
+    const magicLinkUrl = `${origin}/auth/verify?token=${magicLinkToken}&email=${encodeURIComponent(normalizedEmail)}`
 
     return { magicLink: magicLinkUrl }
   } catch (error) {
