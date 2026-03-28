@@ -25,6 +25,7 @@
       "type": "string",
       "title": "Brave Search API Key (optional)",
       "description": "Free API key from https://brave.com/search/api/ — enables real-time web search. Leave blank to use built-in research templates only.",
+      "sensitive": true,
       "required": false
     }
   },
