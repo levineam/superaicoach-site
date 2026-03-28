@@ -6,6 +6,7 @@ import {
   Briefcase,
   CheckCircle2,
   ChevronRight,
+  Download,
   Gavel,
   Landmark,
   Package,
@@ -573,6 +574,143 @@ export function MemberStarter({ userName }: { userName?: string | null }) {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
       />
+
+      {/* Step 4: MCP Desktop Extensions (Claude platform only) */}
+      {activePlatform === 'claude' && (
+        <section className="space-y-4" aria-label="MCP Desktop Extensions">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Step 4 — Power users</p>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground">Add MCP tools to Claude</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Desktop Extensions add real tools to Claude — not just instructions. Download a{' '}
+              <code className="rounded bg-muted px-1 py-0.5 text-xs">.mcpb</code> file, double-click it,
+              and Claude Desktop prompts you to install. Requires Claude Desktop v4+.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {/* Consultant Research Extension */}
+            {(activeProfession === 'consultant' || activeProfession === 'other') && (
+              <Card className="border-border/60">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-base">Consultant Research</CardTitle>
+                      <CardDescription className="mt-1 text-xs">
+                        Research companies, prep client briefs, analyze industry trends, and build competitive snapshots — right inside Claude.
+                      </CardDescription>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+                      4 tools
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  <ul className="space-y-1">
+                    {['research_company', 'prepare_client_brief', 'analyze_industry_trends', 'competitive_snapshot'].map((tool) => (
+                      <li key={tool} className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <ChevronRight className="h-3 w-3 shrink-0 text-accent" aria-hidden="true" />
+                        <code className="rounded bg-muted px-1">{tool}</code>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href="/extensions/superai-consultant-research.mcpb"
+                    download="superai-consultant-research.mcpb"
+                    className="inline-flex"
+                  >
+                    <Button size="sm" variant="outline" className="gap-2 w-full">
+                      <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                      Download .mcpb
+                    </Button>
+                  </a>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Wealth Manager Tools Extension */}
+            {(activeProfession === 'wealth-manager' || activeProfession === 'other') && (
+              <Card className="border-border/60">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-base">Wealth Manager Tools</CardTitle>
+                      <CardDescription className="mt-1 text-xs">
+                        Portfolio analysis, client situation modeling, market intelligence briefs, and estate planning checklists.
+                      </CardDescription>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+                      4 tools
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  <ul className="space-y-1">
+                    {['analyze_portfolio_allocation', 'model_client_situation', 'market_intelligence_brief', 'estate_planning_checklist'].map((tool) => (
+                      <li key={tool} className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <ChevronRight className="h-3 w-3 shrink-0 text-accent" aria-hidden="true" />
+                        <code className="rounded bg-muted px-1">{tool}</code>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href="/extensions/superai-wealth-manager-tools.mcpb"
+                    download="superai-wealth-manager-tools.mcpb"
+                    className="inline-flex"
+                  >
+                    <Button size="sm" variant="outline" className="gap-2 w-full">
+                      <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                      Download .mcpb
+                    </Button>
+                  </a>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Show both for attorney/other since they may want all tools */}
+            {activeProfession === 'attorney' && (
+              <>
+                <Card className="border-border/60">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Consultant Research</CardTitle>
+                    <CardDescription className="mt-1 text-xs">
+                      Research tools useful for due diligence, client intake research, and competitive analysis.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <a href="/extensions/superai-consultant-research.mcpb" download="superai-consultant-research.mcpb" className="inline-flex w-full">
+                      <Button size="sm" variant="outline" className="gap-2 w-full">
+                        <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                        Download .mcpb
+                      </Button>
+                    </a>
+                  </CardContent>
+                </Card>
+                <Card className="border-border/60 opacity-60">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Attorney Tools</CardTitle>
+                    <CardDescription className="mt-1 text-xs">
+                      Contract analysis, case research, and document drafting tools — coming soon.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <Button size="sm" variant="outline" className="gap-2 w-full" disabled>
+                      <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                      Coming soon
+                    </Button>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            <strong>Install:</strong> Download → double-click → Claude Desktop shows the install prompt → click Install.{' '}
+            <strong>Requires:</strong> Claude Desktop v4+.{' '}
+            The copy-paste setup in Steps 2–3 works without this step.
+          </p>
+        </section>
+      )}
     </div>
   )
 }

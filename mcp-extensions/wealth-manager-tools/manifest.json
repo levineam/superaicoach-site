@@ -1,0 +1,40 @@
+{
+  "manifest_version": "0.2",
+  "name": "superai-wealth-manager-tools",
+  "display_name": "SuperAI Wealth Manager Tools",
+  "version": "1.0.0",
+  "description": "Portfolio analysis, client situation modeling, and market intelligence tools for wealth managers and financial advisors.",
+  "author": {
+    "name": "Super AI Coach",
+    "url": "https://superaicoach.com"
+  },
+  "homepage": "https://superaicoach.com/member",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "analyze_portfolio_allocation",
+      "description": "Analyze a client's portfolio allocation: asset class breakdown, concentration risks, rebalancing opportunities, and alignment with risk tolerance."
+    },
+    {
+      "name": "model_client_situation",
+      "description": "Build a structured client situation model: goals, timeline, risk capacity, tax situation, and recommended strategy framework."
+    },
+    {
+      "name": "market_intelligence_brief",
+      "description": "Generate a market intelligence brief covering current macro conditions, sector performance, and key considerations for client conversations."
+    },
+    {
+      "name": "estate_planning_checklist",
+      "description": "Generate a personalized estate planning checklist based on client situation: family structure, asset complexity, and planning gaps."
+    }
+  ],
+  "license": "MIT"
+}
