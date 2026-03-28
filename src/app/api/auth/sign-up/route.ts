@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: 'An account with this email already exists' }, { status: 409 })
     }
 
-    // Create the user
-    const result = await createUser(email, password)
+    // Create the user — self-registered accounts own their workspace (single-tenant model).
+    const result = await createUser(email, password, 'owner')
     if (!result.success || !result.user) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
     const tenantId = tenant?.id ?? result.user.id
 
     // Auto-sign-in: create HMAC-signed session token using the persisted role.
-    // New self-registered users get 'owner' (single-tenant model) — never elevate to admin.
+    // createUser is called with 'owner' above, so this will always resolve to 'owner'.
+    // The allowedRoles guard ensures we never accidentally serialize 'admin' or an unknown role.
     const allowedRoles = ['owner', 'team_member', 'coach'] as const
     type SignUpRole = (typeof allowedRoles)[number]
     const safeRole: SignUpRole = (allowedRoles as readonly string[]).includes(result.user.role)
