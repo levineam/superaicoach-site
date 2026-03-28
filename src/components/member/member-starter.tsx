@@ -614,16 +614,15 @@ export function MemberStarter({ userName }: { userName?: string | null }) {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href="/extensions/superai-consultant-research.mcpb"
-                    download="superai-consultant-research.mcpb"
-                    className="inline-flex"
-                  >
-                    <Button size="sm" variant="outline" className="gap-2 w-full">
+                  <Button asChild size="sm" variant="outline" className="gap-2 w-full">
+                    <a
+                      href="/extensions/superai-consultant-research.mcpb"
+                      download="superai-consultant-research.mcpb"
+                    >
                       <Download className="h-3.5 w-3.5" aria-hidden="true" />
                       Download .mcpb
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </CardContent>
               </Card>
             )}
@@ -653,16 +652,15 @@ export function MemberStarter({ userName }: { userName?: string | null }) {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href="/extensions/superai-wealth-manager-tools.mcpb"
-                    download="superai-wealth-manager-tools.mcpb"
-                    className="inline-flex"
-                  >
-                    <Button size="sm" variant="outline" className="gap-2 w-full">
+                  <Button asChild size="sm" variant="outline" className="gap-2 w-full">
+                    <a
+                      href="/extensions/superai-wealth-manager-tools.mcpb"
+                      download="superai-wealth-manager-tools.mcpb"
+                    >
                       <Download className="h-3.5 w-3.5" aria-hidden="true" />
                       Download .mcpb
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </CardContent>
               </Card>
             )}
@@ -678,12 +676,12 @@ export function MemberStarter({ userName }: { userName?: string | null }) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <a href="/extensions/superai-consultant-research.mcpb" download="superai-consultant-research.mcpb" className="inline-flex w-full">
-                      <Button size="sm" variant="outline" className="gap-2 w-full">
+                    <Button asChild size="sm" variant="outline" className="gap-2 w-full">
+                      <a href="/extensions/superai-consultant-research.mcpb" download="superai-consultant-research.mcpb">
                         <Download className="h-3.5 w-3.5" aria-hidden="true" />
                         Download .mcpb
-                      </Button>
-                    </a>
+                      </a>
+                    </Button>
                   </CardContent>
                 </Card>
                 <Card className="border-border/60 opacity-60">
