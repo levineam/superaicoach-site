@@ -202,7 +202,7 @@ export const bundles: Bundle[] = [
     availableFor: ['claude', 'openclaw'],
     profession: 'attorney',
     features: [
-      'Automatically case law summaries from citations',
+      'Automatically generates case law summaries from citations',
       'Relevant precedent extraction and analysis',
       'Plain English explanations of complex legal concepts',
       'Citation checking and validation'

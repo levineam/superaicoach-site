@@ -74,9 +74,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  // Resolve tenant ID
-  let tenantId = session.tenantSlug
+  // Resolve tenant UUID for endpoint lookups and downstream headers
+  let tenantId = session.tenantId
   if (isAdmin && !isOwnTenant) {
+    const tenant = await getTenantBySlug(requestedSlug)
+    if (!tenant) {
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
+    }
+    tenantId = tenant.id
+  } else {
+    // Resolve own-tenant slug to UUID
     const tenant = await getTenantBySlug(requestedSlug)
     if (!tenant) {
       return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })

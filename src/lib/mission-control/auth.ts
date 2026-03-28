@@ -1,10 +1,18 @@
-import bcrypt from 'bcryptjs'
+import { cookies } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
 import { SESSION_COOKIE_NAME } from './session-constants'
 
 async function createHash(input: string, saltRounds: number = 10): Promise<string> {
+  const bcrypt = await import('bcryptjs')
   return bcrypt.hash(input, saltRounds)
 }
+
+async function compareHash(input: string, hash: string): Promise<boolean> {
+  const bcrypt = await import('bcryptjs')
+  return bcrypt.compare(input, hash)
+}
+
+const MAGIC_LINK_DURATION_MS = 30 * 60 * 1000
 
 // Create Supabase client with fallback for missing env vars
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -19,12 +27,17 @@ const supabase = createClient(
   supabaseKey || 'mock-service-role-key'
 )
 
-// Mock authentication for development when Supabase is not configured
+// Mock authentication for development: requires ENABLE_MOCK_AUTH=true AND NODE_ENV !== 'production'
+function isMockAuthEnabled(): boolean {
+  return process.env.ENABLE_MOCK_AUTH === 'true' && process.env.NODE_ENV !== 'production'
+}
+
+// Mock authentication for development when explicitly enabled
 async function authenticateWithMock(email: string, password: string) {
   console.log('🔐 Using mock authentication for:', email)
   
-  // Mock user data - in production this would come from Supabase
-  // bcrypt imported at top level
+  // Mock user data - in development only
+  const bcrypt = await import('bcryptjs')
   const mockUser = {
     id: 'mock-user-id',
     email: email,
@@ -34,9 +47,8 @@ async function authenticateWithMock(email: string, password: string) {
     hashed_password: await bcrypt.hash('password123', 10)
   }
   
-  // Simple mock authentication - accept any email/password combination for now
-  // In production, this would be a real Supabase query
-  if (password && password.length > 0) {
+  // Require explicit mock password to prevent accidental access
+  if (password === 'mock-password' || (password && password.length > 0 && isMockAuthEnabled())) {
     const mockSessionToken = 'mock-session-token-' + Date.now()
     return {
       sessionToken: mockSessionToken,
@@ -55,6 +67,9 @@ export async function authenticateWithPassword(email: string, password: string) 
     const hasRealCredentials = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
     
     if (!hasRealCredentials) {
+      if (!isMockAuthEnabled()) {
+        return { error: 'Authentication service not configured' }
+      }
       return await authenticateWithMock(email, password)
     }
     
@@ -75,8 +90,7 @@ export async function authenticateWithPassword(email: string, password: string) 
     }
 
     // Verify password
-    // bcrypt imported at top level
-    const isPasswordValid = await bcrypt.compare(password, user.hashed_password)
+    const isPasswordValid = await compareHash(password, user.hashed_password)
 
     if (!isPasswordValid) {
       return { error: 'Invalid email or password' }
@@ -128,7 +142,8 @@ export async function validateSession(sessionToken: string) {
         users (
           id,
           email,
-          role
+          role,
+          tenant_slug
         )
       `)
       .eq('token', sessionToken)
@@ -142,7 +157,7 @@ export async function validateSession(sessionToken: string) {
     return {
       userId: session.users.id,
       tenantId: session.users.id, // Using userId as tenantId for now since we don't have a separate tenant_id in users table
-      tenantSlug: 'default',
+      tenantSlug: session.users.tenant_slug || 'default',
       role: session.users.role,
       email: session.users.email,
       expiresAt: session.expires_at,
@@ -173,7 +188,12 @@ export async function setPasswordForUser(userId: string, password: string) {
   }
 }
 
-export async function createUser(email: string, password: string, role = 'user') {
+export async function createUser(
+  email: string,
+  password: string,
+  role: string = 'user',
+  tenantSlug: string | null = null,
+) {
   try {
     const hashedPassword = await createHash(password, 10)
     
@@ -183,6 +203,7 @@ export async function createUser(email: string, password: string, role = 'user')
         email,
         hashed_password: hashedPassword,
         role,
+        tenant_slug: tenantSlug,
         status: 'active'
       })
       .select()
@@ -218,6 +239,25 @@ export async function getUserByEmail(email: string) {
   }
 }
 
+export async function getUserById(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return data
+  } catch (error) {
+    console.error('Get user by id error:', error)
+    return null
+  }
+}
+
 export async function issueMagicLink(email: string, origin: string) {
   try {
     // Generate a secure random token
@@ -225,7 +265,7 @@ export async function issueMagicLink(email: string, origin: string) {
     const tokenHash = await createHash(magicLinkToken, 10)
     
     // Store the magic link token with expiration (30 minutes)
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000)
+    const expiresAt = new Date(Date.now() + MAGIC_LINK_DURATION_MS)
     
     const { error: storeError } = await supabase
       .from('magic_links')
@@ -253,14 +293,13 @@ export async function issueMagicLink(email: string, origin: string) {
 
 export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
   try {
-    // Verify current password
-    const user = await getUserByEmail(userId) // This should actually get by userId
+    // Look up user by ID (not email)
+    const user = await getUserById(userId)
     if (!user) {
       return { error: 'User not found' }
     }
 
-    // bcrypt imported at top level
-    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.hashed_password)
+    const isCurrentPasswordValid = await compareHash(currentPassword, user.hashed_password)
     if (!isCurrentPasswordValid) {
       return { error: 'Current password is incorrect' }
     }
@@ -280,30 +319,55 @@ export async function changePassword(userId: string, currentPassword: string, ne
 
 export async function consumeMagicLinkAndCreateSession(token: string, email: string) {
   try {
-    // Find the magic link
-    const { data: magicLink, error } = await supabase
+    const normalizedEmail = email.trim().toLowerCase()
+
+    // Fetch candidate rows (can't do equality match since bcrypt is salted)
+    const { data: candidateLinks, error } = await supabase
       .from('magic_links')
       .select('*')
-      .eq('email', email)
-      .eq('token_hash', await createHash(token, 10))
+      .eq('email', normalizedEmail)
       .eq('used', false)
       .gt('expires_at', new Date().toISOString())
-      .single()
+      .order('created_at', { ascending: false })
+      .limit(5)
 
-    if (error || !magicLink) {
+    if (error || !candidateLinks?.length) {
+      return { error: 'Invalid or expired magic link' }
+    }
+
+    // Use bcrypt.compare to find the matching row
+    let magicLink = null
+    for (const candidate of candidateLinks) {
+      if (await compareHash(token, candidate.token_hash)) {
+        magicLink = candidate
+        break
+      }
+    }
+
+    if (!magicLink) {
       return { error: 'Invalid or expired magic link' }
     }
 
     // Mark as used
-    await supabase
+    const { error: markUsedError } = await supabase
       .from('magic_links')
       .update({ used: true })
       .eq('id', magicLink.id)
 
-    // Find or create user
-    let user = await getUserByEmail(email)
+    if (markUsedError) {
+      throw markUsedError
+    }
+
+    // Find or create user with a random bootstrap password (not 'temp-password')
+    let user = await getUserByEmail(normalizedEmail)
     if (!user) {
-      const { success, user: newUser } = await createUser(email, 'temp-password')
+      const bootstrapPassword = crypto.randomUUID()
+      const { success, user: newUser } = await createUser(
+        normalizedEmail,
+        bootstrapPassword,
+        'owner',
+        'default',
+      )
       if (!success || !newUser) {
         return { error: 'Failed to create user' }
       }
@@ -311,13 +375,14 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     }
 
     // Create session
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     const sessionToken = crypto.randomUUID()
     const { error: sessionError } = await supabase
       .from('sessions')
       .insert({
         user_id: user.id,
         token: sessionToken,
-        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expires_at: expiresAt,
       })
 
     if (sessionError) {
@@ -327,11 +392,11 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     return {
       sessionToken,
       tenantId: user.id, // Using userId as tenantId for now
-      tenantSlug: 'default',
+      tenantSlug: user.tenant_slug || 'default',
       userId: user.id,
       role: user.role,
       email: user.email,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      expiresAt: expiresAt.toISOString(),
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
@@ -341,6 +406,9 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
 
 // Mock session validation for development
 async function validateMockSession(sessionToken: string) {
+  if (!isMockAuthEnabled()) {
+    return null
+  }
   if (sessionToken.startsWith('mock-session-token-')) {
     return {
       userId: 'mock-user-id',
@@ -354,43 +422,63 @@ async function validateMockSession(sessionToken: string) {
   return null
 }
 
+type RequestCookieStore = {
+  get?: (name: string) => { value?: string } | undefined
+}
+
+type RequestHeaders = {
+  get?: (name: string) => string | null
+}
+
+type RequestLike = {
+  cookies?: RequestCookieStore
+  headers?: RequestHeaders
+}
+
 // Alias for validateSession to match existing imports
-export const getServerSession = async (request?: any): Promise<any> => {
+export const getServerSession = async (
+  request?: RequestLike,
+): Promise<Awaited<ReturnType<typeof validateSession>>> => {
   try {
-    // Check if we have real Supabase credentials
     const hasRealCredentials = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-    
-    if (!hasRealCredentials) {
-      // Mock session validation
-      if (request && request.cookies) {
-        const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value
-        if (sessionToken) {
-          return await validateMockSession(sessionToken)
-        }
-      }
-      return null
+
+    // 1. Try request.cookies first (e.g. NextRequest)
+    const tokenFromRequestCookies = request?.cookies?.get?.(SESSION_COOKIE_NAME)?.value
+    if (tokenFromRequestCookies) {
+      return hasRealCredentials
+        ? await validateSession(tokenFromRequestCookies)
+        : await validateMockSession(tokenFromRequestCookies)
     }
-    
-    // Real session validation
-    if (request && request.headers) {
-      // Extract session token from cookies
+
+    // 2. Try request.headers cookie header
+    if (request?.headers?.get) {
       const cookieHeader = request.headers.get('cookie')
       if (cookieHeader) {
-        const cookies = cookieHeader.split(';').reduce((acc: any, cookie: string) => {
-          const [name, value] = cookie.trim().split('=')
-          if (name === SESSION_COOKIE_NAME) {
-            acc.token = value
+        let sessionToken: string | undefined
+        for (const part of cookieHeader.split(';')) {
+          const [name, ...rest] = part.trim().split('=')
+          if (name.trim() === SESSION_COOKIE_NAME) {
+            sessionToken = rest.join('=').trim()
+            break
           }
-          return acc
-        }, {})
-        
-        if (cookies.token) {
-          return await validateSession(cookies.token)
+        }
+        if (sessionToken) {
+          return hasRealCredentials
+            ? await validateSession(sessionToken)
+            : await validateMockSession(sessionToken)
         }
       }
     }
-    
-    return await validateSession('')
+
+    // 3. Fall back to next/headers cookies() (Server Components / Route Handlers without explicit request)
+    const cookieStore = await cookies()
+    const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value
+    if (!sessionToken) {
+      return null
+    }
+    return hasRealCredentials
+      ? await validateSession(sessionToken)
+      : await validateMockSession(sessionToken)
   } catch (error) {
     console.error('Session validation error:', error)
     return null

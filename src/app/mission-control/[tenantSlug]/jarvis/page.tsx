@@ -29,8 +29,8 @@ export default async function MissionControlJarvisPage({ params }: JarvisPagePro
     redirect(`/mission-control/${session.tenantSlug}/jarvis`)
   }
 
-  // Resolve the tenant for cross-tenant admin access
-  let resolvedTenantId = session.tenantSlug
+  // Resolve the tenant UUID and name for endpoint lookups
+  let resolvedTenantId = session.tenantId
   let resolvedTenantName = tenantSlug
 
   if (isAdmin && !isOwnTenant) {
@@ -41,9 +41,10 @@ export default async function MissionControlJarvisPage({ params }: JarvisPagePro
     resolvedTenantId = tenant.id
     resolvedTenantName = tenant.name
   } else {
-    // Use session tenant name from session (we'll fetch endpoint separately)
+    // For own-tenant path, resolve slug to UUID and get display name
     const tenant = await getTenantBySlug(tenantSlug)
     if (tenant) {
+      resolvedTenantId = tenant.id
       resolvedTenantName = tenant.name
     }
   }

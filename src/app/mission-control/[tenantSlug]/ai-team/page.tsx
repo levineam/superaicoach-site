@@ -34,14 +34,20 @@ export default async function AITeamPage({ params }: AITeamPageProps) {
     redirect(`/mission-control/${session.tenantSlug}/ai-team`)
   }
 
-  // Resolve tenant ID for cross-tenant admin access
-  let resolvedTenantId = session.tenantSlug
+  // Resolve tenant ID (always use UUID, not slug, for data-access lookups)
+  let resolvedTenantId = session.tenantId
   if (isAdmin && !isOwnTenant) {
     const tenant = await getTenantBySlug(tenantSlug)
     if (!tenant) {
       redirect(`/mission-control/${session.tenantSlug}/ai-team`)
     }
     resolvedTenantId = tenant.id
+  } else {
+    // For own-tenant path, resolve slug to UUID
+    const tenant = await getTenantBySlug(tenantSlug)
+    if (tenant) {
+      resolvedTenantId = tenant.id
+    }
   }
 
   // Check if tenant has a gateway endpoint (needed for chat)

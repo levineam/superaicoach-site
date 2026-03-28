@@ -1,7 +1,6 @@
 import {
   findUserById,
   getMembershipForUserAndTenant,
-  getTenantById,
   getTenantBySlug,
   listTenantActivities,
   getPrimaryEndpointForTenant,
@@ -17,7 +16,7 @@ export async function getMissionControlSnapshot(
   session: SessionPayload,
 ): Promise<MissionControlDashboardSnapshot | null> {
   const user = await findUserById(session.userId)
-  const tenant = await getTenantById(session.tenantSlug)
+  const tenant = await getTenantBySlug(session.tenantSlug)
 
   if (!user || !tenant) {
     return null

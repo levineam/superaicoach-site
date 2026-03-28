@@ -30,12 +30,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
 
-    // Auto-sign-in: create HMAC-signed session token
+    // Auto-sign-in: create HMAC-signed session token using the persisted role
     const signedToken = createSessionToken({
       userId: result.user.id,
       tenantId: result.user.id,
-      tenantSlug: 'default',
-      role: 'owner',
+      tenantSlug: result.user.tenant_slug || 'default',
+      role: result.user.role,
       email,
     })
 

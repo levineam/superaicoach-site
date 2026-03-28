@@ -11,6 +11,7 @@ create table if not exists public.users (
   display_name    text,
   role            text        not null default 'user',
   status          text        not null default 'active',
+  tenant_slug     text,                           -- the tenant this user belongs to
   profession      text,                           -- wealth-manager | consultant | attorney | other
   platform        text,                           -- claude | openclaw
   created_at      timestamptz not null default now(),
@@ -81,7 +82,41 @@ create index if not exists idx_bundle_activations_user on public.bundle_activati
 create index if not exists idx_bundle_activations_bundle on public.bundle_activations (bundle_id);
 
 -- ============================================================
--- 6. Housekeeping
+-- 6. Tenants (Mission Control multi-tenancy)
+-- ============================================================
+create table if not exists public.tenants (
+  id          uuid        primary key default gen_random_uuid(),
+  slug        text        unique not null,
+  name        text        not null,
+  pilot_mode  boolean     not null default false,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+create index if not exists idx_tenants_slug on public.tenants (slug);
+
+-- ============================================================
+-- 7. Tenant OpenClaw endpoints
+-- ============================================================
+create table if not exists public.tenant_openclaw_endpoints (
+  id              uuid        primary key default gen_random_uuid(),
+  tenant_id       uuid        not null references public.tenants(id) on delete cascade,
+  endpoint_label  text        not null default 'primary',
+  endpoint_url    text        not null,
+  api_key         text,
+  platform        text        not null default 'openclaw',
+  status          text        not null default 'healthy',
+  is_primary      boolean     not null default false,
+  last_seen_at    timestamptz,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+create index if not exists idx_tenant_endpoints_tenant_id on public.tenant_openclaw_endpoints (tenant_id);
+create index if not exists idx_tenant_endpoints_primary on public.tenant_openclaw_endpoints (tenant_id, is_primary);
+
+-- ============================================================
+-- 8. Housekeeping
 -- ============================================================
 
 -- updated_at trigger
@@ -97,12 +132,22 @@ create trigger users_updated_at
   before update on public.users
   for each row execute function update_updated_at();
 
+create trigger tenants_updated_at
+  before update on public.tenants
+  for each row execute function update_updated_at();
+
+create trigger tenant_endpoints_updated_at
+  before update on public.tenant_openclaw_endpoints
+  for each row execute function update_updated_at();
+
 -- RLS (service_role bypasses; anon gets nothing)
-alter table public.users             enable row level security;
-alter table public.sessions          enable row level security;
-alter table public.magic_links       enable row level security;
-alter table public.leads             enable row level security;
-alter table public.bundle_activations enable row level security;
+alter table public.users                      enable row level security;
+alter table public.sessions                   enable row level security;
+alter table public.magic_links                enable row level security;
+alter table public.leads                      enable row level security;
+alter table public.bundle_activations         enable row level security;
+alter table public.tenants                    enable row level security;
+alter table public.tenant_openclaw_endpoints  enable row level security;
 
 -- Service-role key (used by the Next.js server) bypasses RLS,
 -- so no permissive policies needed for the app. Add client-side
