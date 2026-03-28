@@ -16,18 +16,17 @@ async function compareHash(input: string, hash: string): Promise<boolean> {
 
 const MAGIC_LINK_DURATION_MS = 20 * 60 * 1000
 
-// Create Supabase client with fallback for missing env vars
+// Create Supabase client only when real credentials are present.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!supabaseUrl || !supabaseKey) {
-  console.warn('⚠️ Supabase credentials not found - using mock authentication')
+  console.warn('⚠️ Supabase credentials not found - authentication service disabled')
 }
 
-const supabase = createClient(
-  supabaseUrl || 'https://mock-project.supabase.co',
-  supabaseKey || 'mock-service-role-key'
-)
+const supabase = supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey)
+  : null
 
 // Mock authentication for development: requires ENABLE_MOCK_AUTH=true AND NODE_ENV !== 'production'
 function isMockAuthEnabled(): boolean {
@@ -77,7 +76,7 @@ export async function authenticateWithPassword(email: string, password: string) 
     const normalizedEmail = email.trim().toLowerCase()
 
     // Find user by email
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await supabase!
       .from('users')
       .select('*')
       .eq('email', normalizedEmail)
@@ -128,7 +127,7 @@ export async function validateSession(sessionToken: string) {
       return await validateMockSession(sessionToken)
     }
     
-    const { data: session, error } = await supabase
+    const { data: session, error } = await supabase!
       .from('sessions')
       .select(`
         *,
@@ -165,7 +164,7 @@ export async function setPasswordForUser(userId: string, password: string) {
   try {
     const hashedPassword = await createHash(password, 10)
     
-    const { error } = await supabase
+    const { error } = await supabase!
       .from('users')
       .update({ hashed_password: hashedPassword })
       .eq('id', userId)
@@ -208,7 +207,7 @@ export async function createUser(
   try {
     const hashedPassword = await createHash(password, 10)
     
-    const { data, error } = await supabase
+    const { data, error } = await supabase!
       .from('users')
       .insert({
         email,
@@ -238,7 +237,7 @@ export async function getUserByEmail(email: string) {
     return null
   }
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabase!
       .from('users')
       .select('*')
       .eq('email', email)
@@ -261,7 +260,7 @@ export async function getUserById(userId: string) {
     return null
   }
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabase!
       .from('users')
       .select('*')
       .eq('id', userId)
@@ -306,13 +305,13 @@ export async function issueMagicLink(email: string, origin: string) {
     // there is only ever one active magic link per address.  This also
     // means the consume flow can safely scan all candidate rows without
     // a hard row limit.
-    await supabase
+    await supabase!
       .from('magic_links')
       .update({ used: true })
       .eq('email', normalizedEmail)
       .eq('used', false)
     
-    const { error: storeError } = await supabase
+    const { error: storeError } = await supabase!
       .from('magic_links')
       .insert({
         email: normalizedEmail,
@@ -388,7 +387,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     // Fetch all unexpired unused rows for this email.  Because issueMagicLink
     // now invalidates previous tokens on creation, there should be at most one
     // candidate row at any given time.
-    const { data: candidateLinks, error } = await supabase
+    const { data: candidateLinks, error } = await supabase!
       .from('magic_links')
       .select('*')
       .eq('email', normalizedEmail)
@@ -415,7 +414,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
 
     // Atomically mark as used — the extra .eq('used', false) guard ensures only one
     // concurrent request wins even under a race condition.
-    const { data: markedRows, error: markUsedError } = await supabase
+    const { data: markedRows, error: markUsedError } = await supabase!
       .from('magic_links')
       .update({ used: true })
       .eq('id', magicLink.id)

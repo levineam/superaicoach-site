@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { authenticateWithPassword } from '@/lib/mission-control/auth'
-import { getMembershipForUserAndTenant, getTenantBySlug } from '@/lib/mission-control/data-access'
+import { getMembershipForUserAndTenant, ensureTenantExists } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
@@ -21,12 +21,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error }, { status: 401 })
     }
 
-    // Resolve tenant ID from slug so audit and tenant-scoped queries use the correct key.
+    // Ensure the tenant exists so tenant-scoped session payloads always carry a UUID.
     const tenantSlug = result.tenantSlug || 'default'
-    const tenant = await getTenantBySlug(tenantSlug)
-    // Fall back to the user's own UUID when no tenant row is found. Using the slug string
-    // would produce a non-UUID tenantId that breaks downstream Postgres uuid-typed columns.
-    const tenantId = tenant?.id ?? result.userId
+    const tenant = await ensureTenantExists({
+      slug: tenantSlug,
+      name: `${email}'s Workspace`,
+      pilotMode: false,
+    })
+    const tenantId = tenant.id
 
     // Resolve role from tenant membership so session.role matches what Mission Control
     // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.

@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { consumeMagicLinkAndCreateSession } from '@/lib/mission-control/auth'
-import { getMembershipForUserAndTenant, getTenantBySlug } from '@/lib/mission-control/data-access'
+import { getMembershipForUserAndTenant, ensureTenantExists } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -30,10 +30,14 @@ async function verifyMagicLink(formData: FormData) {
   }
 
   const cookieStore = await cookies()
-  // Resolve tenant ID from slug so audit and tenant-scoped queries use the correct key.
+  // Ensure the tenant exists so tenant-scoped session payloads always carry a UUID.
   const tenantSlug = result.tenantSlug || 'default'
-  const tenant = await getTenantBySlug(tenantSlug)
-  const tenantId = tenant?.id ?? tenantSlug // fallback: slug string (avoids aliasing userId to tenantId)
+  const tenant = await ensureTenantExists({
+    slug: tenantSlug,
+    name: `${email}'s Workspace`,
+    pilotMode: false,
+  })
+  const tenantId = tenant.id
 
   // Resolve role from tenant membership so session.role matches what Mission Control
   // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.
