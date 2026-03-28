@@ -75,11 +75,14 @@ export async function authenticateWithPassword(email: string, password: string) 
       return await authenticateWithMock(email, password)
     }
     
+    // Normalize email before querying — sign-up lowercases, so lookups must match
+    const normalizedEmail = email.trim().toLowerCase()
+
     // Find user by email
     const { data: user, error: userError } = await supabase
       .from('users')
       .select('*')
-      .eq('email', email)
+      .eq('email', normalizedEmail)
       .single()
 
     if (userError || !user) {
@@ -98,25 +101,10 @@ export async function authenticateWithPassword(email: string, password: string) 
       return { error: 'Invalid email or password' }
     }
 
-    // Create session token
-    const sessionToken = crypto.randomUUID()
-
-    // Store session
-    const { error: sessionError } = await supabase
-      .from('sessions')
-      .insert({
-        user_id: user.id,
-        token: sessionToken,
-        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      })
-
-    if (sessionError) {
-      console.error('Session creation error:', sessionError)
-      return { error: 'Authentication failed' }
-    }
-
+    // Session state is carried entirely in the HMAC-signed cookie created by the
+    // calling route — no server-side sessions row is needed for the current flow.
+    // (Add a DB insert here if you later need server-side revocation.)
     return {
-      sessionToken,
       tenantSlug: user.tenant_slug || 'default',
       userId: user.id,
       role: user.role,
@@ -350,14 +338,22 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       return { error: 'Invalid or expired magic link' }
     }
 
-    // Mark as used
-    const { error: markUsedError } = await supabase
+    // Atomically mark as used — the extra .eq('used', false) guard ensures only one
+    // concurrent request wins even under a race condition.
+    const { data: markedRows, error: markUsedError } = await supabase
       .from('magic_links')
       .update({ used: true })
       .eq('id', magicLink.id)
+      .eq('used', false)
+      .select('id')
 
     if (markUsedError) {
       throw markUsedError
+    }
+
+    // If no rows were updated another request already consumed this token
+    if (!markedRows || markedRows.length === 0) {
+      return { error: 'Magic link has already been used' }
     }
 
     // Find or create user with a random bootstrap password (not 'temp-password')

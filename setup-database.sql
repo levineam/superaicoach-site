@@ -50,8 +50,8 @@ END;
 $$ language 'plpgsql';
 
 -- Create triggers for updated_at
+-- Note: sessions table has no updated_at column — trigger intentionally omitted
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_sessions_updated_at BEFORE UPDATE ON sessions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
