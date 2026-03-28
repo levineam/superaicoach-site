@@ -26,7 +26,7 @@ function buildEmailHtml(magicLinkUrl: string): string {
   return `
 <div style="font-family: -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
   <h2 style="color: #0f172a; font-size: 20px; margin-bottom: 8px;">Sign in to Mission Control</h2>
-  <p style="color: #475569; font-size: 15px; margin-bottom: 24px;">Click the button below to sign in. This link expires in 30 minutes and can only be used once.</p>
+  <p style="color: #475569; font-size: 15px; margin-bottom: 24px;">Click the button below to sign in. This link expires in 20 minutes and can only be used once.</p>
   <a href="${magicLinkUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Log in to Mission Control</a>
   <p style="color: #94a3b8; font-size: 13px; margin-top: 24px;">If you didn't request this, you can safely ignore this email.</p>
 </div>
