@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { authenticateWithPassword } from '@/lib/mission-control/auth'
-import { getTenantBySlug } from '@/lib/mission-control/data-access'
+import { getMembershipForUserAndTenant, getTenantBySlug } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
@@ -26,14 +26,23 @@ export async function POST(request: NextRequest) {
     const tenant = await getTenantBySlug(tenantSlug)
     const tenantId = tenant?.id ?? result.userId // fallback: use userId (single-tenant dev mode)
 
-    // Create HMAC-signed session token that the member auth layer can verify.
-    // Sanitize the role: only values inside MembershipRole are valid in signed cookies.
-    // Default new/unknown roles (e.g. 'user') to 'owner' (single-tenant self-serve).
+    // Resolve role from tenant membership so session.role matches what Mission Control
+    // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.
+    // Fall back to users.role sanitized to a valid MembershipRole when no membership row exists.
     const allowedRoles = ['admin', 'owner', 'team_member', 'coach'] as const
     type MembershipRole = (typeof allowedRoles)[number]
-    const safeRole: MembershipRole = (allowedRoles as readonly string[]).includes(result.role)
-      ? (result.role as MembershipRole)
-      : 'owner'
+    let safeRole: MembershipRole
+    if (tenant) {
+      const membership = await getMembershipForUserAndTenant(result.userId, tenant.id)
+      safeRole = (membership?.role as MembershipRole | undefined) ??
+        ((allowedRoles as readonly string[]).includes(result.role)
+          ? (result.role as MembershipRole)
+          : 'owner')
+    } else {
+      safeRole = (allowedRoles as readonly string[]).includes(result.role)
+        ? (result.role as MembershipRole)
+        : 'owner'
+    }
     const signedToken = createSessionToken({
       userId: result.userId,
       tenantId,

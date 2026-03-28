@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { consumeMagicLinkAndCreateSession } from '@/lib/mission-control/auth'
-import { getTenantBySlug } from '@/lib/mission-control/data-access'
+import { getMembershipForUserAndTenant, getTenantBySlug } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,15 +35,23 @@ async function verifyMagicLink(formData: FormData) {
   const tenant = await getTenantBySlug(tenantSlug)
   const tenantId = tenant?.id ?? result.userId // fallback: use userId (single-tenant dev mode)
 
-  // Sanitize the role: only values inside MembershipRole are valid in signed cookies.
-  // Default unknown roles (e.g. the DB default 'user') to 'owner' (single-tenant self-serve).
+  // Resolve role from tenant membership so session.role matches what Mission Control
+  // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.
+  // Fall back to users.role sanitized to a valid MembershipRole when no membership row exists.
   const allowedVerifyRoles = ['admin', 'owner', 'team_member', 'coach'] as const
   type VerifyMembershipRole = (typeof allowedVerifyRoles)[number]
-  const safeVerifyRole: VerifyMembershipRole = (allowedVerifyRoles as readonly string[]).includes(
-    result.role,
-  )
-    ? (result.role as VerifyMembershipRole)
-    : 'owner'
+  let safeVerifyRole: VerifyMembershipRole
+  if (tenant) {
+    const membership = await getMembershipForUserAndTenant(result.userId, tenant.id)
+    safeVerifyRole = (membership?.role as VerifyMembershipRole | undefined) ??
+      ((allowedVerifyRoles as readonly string[]).includes(result.role)
+        ? (result.role as VerifyMembershipRole)
+        : 'owner')
+  } else {
+    safeVerifyRole = (allowedVerifyRoles as readonly string[]).includes(result.role)
+      ? (result.role as VerifyMembershipRole)
+      : 'owner'
+  }
   const signedToken = createSessionToken({
     userId: result.userId,
     tenantId,
