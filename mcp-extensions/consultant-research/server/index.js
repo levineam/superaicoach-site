@@ -289,7 +289,7 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+  const { name, arguments: args = {} } = request.params;
   switch (name) {
     case 'research_company': return handleResearchCompany(args);
     case 'prepare_client_brief': return handlePrepareClientBrief(args);
