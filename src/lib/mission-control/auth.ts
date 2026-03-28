@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
 import { SESSION_COOKIE_NAME } from './session-constants'
+import { verifySessionToken } from './session'
+import type { SessionPayload } from './types'
 
 async function createHash(input: string, saltRounds: number = 10): Promise<string> {
   const bcrypt = await import('bcryptjs')
@@ -47,18 +49,18 @@ async function authenticateWithMock(email: string, password: string) {
     hashed_password: await bcrypt.hash('password123', 10)
   }
   
-  // Require explicit mock password to prevent accidental access
-  if (password === 'mock-password' || (password && password.length > 0 && isMockAuthEnabled())) {
-    const mockSessionToken = 'mock-session-token-' + Date.now()
-    return {
-      sessionToken: mockSessionToken,
-      tenantSlug: mockUser.tenant_slug,
-      userId: mockUser.id,
-      role: mockUser.role
-    }
+  // Require the explicit mock password — reject any other value to prevent accidental access
+  if (password !== 'mock-password') {
+    return { error: 'Invalid credentials' }
   }
-  
-  return { error: 'Invalid credentials' }
+
+  const mockSessionToken = 'mock-session-token-' + Date.now()
+  return {
+    sessionToken: mockSessionToken,
+    tenantSlug: mockUser.tenant_slug,
+    userId: mockUser.id,
+    role: mockUser.role
+  }
 }
 
 export async function authenticateWithPassword(email: string, password: string) {
@@ -293,7 +295,7 @@ export async function issueMagicLink(email: string, origin: string) {
 
 export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
   try {
-    // Look up user by ID (not email)
+    // Look up user by their ID (not email — callers pass session.userId)
     const user = await getUserById(userId)
     if (!user) {
       return { error: 'User not found' }
@@ -374,29 +376,11 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       user = newUser
     }
 
-    // Create session
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    const sessionToken = crypto.randomUUID()
-    const { error: sessionError } = await supabase
-      .from('sessions')
-      .insert({
-        user_id: user.id,
-        token: sessionToken,
-        expires_at: expiresAt,
-      })
-
-    if (sessionError) {
-      throw sessionError
-    }
-
     return {
-      sessionToken,
-      tenantId: user.id, // Using userId as tenantId for now
       tenantSlug: user.tenant_slug || 'default',
       userId: user.id,
       role: user.role,
       email: user.email,
-      expiresAt: expiresAt.toISOString(),
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
@@ -435,37 +419,54 @@ type RequestLike = {
   headers?: RequestHeaders
 }
 
+function resolveSignedCookie(rawCookie: string): SessionPayload | null {
+  // First try HMAC-signed token (new flow via createSessionToken)
+  const signed = verifySessionToken(rawCookie)
+  if (signed) return signed
+
+  // Fall back: if mock auth is enabled and cookie looks like a mock token, validate it
+  if (isMockAuthEnabled() && rawCookie.startsWith('mock-session-token-')) {
+    return {
+      userId: 'mock-user-id',
+      tenantId: 'mock-user-id',
+      tenantSlug: 'default-tenant',
+      role: 'admin',
+      email: 'mock@example.com',
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    }
+  }
+
+  return null
+}
+
+function extractCookieFromHeader(cookieHeader: string): string | undefined {
+  for (const part of cookieHeader.split(';')) {
+    const [name, ...rest] = part.trim().split('=')
+    if (name.trim() === SESSION_COOKIE_NAME) {
+      return rest.join('=').trim()
+    }
+  }
+  return undefined
+}
+
 // Alias for validateSession to match existing imports
 export const getServerSession = async (
   request?: RequestLike,
-): Promise<Awaited<ReturnType<typeof validateSession>>> => {
+): Promise<SessionPayload | null> => {
   try {
-    const hasRealCredentials = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-
     // 1. Try request.cookies first (e.g. NextRequest)
     const tokenFromRequestCookies = request?.cookies?.get?.(SESSION_COOKIE_NAME)?.value
     if (tokenFromRequestCookies) {
-      return hasRealCredentials
-        ? await validateSession(tokenFromRequestCookies)
-        : await validateMockSession(tokenFromRequestCookies)
+      return resolveSignedCookie(tokenFromRequestCookies)
     }
 
     // 2. Try request.headers cookie header
     if (request?.headers?.get) {
       const cookieHeader = request.headers.get('cookie')
       if (cookieHeader) {
-        let sessionToken: string | undefined
-        for (const part of cookieHeader.split(';')) {
-          const [name, ...rest] = part.trim().split('=')
-          if (name.trim() === SESSION_COOKIE_NAME) {
-            sessionToken = rest.join('=').trim()
-            break
-          }
-        }
+        const sessionToken = extractCookieFromHeader(cookieHeader)
         if (sessionToken) {
-          return hasRealCredentials
-            ? await validateSession(sessionToken)
-            : await validateMockSession(sessionToken)
+          return resolveSignedCookie(sessionToken)
         }
       }
     }
@@ -476,9 +477,7 @@ export const getServerSession = async (
     if (!sessionToken) {
       return null
     }
-    return hasRealCredentials
-      ? await validateSession(sessionToken)
-      : await validateMockSession(sessionToken)
+    return resolveSignedCookie(sessionToken)
   } catch (error) {
     console.error('Session validation error:', error)
     return null
