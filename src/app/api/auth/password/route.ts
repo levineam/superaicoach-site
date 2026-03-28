@@ -24,7 +24,9 @@ export async function POST(request: NextRequest) {
     // Resolve tenant ID from slug so audit and tenant-scoped queries use the correct key.
     const tenantSlug = result.tenantSlug || 'default'
     const tenant = await getTenantBySlug(tenantSlug)
-    const tenantId = tenant?.id ?? tenantSlug // fallback: slug string (avoids aliasing userId to tenantId)
+    // Fall back to the user's own UUID when no tenant row is found. Using the slug string
+    // would produce a non-UUID tenantId that breaks downstream Postgres uuid-typed columns.
+    const tenantId = tenant?.id ?? result.userId
 
     // Resolve role from tenant membership so session.role matches what Mission Control
     // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.

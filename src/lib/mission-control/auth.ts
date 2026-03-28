@@ -187,6 +187,24 @@ export async function createUser(
   role: string = 'user',
   tenantSlug: string | null = null,
 ) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    // In mock mode return a synthetic user record so sign-up and magic-link flows
+    // that call createUser can proceed without a real database.
+    if (!isMockAuthEnabled()) {
+      return { success: false, error: 'Authentication service not configured' }
+    }
+    const mockUser = {
+      id: 'mock-user-' + crypto.randomUUID(),
+      email,
+      hashed_password: null,
+      role,
+      tenant_slug: tenantSlug,
+      status: 'active',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }
+    return { success: true, user: mockUser }
+  }
   try {
     const hashedPassword = await createHash(password, 10)
     
@@ -214,6 +232,11 @@ export async function createUser(
 }
 
 export async function getUserByEmail(email: string) {
+  // In mock mode (no real credentials) there is no DB to query — return null so
+  // callers treat the user as not-found and can proceed to create a mock user.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null
+  }
   try {
     const { data, error } = await supabase
       .from('users')
@@ -233,6 +256,10 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function getUserById(userId: string) {
+  // In mock mode (no real credentials) there is no DB to query — return null.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null
+  }
   try {
     const { data, error } = await supabase
       .from('users')
@@ -252,6 +279,17 @@ export async function getUserById(userId: string) {
 }
 
 export async function issueMagicLink(email: string, origin: string) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    // In environments without real Supabase credentials, emit a test-only in-memory
+    // magic link so sign-in email flows are exercisable during local development.
+    if (!isMockAuthEnabled()) {
+      throw new Error('Authentication service not configured')
+    }
+    const magicLinkToken = crypto.randomUUID()
+    const magicLinkUrl = `${origin}/auth/verify?token=${magicLinkToken}&email=${encodeURIComponent(email.trim().toLowerCase())}`
+    console.log('🔐 Mock magic link (ENABLE_MOCK_AUTH):', magicLinkUrl)
+    return { magicLink: magicLinkUrl }
+  }
   try {
     // Generate a secure random token
     const magicLinkToken = crypto.randomUUID()
@@ -330,6 +368,20 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
   role: string
   email: string
 } | null> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    // In mock mode accept any token and return a synthetic session so the verify
+    // page works during local development without a real database.
+    if (!isMockAuthEnabled()) {
+      return null
+    }
+    const normalizedEmail = email.trim().toLowerCase()
+    return {
+      tenantSlug: 'vai',
+      userId: 'mock-user-id',
+      role: 'admin',
+      email: normalizedEmail,
+    }
+  }
   try {
     const normalizedEmail = email.trim().toLowerCase()
 
