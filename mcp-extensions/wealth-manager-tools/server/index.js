@@ -204,7 +204,7 @@ Create a comprehensive, prioritized estate planning checklist with:
 - Business interests properly documented
 
 **Tax Planning**
-- Annual gift exclusion utilization ($18,000/person in 2024)
+- Annual gift exclusion utilization (confirm the current IRS annual exclusion amount for the applicable tax year)
 - 529 superfunding if applicable
 - Charitable giving strategies (DAF, CRT, direct gifts)
 - Trust structures for estate tax mitigation if applicable
@@ -231,7 +231,8 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+  const { name, arguments: rawArgs } = request.params;
+  const args = rawArgs ?? {};
 
   switch (name) {
     case 'analyze_portfolio_allocation':
