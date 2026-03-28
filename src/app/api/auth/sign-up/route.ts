@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { createUser, getUserByEmail } from '@/lib/mission-control/auth'
+import { getTenantBySlug } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
@@ -30,6 +31,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
 
+    // Resolve the tenant UUID from slug so tenant-scoped queries use the correct key.
+    // Fall back to the user's own ID only in single-tenant dev environments where no
+    // tenant row exists yet.
+    const tenantSlug = result.user.tenant_slug || 'default'
+    const tenant = await getTenantBySlug(tenantSlug)
+    const tenantId = tenant?.id ?? result.user.id
+
     // Auto-sign-in: create HMAC-signed session token using the persisted role.
     // New self-registered users get 'owner' (single-tenant model) — never elevate to admin.
     const allowedRoles = ['owner', 'team_member', 'coach'] as const
@@ -39,8 +47,8 @@ export async function POST(request: NextRequest) {
       : 'owner'
     const signedToken = createSessionToken({
       userId: result.user.id,
-      tenantId: result.user.id,
-      tenantSlug: result.user.tenant_slug || 'default',
+      tenantId,
+      tenantSlug,
       role: safeRole,
       email,
     })

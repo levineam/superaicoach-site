@@ -256,6 +256,16 @@ export async function issueMagicLink(email: string, origin: string) {
     
     // Store the magic link token with expiration (20 minutes)
     const expiresAt = new Date(Date.now() + MAGIC_LINK_DURATION_MS)
+
+    // Invalidate any previously issued unused tokens for this email so
+    // there is only ever one active magic link per address.  This also
+    // means the consume flow can safely scan all candidate rows without
+    // a hard row limit.
+    await supabase
+      .from('magic_links')
+      .update({ used: true })
+      .eq('email', email.trim().toLowerCase())
+      .eq('used', false)
     
     const { error: storeError } = await supabase
       .from('magic_links')
@@ -307,11 +317,18 @@ export async function changePassword(userId: string, currentPassword: string, ne
   }
 }
 
-export async function consumeMagicLinkAndCreateSession(token: string, email: string) {
+export async function consumeMagicLinkAndCreateSession(token: string, email: string): Promise<{
+  tenantSlug: string
+  userId: string
+  role: string
+  email: string
+} | null> {
   try {
     const normalizedEmail = email.trim().toLowerCase()
 
-    // Fetch candidate rows (can't do equality match since bcrypt is salted)
+    // Fetch all unexpired unused rows for this email.  Because issueMagicLink
+    // now invalidates previous tokens on creation, there should be at most one
+    // candidate row at any given time.
     const { data: candidateLinks, error } = await supabase
       .from('magic_links')
       .select('*')
@@ -319,10 +336,9 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       .eq('used', false)
       .gt('expires_at', new Date().toISOString())
       .order('created_at', { ascending: false })
-      .limit(5)
 
     if (error || !candidateLinks?.length) {
-      return { error: 'Invalid or expired magic link' }
+      return null
     }
 
     // Use bcrypt.compare to find the matching row
@@ -335,7 +351,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     }
 
     if (!magicLink) {
-      return { error: 'Invalid or expired magic link' }
+      return null
     }
 
     // Atomically mark as used — the extra .eq('used', false) guard ensures only one
@@ -353,7 +369,8 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
 
     // If no rows were updated another request already consumed this token
     if (!markedRows || markedRows.length === 0) {
-      return { error: 'Magic link has already been used' }
+      console.warn('Magic link already consumed for email:', normalizedEmail)
+      return null
     }
 
     // Find or create user with a random bootstrap password (not 'temp-password')
@@ -367,14 +384,15 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
         'default',
       )
       if (!success || !newUser) {
-        return { error: 'Failed to create user' }
+        return null
       }
       user = newUser
     }
 
     // Block inactive accounts — same guard as password login
     if (user.status !== 'active') {
-      return { error: 'Account is not active' }
+      console.warn('Magic link login blocked: account inactive for email:', normalizedEmail)
+      return null
     }
 
     return {
@@ -385,7 +403,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
-    return { error: 'Failed to create session' }
+    return null
   }
 }
 
