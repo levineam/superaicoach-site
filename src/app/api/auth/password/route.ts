@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Resolve role from tenant membership so session.role matches what Mission Control
     // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.
     // Fall back to users.role sanitized to a valid MembershipRole when no membership row exists.
-    const allowedRoles = ['admin', 'owner', 'team_member', 'coach'] as const
+    const allowedRoles = ['owner', 'team_member', 'coach'] as const
     type MembershipRole = (typeof allowedRoles)[number]
     let safeRole: MembershipRole
     if (tenant) {

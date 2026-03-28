@@ -39,14 +39,12 @@ async function authenticateWithMock(email: string, password: string) {
   console.log('🔐 Using mock authentication for:', email)
   
   // Mock user data - in development only
-  const bcrypt = await import('bcryptjs')
   const mockUser = {
     id: 'mock-user-id',
     email: email,
     tenant_slug: 'vai',
     role: 'admin',
     status: 'active',
-    hashed_password: await bcrypt.hash('password123', 10)
   }
   
   // Require the explicit mock password — reject any other value to prevent accidental access

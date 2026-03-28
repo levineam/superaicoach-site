@@ -38,7 +38,7 @@ async function verifyMagicLink(formData: FormData) {
   // Resolve role from tenant membership so session.role matches what Mission Control
   // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.
   // Fall back to users.role sanitized to a valid MembershipRole when no membership row exists.
-  const allowedVerifyRoles = ['admin', 'owner', 'team_member', 'coach'] as const
+  const allowedVerifyRoles = ['owner', 'team_member', 'coach'] as const
   type VerifyMembershipRole = (typeof allowedVerifyRoles)[number]
   let safeVerifyRole: VerifyMembershipRole
   if (tenant) {
