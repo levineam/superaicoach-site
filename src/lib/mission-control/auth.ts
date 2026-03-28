@@ -266,7 +266,7 @@ export async function issueMagicLink(email: string, origin: string) {
     const magicLinkToken = crypto.randomUUID()
     const tokenHash = await createHash(magicLinkToken, 10)
     
-    // Store the magic link token with expiration (30 minutes)
+    // Store the magic link token with expiration (20 minutes)
     const expiresAt = new Date(Date.now() + MAGIC_LINK_DURATION_MS)
     
     const { error: storeError } = await supabase
@@ -374,6 +374,11 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
         return { error: 'Failed to create user' }
       }
       user = newUser
+    }
+
+    // Block inactive accounts — same guard as password login
+    if (user.status !== 'active') {
+      return { error: 'Account is not active' }
     }
 
     return {

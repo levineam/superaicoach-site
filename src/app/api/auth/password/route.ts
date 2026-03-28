@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { authenticateWithPassword } from '@/lib/mission-control/auth'
+import { getTenantBySlug } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
@@ -20,6 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error }, { status: 401 })
     }
 
+    // Resolve tenant ID from slug so audit and tenant-scoped queries use the correct key.
+    const tenantSlug = result.tenantSlug || 'default'
+    const tenant = await getTenantBySlug(tenantSlug)
+    const tenantId = tenant?.id ?? result.userId // fallback: use userId (single-tenant dev mode)
+
     // Create HMAC-signed session token that the member auth layer can verify.
     // Sanitize the role: only values inside MembershipRole are valid in signed cookies.
     // Default new/unknown roles (e.g. 'user') to 'owner' (single-tenant self-serve).
@@ -30,8 +36,8 @@ export async function POST(request: NextRequest) {
       : 'owner'
     const signedToken = createSessionToken({
       userId: result.userId,
-      tenantId: result.userId,       // simplified — no multi-tenant
-      tenantSlug: result.tenantSlug || 'default',
+      tenantId,
+      tenantSlug,
       role: safeRole,
       email: email,
     })

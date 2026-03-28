@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { consumeMagicLinkAndCreateSession } from '@/lib/mission-control/auth'
+import { getTenantBySlug } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,13 +19,22 @@ async function verifyMagicLink(formData: FormData) {
     redirect('/sign-in?error=missing-token')
   }
 
-  const result = await consumeMagicLinkAndCreateSession(token, email as string)
+  if (typeof email !== 'string' || !email) {
+    redirect('/sign-in?error=missing-email')
+  }
+
+  const result = await consumeMagicLinkAndCreateSession(token, email)
 
   if (!result || 'error' in result) {
     redirect('/sign-in?error=invalid-token')
   }
 
   const cookieStore = await cookies()
+  // Resolve tenant ID from slug so audit and tenant-scoped queries use the correct key.
+  const tenantSlug = result.tenantSlug || 'default'
+  const tenant = await getTenantBySlug(tenantSlug)
+  const tenantId = tenant?.id ?? result.userId // fallback: use userId (single-tenant dev mode)
+
   // Sanitize the role: only values inside MembershipRole are valid in signed cookies.
   // Default unknown roles (e.g. the DB default 'user') to 'owner' (single-tenant self-serve).
   const allowedVerifyRoles = ['admin', 'owner', 'team_member', 'coach'] as const
@@ -36,10 +46,10 @@ async function verifyMagicLink(formData: FormData) {
     : 'owner'
   const signedToken = createSessionToken({
     userId: result.userId,
-    tenantId: result.userId,
-    tenantSlug: result.tenantSlug || 'default',
+    tenantId,
+    tenantSlug,
     role: safeVerifyRole,
-    email: result.email || (email as string),
+    email: result.email || email,
   })
   cookieStore.set(SESSION_COOKIE_NAME, signedToken, {
     httpOnly: true,
