@@ -47,7 +47,9 @@ create table if not exists public.magic_links (
   created_at timestamptz not null default now()
 );
 
-create index if not exists idx_magic_links_token_hash on public.magic_links (token_hash);
+-- token_hash is bcrypt — non-deterministic, cannot be equality-searched by index.
+-- Index on (email, expires_at) covers the actual query pattern in consumeMagicLink.
+create index if not exists idx_magic_links_email_expires on public.magic_links (email, expires_at);
 create index if not exists idx_magic_links_email on public.magic_links (email);
 
 -- ============================================================

@@ -43,7 +43,7 @@ async function authenticateWithMock(email: string, password: string) {
   const mockUser = {
     id: 'mock-user-id',
     email: email,
-    tenant_slug: 'default-tenant',
+    tenant_slug: 'vai',
     role: 'admin',
     status: 'active',
     hashed_password: await bcrypt.hash('password123', 10)
@@ -92,6 +92,11 @@ export async function authenticateWithPassword(email: string, password: string) 
     // Check if user is active
     if (user.status !== 'active') {
       return { error: 'Account is not active' }
+    }
+
+    // Guard against magic-link-only accounts that have no password hash.
+    if (!user.hashed_password) {
+      return { error: 'Invalid email or password' }
     }
 
     // Verify password
@@ -419,8 +424,8 @@ async function validateMockSession(sessionToken: string) {
   if (sessionToken.startsWith('mock-session-token-')) {
     return {
       userId: 'mock-user-id',
-      tenantId: 'mock-user-id',
-      tenantSlug: 'default-tenant',
+      tenantId: 'tenant_vai',
+      tenantSlug: 'vai',
       role: 'admin',
       email: 'mock@example.com',
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
@@ -451,8 +456,8 @@ function resolveSignedCookie(rawCookie: string): SessionPayload | null {
   if (isMockAuthEnabled() && rawCookie.startsWith('mock-session-token-')) {
     return {
       userId: 'mock-user-id',
-      tenantId: 'mock-user-id',
-      tenantSlug: 'default-tenant',
+      tenantId: 'tenant_vai',
+      tenantSlug: 'vai',
       role: 'admin',
       email: 'mock@example.com',
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
