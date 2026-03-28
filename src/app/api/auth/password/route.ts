@@ -24,12 +24,13 @@ export async function POST(request: NextRequest) {
     // Resolve tenant ID from slug so audit and tenant-scoped queries use the correct key.
     const tenantSlug = result.tenantSlug || 'default'
     const tenant = await getTenantBySlug(tenantSlug)
-    const tenantId = tenant?.id ?? result.userId // fallback: use userId (single-tenant dev mode)
+    const tenantId = tenant?.id ?? tenantSlug // fallback: slug string (avoids aliasing userId to tenantId)
 
     // Resolve role from tenant membership so session.role matches what Mission Control
     // permission checks (canRoleRunAction, getMembershipForUserAndTenant) expect.
     // Fall back to users.role sanitized to a valid MembershipRole when no membership row exists.
-    const allowedRoles = ['owner', 'team_member', 'coach'] as const
+    // Include 'admin' so platform-admin accounts are not silently coerced to 'owner'.
+    const allowedRoles = ['admin', 'owner', 'team_member', 'coach'] as const
     type MembershipRole = (typeof allowedRoles)[number]
     let safeRole: MembershipRole
     if (tenant) {

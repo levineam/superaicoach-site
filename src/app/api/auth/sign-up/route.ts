@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     // tenant row exists yet.
     const tenantSlug = result.user.tenant_slug || 'default'
     const tenant = await getTenantBySlug(tenantSlug)
-    const tenantId = tenant?.id ?? result.user.id
+    const tenantId = tenant?.id ?? tenantSlug // fallback: slug string (avoids aliasing userId to tenantId)
 
     // Auto-sign-in: create HMAC-signed session token using the persisted role.
     // createUser is called with 'owner' above, so this will always resolve to 'owner'.
