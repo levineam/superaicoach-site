@@ -25,7 +25,9 @@ async function verifyMagicLink(formData: FormData) {
 
   const result = await consumeMagicLinkAndCreateSession(token, email)
 
-  if (!result) {
+  // consumeMagicLinkAndCreateSession returns null on failure; any non-null result
+  // must have the expected fields for us to build a valid session.
+  if (!result || !result.userId || !result.email) {
     redirect('/sign-in?error=invalid-token')
   }
 

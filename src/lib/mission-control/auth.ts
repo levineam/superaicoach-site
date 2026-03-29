@@ -343,6 +343,12 @@ export async function changePassword(userId: string, currentPassword: string, ne
       return { error: 'User not found' }
     }
 
+    // Magic-link-only accounts have no hashed_password — reject password changes
+    // rather than passing null to bcrypt which would throw or always mismatch.
+    if (!user.hashed_password) {
+      return { error: 'Account uses magic-link authentication; no password set' }
+    }
+
     const isCurrentPasswordValid = await compareHash(currentPassword, user.hashed_password)
     if (!isCurrentPasswordValid) {
       return { error: 'Current password is incorrect' }
@@ -526,7 +532,9 @@ function extractCookieFromHeader(cookieHeader: string): string | undefined {
   return undefined
 }
 
-// Alias for validateSession to match existing imports
+// Read the HMAC-signed session cookie from the incoming request or, when no
+// request is provided, from the Next.js App Router cookie store (server
+// components / route handlers that don't receive an explicit request object).
 export const getServerSession = async (
   request?: RequestLike,
 ): Promise<SessionPayload | null> => {
