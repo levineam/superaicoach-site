@@ -440,12 +440,18 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     // Find or create user with a random bootstrap password (not 'temp-password')
     let user = await getUserByEmail(normalizedEmail)
     if (!user) {
+      // Derive a user-specific tenant slug from the email local-part so that
+      // each first-time magic-link user gets their own tenant instead of
+      // sharing the global 'default' workspace.
+      const emailLocalPart = normalizedEmail.split('@')[0]
+      const userTenantSlug = emailLocalPart.replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').slice(0, 50)
+        + '-' + crypto.randomUUID().slice(0, 8)
       const bootstrapPassword = crypto.randomUUID()
       const { success, user: newUser } = await createUser(
         normalizedEmail,
         bootstrapPassword,
         'owner',
-        'default',
+        userTenantSlug,
       )
       if (!success || !newUser) {
         return null
