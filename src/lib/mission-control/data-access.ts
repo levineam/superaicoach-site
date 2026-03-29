@@ -253,6 +253,66 @@ function memGetDefaultMembershipForUser(userId: string): MembershipRecord | null
   return membership || null
 }
 
+function memCreateMembership(params: {
+  userId: string
+  tenantId: string
+  role: string
+}): MembershipRecord {
+  const store = getStore()
+  const existing = memGetMembershipForUserAndTenant(params.userId, params.tenantId)
+  if (existing) {
+    return existing
+  }
+
+  const timestamp = nowIso()
+  const membership: MembershipRecord = {
+    id: randomUUID(),
+    userId: params.userId,
+    tenantId: params.tenantId,
+    role: params.role as MembershipRole,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  }
+
+  store.memberships.set(membership.id, membership)
+  addMembershipIndex(params.userId, membership.id)
+
+  return membership
+}
+
+async function dbCreateMembership(params: {
+  userId: string
+  tenantId: string
+  role: string
+}): Promise<MembershipRecord> {
+  const db = getMissionControlDbClient()
+
+  if (!db) {
+    throw new Error('Mission Control DB client is not configured')
+  }
+
+  const existing = await dbGetMembershipForUserAndTenant(params.userId, params.tenantId)
+  if (existing) {
+    return existing
+  }
+
+  const { data, error } = await db
+    .from('memberships')
+    .insert({
+      user_id: params.userId,
+      tenant_id: params.tenantId,
+      role: params.role,
+    })
+    .select('*')
+    .single()
+
+  if (error) {
+    throw error
+  }
+
+  return mapMembership(data as DbRow)
+}
+
 function memCreateTenantEndpoint(params: {
   tenantId: string
   endpointLabel: string
@@ -1418,4 +1478,17 @@ export async function listMembershipsForUser(userId: string): Promise<Membership
   }
 
   return memListMembershipsForUser(userId)
+}
+
+export async function createMembership(params: {
+  userId: string
+  tenantId: string
+  role: string
+}): Promise<MembershipRecord> {
+  if (isMissionControlDbEnabled()) {
+    await ensureDbBootstrap()
+    return dbCreateMembership(params)
+  }
+
+  return memCreateMembership(params)
 }

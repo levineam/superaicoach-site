@@ -25,14 +25,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: 'An account with this email already exists' }, { status: 409 })
     }
 
+    // Generate a unique tenant slug for self-registered users to ensure isolated workspaces.
+    const emailLocalPart = email.split('@')[0]
+    const uniqueTenantSlug = emailLocalPart.replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').slice(0, 50)
+      + '-' + crypto.randomUUID().slice(0, 8)
+    const tenantSlug = uniqueTenantSlug
+
     // Create the user — self-registered accounts own their workspace (single-tenant model).
-    const result = await createUser(email, password, 'owner')
+    const result = await createUser(email, password, 'owner', tenantSlug)
     if (!result.success || !result.user) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
-
-    // Ensure the tenant exists so tenant-scoped session payloads always carry a UUID.
-    const tenantSlug = result.user.tenant_slug || 'default'
+    
     const tenant = await ensureTenantExists({
       slug: tenantSlug,
       name: `${email}'s Workspace`,

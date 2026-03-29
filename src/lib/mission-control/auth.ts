@@ -3,6 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 import { SESSION_COOKIE_NAME } from './session-constants'
 import { verifySessionToken } from './session'
 import type { SessionPayload } from './types'
+import {
+  createMembership,
+  getDefaultMembershipForUser,
+  getTenantById,
+  getTenantBySlug,
+} from './data-access'
 
 async function createHash(input: string, saltRounds: number = 10): Promise<string> {
   const bcrypt = await import('bcryptjs')
@@ -106,10 +112,27 @@ export async function authenticateWithPassword(email: string, password: string) 
     // Session state is carried entirely in the HMAC-signed cookie created by the
     // calling route — no server-side sessions row is needed for the current flow.
     // (Add a DB insert here if you later need server-side revocation.)
+    
+    // Resolve tenantSlug and role from membership when available for accurate
+    // tenant-scoped permissions matching Mission Control authorization model.
+    let finalTenantSlug = user.tenant_slug || 'default'
+    let finalRole = user.role
+    
+    try {
+      const membership = await getDefaultMembershipForUser(user.id)
+      if (membership) {
+        finalTenantSlug = user.tenant_slug || (await getTenantById(membership.tenantId))?.slug || 'default'
+        finalRole = membership.role
+      }
+    } catch (membershipError) {
+      console.warn('Failed to resolve membership for user:', membershipError)
+      // Fall back to user record values if membership resolution fails
+    }
+
     return {
-      tenantSlug: user.tenant_slug || 'default',
+      tenantSlug: finalTenantSlug,
       userId: user.id,
-      role: user.role,
+      role: finalRole,
       email: user.email,
     }
   } catch (error) {
@@ -221,6 +244,25 @@ export async function createUser(
 
     if (error) {
       throw error
+    }
+
+    // When a tenant slug is provided, ensure a membership row exists so
+    // tenant-scoped lookups (getMembershipForUserAndTenant, getMissionControlSnapshot)
+    // can resolve the user's role from the memberships table.
+    if (tenantSlug && data) {
+      try {
+        const tenant = await getTenantBySlug(tenantSlug)
+        if (tenant) {
+          await createMembership({
+            userId: data.id,
+            tenantId: tenant.id,
+            role: data.role,
+          })
+        }
+      } catch (membershipError) {
+        console.warn('Failed to create membership for user:', membershipError)
+        // Continue with user creation even if membership fails
+      }
     }
 
     return { success: true, user: data }
@@ -465,10 +507,26 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       return null
     }
 
+    // Resolve tenantSlug from membership when user.tenant_slug is absent
+    // for migrated users who have memberships but unset tenant_slug.
+    let finalTenantSlug = user.tenant_slug || 'default'
+    let finalRole = user.role
+    
+    try {
+      const membership = await getDefaultMembershipForUser(user.id)
+      if (membership) {
+        finalTenantSlug = user.tenant_slug || (await getTenantById(membership.tenantId))?.slug || 'default'
+        finalRole = membership.role
+      }
+    } catch (membershipError) {
+      console.warn('Failed to resolve membership for magic-link user:', membershipError)
+      // Fall back to user record values if membership resolution fails
+    }
+
     return {
-      tenantSlug: user.tenant_slug || 'default',
+      tenantSlug: finalTenantSlug,
       userId: user.id,
-      role: user.role,
+      role: finalRole,
       email: user.email,
     }
   } catch (error) {
