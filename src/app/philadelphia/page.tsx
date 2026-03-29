@@ -5,8 +5,9 @@ import { MapPin, ArrowRight } from 'lucide-react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { getBaseUrl } from '@/lib/site-url'
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
+const baseUrl = getBaseUrl()
 
 export const metadata: Metadata = {
   title: "Philadelphia's Personal AI Assistant Setup Service | SuperAIcoach",
@@ -62,7 +63,7 @@ export default function PhiladelphiaPage() {
           {/* CTA */}
           <div className="mt-8 flex flex-wrap items-center gap-4" id="book">
             <Link
-              href="https://calendly.com/superaicoach"
+              href="https://calendly.com/andrew-superaicoach/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
@@ -167,7 +168,7 @@ export default function PhiladelphiaPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                href="https://calendly.com/superaicoach"
+                href="https://calendly.com/andrew-superaicoach/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"

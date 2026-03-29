@@ -1,9 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-function getBaseUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
-  return raw.endsWith('/') ? raw.slice(0, -1) : raw
-}
+import { getBaseUrl } from '@/lib/site-url'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getBaseUrl()
@@ -17,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
     },
     {
-      url: `${base}/membership`,
+      url: `${base}/member`,
       lastModified: now,
       priority: 0.95,
       changeFrequency: 'weekly',
