@@ -1,0 +1,21 @@
+[skills] Skipping skill path that resolves outside its configured root.
+[plugins] system-guard: loaded without install/load-path provenance; treat as untracked local code and pin trust via plugins.allow or install records (/Users/andrew/clawd/.openclaw/extensions/system-guard/index.ts)
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] read tool called without path: toolCallId=toolu_01UERW2a3zeoUhRWWJaKKSGW argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01AJmFth3PsYWQDNMKYWp8Zj argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01Eq3G1kZFrbUcPfAUiwNLyk argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01B6pYBfRX3VNp2G2KDFYeP4 argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01UPirWeE6vjD6KhXFfgnkVE argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01VdWQyKyQWtphMaC11QbCYy argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01FuBRjiNxuvGkEiXt7rbSBy argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01Sd7PGKGWEqW48gGnFTG3ht argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_011srf1rQCQMQF6SrzB4BRfU argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01ArRFXkjcZQnt6uJ4b7PQpL argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01RyiY22mcofCUjaY6hPDtZD argsType=object
+[agent/embedded] read tool called without path: toolCallId=toolu_01SUeH2mN9n5RxmVx5g4Gk2B argsType=object
+[agent/embedded] embedded run timeout: runId=pr-autopilot-pr-18-1774957452758 sessionId=pr-autopilot-pr-18-1774957452758 timeoutMs=120000
+[agent/embedded] Profile anthropic:claude-cli timed out. Trying next account...
+[agent/embedded] embedded run failover decision: runId=pr-autopilot-pr-18-1774957452758 stage=assistant decision=fallback_model reason=timeout provider=anthropic/claude-opus-4-6 profile=sha256:462c5b50d98c
+[diagnostic] lane task error: lane=main durationMs=122531 error="FailoverError: LLM request timed out."
+[diagnostic] lane task error: lane=session:pr-autopilot-pr-18-1774957452758 durationMs=122534 error="FailoverError: LLM request timed out."
+[model-fallback/decision] model fallback decision: decision=candidate_failed requested=anthropic/claude-opus-4-6 candidate=anthropic/claude-opus-4-6 reason=unknown next=openai-codex/gpt-5.4
