@@ -1,0 +1,3 @@
+[skills] Skipping skill path that resolves outside its configured root.
+[tools] tools.profile (coding) allowlist contains unknown entries (code_execution, x_search). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[tools] read failed: Offset 580 is beyond end of file (577 lines total) raw_params={"path":"/Users/andrew/clawd/repos/superaicoach-site/tmp/pr-autopilot/pr-18-1775266586880/src/lib/mission-control/auth.ts","offset":580,"limit":120}
