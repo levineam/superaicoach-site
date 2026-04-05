@@ -1,0 +1,2 @@
+[skills] Skipping skill path that resolves outside its configured root.
+[tools] tools.profile (coding) allowlist contains unknown entries (code_execution, x_search). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
