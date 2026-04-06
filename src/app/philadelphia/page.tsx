@@ -94,7 +94,7 @@ export default function PhiladelphiaPage() {
               alt="Philadelphia AI Personal Assistant Setup"
               width={949}
               height={414}
-              className="rounded-2xl border border-border/60 shadow-lg"
+              className=""
               priority
             />
           </div>
