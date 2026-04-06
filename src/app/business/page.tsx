@@ -354,7 +354,7 @@ export default function BusinessPage() {
         <ScrollReveal delayMs={160} className="flex flex-col items-center gap-4">
           <ConsultationCTA
             source="business-page"
-            label="Free 15-minute call"
+            label="Book a Call"
           />
           <Link
             href="/mission-control"

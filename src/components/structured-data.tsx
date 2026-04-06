@@ -232,7 +232,7 @@ export const DEFAULT_FAQ_ITEMS: FAQItem[] = [
 
 export const DEFAULT_HOW_TO_STEPS: HowToStep[] = [
   {
-    name: 'Free 15-minute call',
+    name: 'Book a Call',
     text: 'Start by booking a free 15-minute call to define the highest-value AI workflow for your current work.',
   },
   {

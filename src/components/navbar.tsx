@@ -56,7 +56,7 @@ export function Navbar() {
             className="rounded-full bg-accent px-5 text-accent-foreground hover:bg-accent/90"
           >
             <Link href="https://calendly.com/levineam/30min" target="_blank" rel="noopener noreferrer">
-              Free 15-minute call
+              Book a Call
               <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Link>
           </Button>
@@ -91,7 +91,7 @@ export function Navbar() {
             </Button>
             <Button asChild className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
               <Link href="https://calendly.com/levineam/30min" target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>
-                Free 15-minute call
+                Book a Call
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Link>
             </Button>

@@ -16,7 +16,7 @@ export type ConsultationCTAProps = {
 
 export function ConsultationCTA({
   source = 'unknown',
-  label = 'Free 15-minute call',
+  label = 'Book a Call',
   buttonClassName,
   containerClassName,
 }: ConsultationCTAProps) {

@@ -434,7 +434,7 @@ export default function WhyPage() {
             </p>
           </ScrollReveal>
           <ScrollReveal delayMs={80} className="flex flex-col items-center gap-4">
-            <ConsultationCTA source="why-page" label="Free 15-minute call" />
+            <ConsultationCTA source="why-page" label="Book a Call" />
             <p className="text-sm text-muted-foreground">
               Or reach out at{" "}
               <a
