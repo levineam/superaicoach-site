@@ -113,7 +113,7 @@ export function ServiceStructuredData(props: ServiceStructuredDataProps) {
       price: '0',
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
-      url: 'https://calendly.com/andrew-superaicoach/30min',
+      url: 'https://calendly.com/levineam/30min',
     },
   }
 
@@ -232,7 +232,7 @@ export const DEFAULT_FAQ_ITEMS: FAQItem[] = [
 
 export const DEFAULT_HOW_TO_STEPS: HowToStep[] = [
   {
-    name: 'Book a free consult',
+    name: 'Free 15-minute call',
     text: 'Start by booking a free 15-minute call to define the highest-value AI workflow for your current work.',
   },
   {

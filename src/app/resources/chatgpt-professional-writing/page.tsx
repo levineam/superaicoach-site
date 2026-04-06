@@ -125,7 +125,7 @@ export default function ChatGPTWritingGuide() {
             <div className="mt-4">
               <ConsultationCTA
                 source="chatgpt-writing-guide"
-                label="Book a consultation"
+                label="Free 15-minute call"
                 buttonClassName="border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
               />
             </div>

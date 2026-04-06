@@ -55,7 +55,7 @@ export default function PhillyPage() {
           <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <ConsultationCTA
               source="philly-hero"
-              label="Book a free 15-min consult"
+              label="Free 15-minute call"
               containerClassName="items-start"
             />
             <a

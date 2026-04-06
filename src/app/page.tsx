@@ -31,7 +31,7 @@ export default function Page() {
       <FAQStructuredData faqs={DEFAULT_FAQ_ITEMS} />
       <HowToStructuredData
         name="How to start with SuperAIcoach"
-        description="Book a consult, bring one real use case, build your workflow, and run it right away."
+        description="Book a free 15-minute call, bring one real use case, build your workflow, and run it right away."
         url="https://superaicoach.com"
         totalTime="PT15M"
         steps={DEFAULT_HOW_TO_STEPS}

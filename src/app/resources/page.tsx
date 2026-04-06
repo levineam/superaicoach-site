@@ -86,7 +86,7 @@ export default function ResourcesPage() {
               <div className="mt-4">
                 <ConsultationCTA
                   source="resources-page"
-                  label="Book a consultation"
+                  label="Free 15-minute call"
                   buttonClassName="border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
                   containerClassName="justify-center"
                 />

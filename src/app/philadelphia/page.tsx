@@ -66,12 +66,12 @@ export default function PhiladelphiaPage() {
             {/* CTA */}
             <div className="mt-8 flex flex-wrap items-center gap-4" id="book">
               <Link
-                href="https://calendly.com/superaicoach"
+                href="https://calendly.com/levineam/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
               >
-                Book a session
+                Free 15-minute call
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -183,12 +183,12 @@ export default function PhiladelphiaPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                href="https://calendly.com/superaicoach"
+                href="https://calendly.com/levineam/30min"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
               >
-                Book a session
+                Free 15-minute call
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <a
