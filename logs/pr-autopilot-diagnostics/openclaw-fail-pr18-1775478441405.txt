@@ -1,0 +1,3 @@
+[skills] Skipping skill path that resolves outside its configured root.
+[model-fallback/decision] model fallback decision: decision=skip_candidate requested=openai-codex/gpt-5.4 candidate=openai-codex/gpt-5.4 reason=rate_limit next=openrouter/z-ai/glm-4.5-air:free
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch, code_execution, x_search). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
