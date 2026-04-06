@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, ArrowRight } from 'lucide-react'
 
@@ -40,48 +41,63 @@ export default function PhiladelphiaPage() {
       <Navbar />
       <main className="mx-auto max-w-6xl px-6 pb-24 pt-28">
         {/* Hero */}
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-sm text-muted-foreground backdrop-blur-md">
-            <MapPin className="h-4 w-4" />
-            Philadelphia &amp; surrounding area
+        <div className="grid items-center gap-12 md:grid-cols-2">
+          {/* Left — Copy */}
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-sm text-muted-foreground backdrop-blur-md">
+              <MapPin className="h-4 w-4" />
+              Philadelphia &amp; surrounding area
+            </div>
+
+            <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
+              Philadelphia AI Personal Assistant Setup
+            </h1>
+
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              On-site installation of OpenClaw or Hermes Agents, customized to your needs
+            </p>
+
+            <p className="mt-3 text-base font-medium text-foreground">
+              Introductory pricing:{' '}
+              <span className="text-accent">$100/hour</span>,{' '}
+              <span className="line-through text-muted-foreground">$200/hour</span>
+            </p>
+
+            {/* CTA */}
+            <div className="mt-8 flex flex-wrap items-center gap-4" id="book">
+              <Link
+                href="https://calendly.com/superaicoach"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
+              >
+                Book a session
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <p className="mt-4 text-sm text-muted-foreground">
+              Questions first?{' '}
+              <a
+                href="mailto:hello@superaicoach.com"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                Email us
+              </a>
+            </p>
           </div>
 
-          <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
-            {"Philadelphia's Personal AI Assistant Setup Service"}
-            <span className="mt-2 block text-accent">
-              Get a personal AI assistant that actually knows you — set up in your home or office by an expert.
-            </span>
-          </h1>
-
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Most AI tools are generic. Yours shouldn&apos;t be. We come to you, learn how you
-            work, and set up an assistant tailored to your life — not a demo, not a tutorial, a
-            real working system you can rely on day one.
-          </p>
-
-          {/* CTA */}
-          <div className="mt-8 flex flex-wrap items-center gap-4" id="book">
-            <Link
-              href="https://calendly.com/superaicoach"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
-            >
-              Book a session
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <p className="text-sm text-muted-foreground">Starting at $100/hour</p>
+          {/* Right — Image */}
+          <div className="relative">
+            <Image
+              src="/philadelphia-hero.png"
+              alt="Philadelphia AI Personal Assistant Setup"
+              width={949}
+              height={414}
+              className="rounded-2xl border border-border/60 shadow-lg"
+              priority
+            />
           </div>
-
-          <p className="mt-4 text-sm text-muted-foreground">
-            Questions first?{' '}
-            <a
-              href="mailto:hello@superaicoach.com"
-              className="underline underline-offset-4 hover:text-foreground"
-            >
-              Email us
-            </a>
-          </p>
         </div>
 
         {/* What you get */}
