@@ -41,9 +41,9 @@ export default function PhiladelphiaPage() {
       <Navbar />
       <main className="mx-auto max-w-6xl px-6 pb-24 pt-28">
         {/* Hero */}
-        <div className="grid items-center gap-12 md:grid-cols-2">
+        <div className="grid items-center gap-12 md:grid-cols-5">
           {/* Left — Copy */}
-          <div>
+          <div className="md:col-span-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-sm text-muted-foreground backdrop-blur-md">
               <MapPin className="h-4 w-4" />
               Philadelphia &amp; surrounding area
@@ -88,7 +88,7 @@ export default function PhiladelphiaPage() {
           </div>
 
           {/* Right — Image */}
-          <div className="relative">
+          <div className="relative md:col-span-2">
             <Image
               src="/philadelphia-hero.png"
               alt="Philadelphia AI Personal Assistant Setup"
