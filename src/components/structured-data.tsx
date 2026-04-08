@@ -1,5 +1,7 @@
 import Script from 'next/script'
 
+type JsonLdValue = Record<string, unknown>
+
 interface OrganizationData {
   type: 'Organization' | 'LocalBusiness'
   name: string
@@ -19,8 +21,9 @@ interface OrganizationData {
     '@type': string
     name: string
   }
-  areaServed?: string | string[]
-  serviceType?: string[]
+  areaServed?: string | string[] | JsonLdValue | JsonLdValue[]
+  serviceType?: string | string[]
+  priceRange?: string
 }
 
 interface StructuredDataProps {
@@ -33,8 +36,11 @@ interface ServiceStructuredDataProps {
   url: string
   providerName: string
   providerUrl: string
-  areaServed?: string | string[]
+  providerType?: 'Organization' | 'LocalBusiness'
+  areaServed?: string | string[] | JsonLdValue | JsonLdValue[]
   serviceType?: string
+  offers?: JsonLdValue
+  hasOfferCatalog?: JsonLdValue
 }
 
 interface FAQItem {
@@ -59,7 +65,7 @@ interface HowToStructuredDataProps {
   steps: HowToStep[]
 }
 
-function buildOrganizationSchema(organization: OrganizationData) {
+export function buildOrganizationSchema(organization: OrganizationData) {
   return {
     '@context': 'https://schema.org',
     '@type': organization.type,
@@ -78,6 +84,7 @@ function buildOrganizationSchema(organization: OrganizationData) {
     ...(organization.founder && { founder: organization.founder }),
     ...(organization.areaServed && { areaServed: organization.areaServed }),
     ...(organization.serviceType && { serviceType: organization.serviceType }),
+    ...(organization.priceRange && { priceRange: organization.priceRange }),
   }
 }
 
@@ -93,21 +100,22 @@ export function StructuredData({ organization }: StructuredDataProps) {
   )
 }
 
-export function ServiceStructuredData(props: ServiceStructuredDataProps) {
-  const structuredData = {
+export function buildServiceSchema(props: ServiceStructuredDataProps) {
+  return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: props.name,
     description: props.description,
     url: props.url,
     provider: {
-      '@type': 'Organization',
+      '@type': props.providerType ?? 'Organization',
       name: props.providerName,
       url: props.providerUrl,
     },
     areaServed: props.areaServed ?? 'United States',
     ...(props.serviceType && { serviceType: props.serviceType }),
-    offers: {
+    ...(props.hasOfferCatalog && { hasOfferCatalog: props.hasOfferCatalog }),
+    offers: props.offers ?? {
       '@type': 'Offer',
       name: 'Free 15-minute AI coaching consult',
       price: '0',
@@ -116,6 +124,10 @@ export function ServiceStructuredData(props: ServiceStructuredDataProps) {
       url: 'https://calendly.com/levineam/30min',
     },
   }
+}
+
+export function ServiceStructuredData(props: ServiceStructuredDataProps) {
+  const structuredData = buildServiceSchema(props)
 
   return (
     <Script
@@ -126,8 +138,8 @@ export function ServiceStructuredData(props: ServiceStructuredDataProps) {
   )
 }
 
-export function FAQStructuredData({ faqs }: FAQStructuredDataProps) {
-  const structuredData = {
+export function buildFAQSchema({ faqs }: FAQStructuredDataProps) {
+  return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: faqs.map((faq) => ({
@@ -139,6 +151,10 @@ export function FAQStructuredData({ faqs }: FAQStructuredDataProps) {
       },
     })),
   }
+}
+
+export function FAQStructuredData({ faqs }: FAQStructuredDataProps) {
+  const structuredData = buildFAQSchema({ faqs })
 
   return (
     <Script
