@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     title: "Philadelphia's Personal AI Assistant Setup Service | SuperAIcoach",
     description:
       'Personal AI assistant setup in your home or office. Starting at $100/hour in Philadelphia.',
+    creator: '@andrewlevine',
   },
   other: {
     'geo.region': 'US-PA',

@@ -1,13 +1,20 @@
-'use client'
-
-import { useState } from 'react'
+import Script from 'next/script'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, ArrowRight, ChevronDown, Sparkles, Mail, Calendar, Workflow, Shield } from 'lucide-react'
+import { MapPin, ArrowRight, Sparkles, Mail, Workflow, Shield } from 'lucide-react'
 
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import {
+  buildFAQSchema,
+  buildOrganizationSchema,
+  buildServiceSchema,
+} from '@/components/structured-data'
+
+import { PhiladelphiaFAQ } from './philadelphia-faq'
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
 
 const howItWorks = [
   {
@@ -113,120 +120,83 @@ const faqs = [
   },
 ]
 
-function FAQItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="border-b border-border/40">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between py-5 text-left"
-      >
-        <h3 className="pr-4 text-base font-semibold text-foreground">{question}</h3>
-        <ChevronDown
-          className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 ${
-            open ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-      <div
-        className={`overflow-hidden transition-all duration-200 ${
-          open ? 'max-h-96 pb-5' : 'max-h-0'
-        }`}
-      >
-        <p className="text-sm leading-relaxed text-muted-foreground">{answer}</p>
-      </div>
-    </div>
-  )
-}
+const localBusinessSchema = buildOrganizationSchema({
+  type: 'LocalBusiness',
+  name: 'SuperAIcoach',
+  description:
+    'In-person AI personal assistant setup service in Philadelphia. We install and configure OpenClaw or Hermes Agent on your hardware, tailored to your life.',
+  url: `${baseUrl}/philadelphia`,
+  email: 'hello@superaicoach.com',
+  areaServed: [
+    { '@type': 'City', name: 'Philadelphia' },
+    { '@type': 'State', name: 'Pennsylvania' },
+  ],
+  address: {
+    addressLocality: 'Philadelphia',
+    addressRegion: 'PA',
+    addressCountry: 'US',
+  },
+  priceRange: '$100-$200',
+  sameAs: ['https://x.com/andrewlevine'],
+})
+
+const serviceSchema = buildServiceSchema({
+  name: 'Personal AI Assistant Setup',
+  description:
+    'In-person installation and configuration of OpenClaw or Hermes Agent AI assistants for personal and professional use in the Philadelphia area.',
+  url: `${baseUrl}/philadelphia`,
+  providerName: 'SuperAIcoach',
+  providerUrl: baseUrl,
+  providerType: 'LocalBusiness',
+  serviceType: 'AI Assistant Installation and Configuration',
+  areaServed: { '@type': 'City', name: 'Philadelphia' },
+  offers: {
+    '@type': 'Offer',
+    name: 'Introductory Setup',
+    description: 'In-person AI assistant setup at your home or office in Philadelphia',
+    price: '100',
+    priceCurrency: 'USD',
+    billingIncrement: 'PT1H',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'AI Setup Services',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        name: 'Introductory Setup',
+        description: 'In-person AI assistant setup at your home or office in Philadelphia',
+        price: '100',
+        priceCurrency: 'USD',
+        billingIncrement: 'PT1H',
+      },
+    ],
+  },
+})
+
+const faqSchema = buildFAQSchema({ faqs })
 
 export default function PhiladelphiaPage() {
   return (
     <>
-      <Navbar />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-28">
-        {/* Schema.org JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'LocalBusiness',
-              name: 'SuperAIcoach',
-              description:
-                'In-person AI personal assistant setup service in Philadelphia. We install and configure OpenClaw or Hermes Agent on your hardware, tailored to your life.',
-              url: 'https://superaicoach.com/philadelphia',
-              email: 'hello@superaicoach.com',
-              areaServed: [
-                { '@type': 'City', name: 'Philadelphia' },
-                { '@type': 'State', name: 'Pennsylvania' },
-              ],
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: 'Philadelphia',
-                addressRegion: 'PA',
-                addressCountry: 'US',
-              },
-              priceRange: '$100-$200',
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Service',
-              name: 'Personal AI Assistant Setup',
-              description:
-                'In-person installation and configuration of OpenClaw or Hermes Agent AI assistants for personal and professional use in the Philadelphia area.',
-              provider: {
-                '@type': 'LocalBusiness',
-                name: 'SuperAIcoach',
-                url: 'https://superaicoach.com',
-              },
-              serviceType: 'AI Assistant Installation and Configuration',
-              areaServed: { '@type': 'City', name: 'Philadelphia' },
-              hasOfferCatalog: {
-                '@type': 'OfferCatalog',
-                name: 'AI Setup Services',
-                itemListElement: [
-                  {
-                    '@type': 'Offer',
-                    name: 'Introductory Setup',
-                    description:
-                      'In-person AI assistant setup at your home or office in Philadelphia',
-                    price: '100',
-                    priceCurrency: 'USD',
-                    billingIncrement: 'PT1H',
-                  },
-                ],
-              },
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'FAQPage',
-              mainEntity: faqs.map((faq) => ({
-                '@type': 'Question',
-                name: faq.question,
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: faq.answer,
-                },
-              })),
-            }),
-          }}
-        />
+      <Script
+        id="structured-data-philadelphia-local-business"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
+      <Script
+        id="structured-data-philadelphia-service"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <Script
+        id="structured-data-philadelphia-faq"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
 
-        {/* Meta tags for geo */}
-        <meta name="geo.region" content="US-PA" />
-        <meta name="geo.placename" content="Philadelphia" />
-
-        {/* Hero */}
+      <Navbar mode="pill-on-scroll" />
+      <main className="mx-auto max-w-6xl px-6 pb-24 pt-32 sm:pt-36">
         <div className="grid items-center gap-12 md:grid-cols-5">
           <div className="md:col-span-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-sm text-muted-foreground backdrop-blur-md">
@@ -243,8 +213,7 @@ export default function PhiladelphiaPage() {
             </p>
 
             <p className="mt-3 text-base font-medium text-foreground">
-              Introductory pricing:{' '}
-              <span className="text-accent">$100/hour</span>,{' '}
+              Introductory pricing: <span className="text-accent">$100/hour</span>,{' '}
               <span className="line-through text-muted-foreground">$200/hour</span>
             </p>
 
@@ -272,18 +241,20 @@ export default function PhiladelphiaPage() {
           </div>
 
           <div className="relative md:col-span-2">
-            <Image
-              src="/philadelphia-hero.png"
-              alt="OpenClaw and Hermes Agent logos — personal AI assistant platforms"
-              width={949}
-              height={414}
-              priority
-            />
+            <div className="rounded-[2rem] border border-border/60 bg-card/30 p-4 shadow-lg shadow-black/5 backdrop-blur-xl">
+              <Image
+                src="/philadelphia-hero.png"
+                alt="OpenClaw and Hermes Agent logos — personal AI assistant platforms"
+                width={949}
+                height={414}
+                priority
+                className="w-full"
+              />
+            </div>
           </div>
         </div>
 
-        {/* How It Works */}
-        <section className="mt-20">
+        <section className="mt-20" id="how-it-works">
           <ScrollReveal>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
               How It Works
@@ -310,7 +281,6 @@ export default function PhiladelphiaPage() {
           </ScrollReveal>
         </section>
 
-        {/* What's Possible */}
         <section className="mt-20">
           <ScrollReveal>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
@@ -338,7 +308,6 @@ export default function PhiladelphiaPage() {
           </ScrollReveal>
         </section>
 
-        {/* What's Included */}
         <section className="mt-20">
           <ScrollReveal>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
@@ -365,7 +334,6 @@ export default function PhiladelphiaPage() {
           </ScrollReveal>
         </section>
 
-        {/* Pricing */}
         <section className="mt-20">
           <ScrollReveal className="rounded-3xl border border-border/60 bg-primary p-10 text-primary-foreground">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Pricing</p>
@@ -394,8 +362,7 @@ export default function PhiladelphiaPage() {
           </ScrollReveal>
         </section>
 
-        {/* FAQ */}
-        <section className="mt-20">
+        <section className="mt-20" id="faq">
           <ScrollReveal>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">FAQ</p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
@@ -403,13 +370,10 @@ export default function PhiladelphiaPage() {
             </h2>
           </ScrollReveal>
           <ScrollReveal delayMs={60} className="mt-10 max-w-3xl">
-            {faqs.map((faq) => (
-              <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
-            ))}
+            <PhiladelphiaFAQ faqs={faqs} />
           </ScrollReveal>
         </section>
 
-        {/* Final CTA */}
         <section className="mt-20">
           <ScrollReveal className="text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">

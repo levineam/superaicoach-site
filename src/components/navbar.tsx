@@ -13,26 +13,44 @@ const navLinks = [
   { label: 'FAQ', href: '/#faq' },
 ]
 
-export function Navbar() {
+type NavbarMode = 'default' | 'pill-on-scroll'
+
+export function Navbar({ mode = 'default' }: { mode?: NavbarMode }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const pillMode = mode === 'pill-on-scroll'
 
   return (
     <header
       className={cn(
         'fixed left-0 right-0 top-0 z-50 transition-all duration-300',
-        scrolled
-          ? 'border-b border-border bg-background/80 shadow-sm backdrop-blur-lg'
-          : 'bg-transparent',
+        pillMode ? 'px-4 pt-4 sm:px-6' : undefined,
+        !pillMode &&
+          (scrolled
+            ? 'border-b border-border bg-background/80 shadow-sm backdrop-blur-lg'
+            : 'bg-transparent'),
       )}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <nav
+        className={cn(
+          'mx-auto flex items-center justify-between transition-all duration-300',
+          pillMode
+            ? [
+                scrolled
+                  ? 'max-w-5xl rounded-full border border-border/70 bg-background/80 px-5 py-3 shadow-lg shadow-black/5 backdrop-blur-xl sm:px-6'
+                  : 'max-w-6xl px-0 py-2',
+              ]
+            : 'max-w-6xl px-6 py-4',
+        )}
+      >
         <Link href="/" className="text-xl font-bold tracking-tight text-foreground">
           SuperAI<span className="text-accent">coach</span>
         </Link>
@@ -72,7 +90,14 @@ export function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="border-t border-border bg-background/95 px-6 pb-6 pt-4 backdrop-blur-lg md:hidden">
+        <div
+          className={cn(
+            'backdrop-blur-lg md:hidden',
+            pillMode
+              ? 'mx-auto mt-3 max-w-5xl rounded-[28px] border border-border/70 bg-background/95 px-6 pb-6 pt-4 shadow-lg shadow-black/5'
+              : 'border-t border-border bg-background/95 px-6 pb-6 pt-4',
+          )}
+        >
           <div className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <Link
@@ -90,7 +115,12 @@ export function Navbar() {
               </Link>
             </Button>
             <Button asChild className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
-              <Link href="https://calendly.com/levineam/30min" target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>
+              <Link
+                href="https://calendly.com/levineam/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+              >
                 Book a Call
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Link>
