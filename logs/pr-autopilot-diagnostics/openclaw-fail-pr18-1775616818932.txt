@@ -1,0 +1,4 @@
+[skills] Skipping skill path that resolves outside its configured root.
+[tools] tools.profile (coding) allowlist contains unknown entries (apply_patch, code_execution, x_search). These entries are shipped core tools but unavailable in the current runtime/provider/model/config.
+[agent/embedded] embedded run agent end: runId=pr-autopilot-pr-18-1775616542868 isError=true model=glm-5.1 provider=zai error=⚠️ API rate limit reached. Please try again later. rawError=429 Rate limit reached for requests
+[agent/embedded] embedded run agent end: runId=pr-autopilot-pr-18-1775616542868 isError=true model=glm-5.1 provider=zai error=⚠️ API rate limit reached. Please try again later. rawError=429 Rate limit reached for requests
