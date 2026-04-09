@@ -1,0 +1,21 @@
+Failed to parse JSON message: [outbound-hygiene] Plugin loaded - monitoring outbound messages SyntaxError: Unexpected token 'o', "[outbound-h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Failed to parse JSON message: [capture-router] capture router loaded from /Users/andrew/.openclaw/scripts/capture-router-hook.js SyntaxError: Unexpected token 'c', "[capture-ro"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Failed to parse JSON message: [capture-router] Plugin loaded — monitoring inbound messages for capture SyntaxError: Unexpected token 'c', "[capture-ro"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Failed to parse JSON message: [35m[plugins][39m [36m[system-guard] plugin loaded — before_tool_call enforcement active[39m SyntaxError: Unexpected token '', "[35m[plug"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Failed to parse JSON message: [35m[plugins][39m [36m[lcm] Plugin loaded (enabled=true, db=/Users/andrew/.openclaw/lcm.db, threshold=0.75)[39m SyntaxError: Unexpected token '', "[35m[plug"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at Object.start (file:///Users/andrew/.nvm/versions/node/v24.9.0/lib/node_modules/acpx/node_modules/@agentclientprotocol/sdk/dist/stream.js:34:54)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Timed out after 120000ms
