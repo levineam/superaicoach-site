@@ -47,24 +47,17 @@ async function verifyMagicLink(formData: FormData) {
   // Include 'admin' so platform-admin accounts are not silently coerced to 'owner'.
   const allowedVerifyRoles = ['admin', 'owner', 'team_member', 'coach'] as const
   type VerifyMembershipRole = (typeof allowedVerifyRoles)[number]
-  let safeVerifyRole: VerifyMembershipRole
-  if (tenant) {
-    const membership = await getMembershipForUserAndTenant(result.userId, tenant.id)
-    safeVerifyRole = (membership?.role as VerifyMembershipRole | undefined) ??
-      ((allowedVerifyRoles as readonly string[]).includes(result.role)
-        ? (result.role as VerifyMembershipRole)
-        : 'owner')
-  } else {
-    safeVerifyRole = (allowedVerifyRoles as readonly string[]).includes(result.role)
+  const membership = await getMembershipForUserAndTenant(result.userId, tenant.id)
+  const safeVerifyRole = (membership?.role as VerifyMembershipRole | undefined) ??
+    ((allowedVerifyRoles as readonly string[]).includes(result.role)
       ? (result.role as VerifyMembershipRole)
-      : 'owner'
-  }
+      : 'owner')
   const signedToken = createSessionToken({
     userId: result.userId,
     tenantId,
     tenantSlug,
     role: safeVerifyRole,
-    email: result.email || email,
+    email: result.email,
   })
   cookieStore.set(SESSION_COOKIE_NAME, signedToken, {
     httpOnly: true,

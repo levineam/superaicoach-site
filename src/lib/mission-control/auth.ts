@@ -22,6 +22,22 @@ async function compareHash(input: string, hash: string): Promise<boolean> {
 
 const MAGIC_LINK_DURATION_MS = 20 * 60 * 1000
 
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase()
+}
+
+function createTenantSlugFromEmail(email: string): string {
+  const emailLocalPart = normalizeEmail(email).split('@')[0] ?? ''
+  const baseSlug = emailLocalPart
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 50)
+
+  const slugPrefix = baseSlug || 'workspace'
+  return `${slugPrefix}-${crypto.randomUUID().slice(0, 8)}`
+}
+
 // Create Supabase client only when real credentials are present.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -41,12 +57,13 @@ function isMockAuthEnabled(): boolean {
 
 // Mock authentication for development when explicitly enabled
 async function authenticateWithMock(email: string, password: string) {
-  console.log('🔐 Using mock authentication for:', email)
+  const normalizedEmail = normalizeEmail(email)
+  console.log('🔐 Using mock authentication for:', normalizedEmail)
   
   // Mock user data - in development only
   const mockUser = {
     id: 'mock-user-id',
-    email: email,
+    email: normalizedEmail,
     tenant_slug: 'vai',
     role: 'admin',
     status: 'active',
@@ -79,7 +96,7 @@ export async function authenticateWithPassword(email: string, password: string) 
     }
     
     // Normalize email before querying — sign-up lowercases, so lookups must match
-    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedEmail = normalizeEmail(email)
 
     // Find user by email
     const { data: user, error: userError } = await supabase!
@@ -215,9 +232,10 @@ export async function createUser(
     if (!isMockAuthEnabled()) {
       return { success: false, error: 'Authentication service not configured' }
     }
+    const normalizedEmail = normalizeEmail(email)
     const mockUser = {
       id: 'mock-user-' + crypto.randomUUID(),
-      email,
+      email: normalizedEmail,
       hashed_password: null,
       role,
       tenant_slug: tenantSlug,
@@ -228,12 +246,13 @@ export async function createUser(
     return { success: true, user: mockUser }
   }
   try {
+    const normalizedEmail = normalizeEmail(email)
     const hashedPassword = await createHash(password, 10)
     
     const { data, error } = await supabase!
       .from('users')
       .insert({
-        email,
+        email: normalizedEmail,
         hashed_password: hashedPassword,
         role,
         tenant_slug: tenantSlug,
@@ -279,10 +298,11 @@ export async function getUserByEmail(email: string) {
     return null
   }
   try {
+    const normalizedEmail = normalizeEmail(email)
     const { data, error } = await supabase!
       .from('users')
       .select('*')
-      .eq('email', email)
+      .eq('email', normalizedEmail)
       .single()
 
     if (error) {
@@ -327,7 +347,7 @@ export async function issueMagicLink(email: string, origin: string) {
       throw new Error('Authentication service not configured')
     }
     const magicLinkToken = crypto.randomUUID()
-    const magicLinkUrl = `${origin}/auth/verify?token=${magicLinkToken}&email=${encodeURIComponent(email.trim().toLowerCase())}`
+    const magicLinkUrl = `${origin}/auth/verify?token=${magicLinkToken}&email=${encodeURIComponent(normalizeEmail(email))}`
     console.log('🔐 Mock magic link (ENABLE_MOCK_AUTH):', magicLinkUrl)
     return { magicLink: magicLinkUrl }
   }
@@ -485,9 +505,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       // Derive a user-specific tenant slug from the email local-part so that
       // each first-time magic-link user gets their own tenant instead of
       // sharing the global 'default' workspace.
-      const emailLocalPart = normalizedEmail.split('@')[0]
-      const userTenantSlug = emailLocalPart.replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').slice(0, 50)
-        + '-' + crypto.randomUUID().slice(0, 8)
+      const userTenantSlug = createTenantSlugFromEmail(normalizedEmail)
       const bootstrapPassword = crypto.randomUUID()
       const { success, user: newUser } = await createUser(
         normalizedEmail,

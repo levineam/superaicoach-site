@@ -1,5 +1,5 @@
--- SuperAIcoach fresh schema (replaces Mission Control)
--- Lean auth + profession-first product tables only.
+-- SuperAIcoach fresh schema for the new Supabase project.
+-- Lean auth, tenant, and profession-first product tables only.
 
 -- ============================================================
 -- 1. Users (service-role managed, not Supabase Auth)
