@@ -19,6 +19,7 @@ create table if not exists public.users (
 );
 
 create index if not exists idx_users_email on public.users (email);
+create unique index if not exists idx_users_email_lower on public.users (lower(email));
 
 -- ============================================================
 -- 2. Sessions (cookie-based, managed by app server)

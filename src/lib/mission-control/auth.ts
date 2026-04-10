@@ -22,6 +22,11 @@ async function compareHash(input: string, hash: string): Promise<boolean> {
 }
 
 const MAGIC_LINK_DURATION_MS = 20 * 60 * 1000
+const MOCK_USER_ID = 'mock-user-id'
+const MOCK_TENANT_ID = 'tenant_vai'
+const MOCK_TENANT_SLUG = 'vai'
+const MOCK_ROLE = 'admin'
+const MOCK_EMAIL = 'mock@example.com'
 
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
@@ -60,13 +65,13 @@ function isMockAuthEnabled(): boolean {
 async function authenticateWithMock(email: string, password: string) {
   const normalizedEmail = normalizeEmail(email)
   console.log('🔐 Using mock authentication for:', normalizedEmail)
-  
+
   // Mock user data - in development only
   const mockUser = {
-    id: 'mock-user-id',
+    id: MOCK_USER_ID,
     email: normalizedEmail,
-    tenant_slug: 'vai',
-    role: 'admin',
+    tenant_slug: MOCK_TENANT_SLUG,
+    role: MOCK_ROLE,
     status: 'active',
   }
   
@@ -116,12 +121,13 @@ export async function authenticateWithPassword(email: string, password: string) 
     }
 
     // Guard against magic-link-only accounts that have no password hash.
-    if (!user.hashed_password) {
+    const passwordHash = user.hashed_password
+    if (!passwordHash) {
       return { error: 'Invalid email or password' }
     }
 
     // Verify password
-    const isPasswordValid = await compareHash(password, user.hashed_password)
+    const isPasswordValid = await compareHash(password, passwordHash)
 
     if (!isPasswordValid) {
       return { error: 'Invalid email or password' }
@@ -256,7 +262,7 @@ export async function createUser(
         email: normalizedEmail,
         hashed_password: hashedPassword,
         role,
-        tenant_slug: tenantSlug,
+        ...(tenantSlug ? { tenant_slug: tenantSlug } : {}),
         status: 'active'
       })
       .select()
@@ -520,9 +526,17 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
         userTenantSlug,
       )
       if (!success || !newUser) {
-        return null
+        user = await getUserByEmail(normalizedEmail)
+        if (!user) {
+          return null
+        }
+      } else {
+        user = newUser
       }
-      user = newUser
+    }
+
+    if (!user) {
+      return null
     }
 
     // Block inactive accounts — same guard as password login
@@ -566,11 +580,11 @@ async function validateMockSession(sessionToken: string) {
   }
   if (sessionToken.startsWith('mock-session-token-')) {
     return {
-      userId: 'mock-user-id',
-      tenantId: 'tenant_vai',
-      tenantSlug: 'vai',
-      role: 'admin',
-      email: 'mock@example.com',
+      userId: MOCK_USER_ID,
+      tenantId: MOCK_TENANT_ID,
+      tenantSlug: MOCK_TENANT_SLUG,
+      role: MOCK_ROLE,
+      email: MOCK_EMAIL,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     }
   }
@@ -598,11 +612,11 @@ function resolveSignedCookie(rawCookie: string): SessionPayload | null {
   // Fall back: if mock auth is enabled and cookie looks like a mock token, validate it
   if (isMockAuthEnabled() && rawCookie.startsWith('mock-session-token-')) {
     return {
-      userId: 'mock-user-id',
-      tenantId: 'tenant_vai',
-      tenantSlug: 'vai',
-      role: 'admin',
-      email: 'mock@example.com',
+      userId: MOCK_USER_ID,
+      tenantId: MOCK_TENANT_ID,
+      tenantSlug: MOCK_TENANT_SLUG,
+      role: MOCK_ROLE,
+      email: MOCK_EMAIL,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     }
   }
