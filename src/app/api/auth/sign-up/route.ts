@@ -1,14 +1,14 @@
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { createUser, getUserByEmail } from '@/lib/mission-control/auth'
+import { createTenantSlugFromEmail, createUser, getUserByEmail, normalizeEmail } from '@/lib/mission-control/auth'
 import { ensureTenantExists } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { email?: string; password?: string }
-    const email = body.email?.trim().toLowerCase()
+    const email = body.email ? normalizeEmail(body.email) : undefined
     const password = body.password
 
     if (!email || !password) {
@@ -26,22 +26,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate a unique tenant slug for self-registered users to ensure isolated workspaces.
-    const emailLocalPart = email.split('@')[0]
-    const uniqueTenantSlug = emailLocalPart.replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').slice(0, 50)
-      + '-' + crypto.randomUUID().slice(0, 8)
-    const tenantSlug = uniqueTenantSlug
+    const tenantSlug = createTenantSlugFromEmail(email)
+
+    const tenant = await ensureTenantExists({
+      slug: tenantSlug,
+      name: `${email}'s Workspace`,
+      pilotMode: false,
+    })
 
     // Create the user — self-registered accounts own their workspace (single-tenant model).
     const result = await createUser(email, password, 'owner', tenantSlug)
     if (!result.success || !result.user) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
-    
-    const tenant = await ensureTenantExists({
-      slug: tenantSlug,
-      name: `${email}'s Workspace`,
-      pilotMode: false,
-    })
 
     // Auto-sign-in: create HMAC-signed session token using the persisted role.
     // createUser is called with 'owner' above, so this will always resolve to 'owner'.

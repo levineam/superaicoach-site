@@ -1,14 +1,14 @@
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { authenticateWithPassword } from '@/lib/mission-control/auth'
+import { authenticateWithPassword, normalizeEmail } from '@/lib/mission-control/auth'
 import { getMembershipForUserAndTenant, ensureTenantExists } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { email?: string; password?: string }
-    const email = body.email?.trim()
+    const email = body.email ? normalizeEmail(body.email) : undefined
     const password = body.password
 
     if (!email || !password) {
@@ -36,18 +36,11 @@ export async function POST(request: NextRequest) {
     // Include 'admin' so platform-admin accounts are not silently coerced to 'owner'.
     const allowedRoles = ['admin', 'owner', 'team_member', 'coach'] as const
     type MembershipRole = (typeof allowedRoles)[number]
-    let safeRole: MembershipRole
-    if (tenant) {
-      const membership = await getMembershipForUserAndTenant(result.userId, tenant.id)
-      safeRole = (membership?.role as MembershipRole | undefined) ??
-        ((allowedRoles as readonly string[]).includes(result.role)
-          ? (result.role as MembershipRole)
-          : 'owner')
-    } else {
-      safeRole = (allowedRoles as readonly string[]).includes(result.role)
+    const membership = await getMembershipForUserAndTenant(result.userId, tenant.id)
+    const safeRole: MembershipRole = (membership?.role as MembershipRole | undefined) ??
+      ((allowedRoles as readonly string[]).includes(result.role)
         ? (result.role as MembershipRole)
-        : 'owner'
-    }
+        : 'owner')
     const signedToken = createSessionToken({
       userId: result.userId,
       tenantId,

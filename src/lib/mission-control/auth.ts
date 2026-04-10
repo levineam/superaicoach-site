@@ -5,6 +5,7 @@ import { verifySessionToken } from './session'
 import type { SessionPayload } from './types'
 import {
   createMembership,
+  ensureTenantExists,
   getDefaultMembershipForUser,
   getTenantById,
   getTenantBySlug,
@@ -22,11 +23,11 @@ async function compareHash(input: string, hash: string): Promise<boolean> {
 
 const MAGIC_LINK_DURATION_MS = 20 * 60 * 1000
 
-function normalizeEmail(email: string): string {
+export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
 }
 
-function createTenantSlugFromEmail(email: string): string {
+export function createTenantSlugFromEmail(email: string): string {
   const emailLocalPart = normalizeEmail(email).split('@')[0] ?? ''
   const baseSlug = emailLocalPart
     .replace(/[^a-z0-9-]/g, '-')
@@ -361,7 +362,7 @@ export async function issueMagicLink(email: string, origin: string) {
 
     // Normalize email before storing so invalidation and consume queries
     // both operate on the same canonical form.
-    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedEmail = normalizeEmail(email)
 
     // Invalidate any previously issued unused tokens for this email so
     // there is only ever one active magic link per address.  This also
@@ -441,7 +442,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     if (!isMockAuthEnabled()) {
       return null
     }
-    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedEmail = normalizeEmail(email)
     return {
       tenantSlug: 'vai',
       userId: 'mock-user-id',
@@ -450,7 +451,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     }
   }
   try {
-    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedEmail = normalizeEmail(email)
 
     // Fetch all unexpired unused rows for this email.  Because issueMagicLink
     // now invalidates previous tokens on creation, there should be at most one
@@ -506,6 +507,11 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       // each first-time magic-link user gets their own tenant instead of
       // sharing the global 'default' workspace.
       const userTenantSlug = createTenantSlugFromEmail(normalizedEmail)
+      await ensureTenantExists({
+        slug: userTenantSlug,
+        name: `${normalizedEmail}'s Workspace`,
+        pilotMode: false,
+      })
       const bootstrapPassword = crypto.randomUUID()
       const { success, user: newUser } = await createUser(
         normalizedEmail,
