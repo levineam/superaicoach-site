@@ -222,14 +222,20 @@ export async function validateSession(sessionToken: string) {
 export async function setPasswordForUser(userId: string, password: string) {
   try {
     const hashedPassword = await createHash(password, 10)
-    
-    const { error } = await supabase!
+
+    const { data: updatedUser, error } = await supabase!
       .from('users')
       .update({ password_hash: hashedPassword })
       .eq('id', userId)
+      .select('id')
+      .maybeSingle()
 
     if (error) {
       throw error
+    }
+
+    if (!updatedUser) {
+      return { success: false, error: 'User not found' }
     }
 
     return { success: true }
@@ -259,7 +265,7 @@ export async function createUser(
       email: normalizedEmail,
       password_hash: null,
       role: persistedRole,
-      tenant_slug: tenantSlug,
+      tenant_slug: tenantSlug ?? MOCK_TENANT_SLUG,
       status: 'active',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -549,7 +555,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       )
 
       user = success && newUser ? newUser : await getUserByEmail(normalizedEmail)
-      if (!user) {
+      if (!user?.id) {
         return null
       }
     }
@@ -581,7 +587,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       tenantSlug: finalTenantSlug,
       userId: user.id,
       role: finalRole,
-      email: user.email ?? normalizedEmail,
+      email: normalizeEmail(user.email ?? normalizedEmail),
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
