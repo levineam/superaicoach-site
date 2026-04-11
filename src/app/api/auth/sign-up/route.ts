@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { createTenantSlugFromEmail, createUser, createWorkspaceNameFromEmail, getUserByEmail, normalizeEmail } from '@/lib/mission-control/auth'
+import { createTenantSlugFromEmail, createUser, createWorkspaceNameFromEmail, getUserByEmail, normalizeEmail, toMembershipRole } from '@/lib/mission-control/auth'
 import { ensureTenantExists } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
@@ -40,19 +40,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
 
-    // Auto-sign-in: create HMAC-signed session token using the persisted role.
-    // createUser is called with 'owner' above, so this will always resolve to 'owner'.
-    // The allowedRoles guard ensures we never accidentally serialize 'admin' or an unknown role.
-    const allowedRoles = ['owner', 'team_member', 'coach'] as const
-    type SignUpRole = (typeof allowedRoles)[number]
-    const safeRole: SignUpRole = (allowedRoles as readonly string[]).includes(result.user.role)
-      ? (result.user.role as SignUpRole)
-      : 'owner'
+    // Auto-sign-in: serialize the persisted role through the shared Mission Control
+    // sanitizer so session payloads stay aligned with the auth layer.
     const signedToken = createSessionToken({
       userId: result.user.id,
       tenantId: tenant.id,
       tenantSlug,
-      role: safeRole,
+      role: toMembershipRole(result.user.role),
       email,
     })
 

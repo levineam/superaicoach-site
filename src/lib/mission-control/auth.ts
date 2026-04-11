@@ -242,7 +242,7 @@ export async function setPasswordForUser(userId: string, password: string) {
 export async function createUser(
   email: string,
   password: string,
-  role: string = 'user',
+  role: MembershipRole = 'owner',
   tenantSlug: string | null = null,
 ) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -448,9 +448,9 @@ export async function changePassword(userId: string, currentPassword: string, ne
   }
 }
 
-const SESSION_ROLES = ['admin', 'owner', 'team_member', 'coach'] as const
+export const SESSION_ROLES = ['admin', 'owner', 'team_member', 'coach'] as const
 
-function toMembershipRole(role: string | null | undefined): MembershipRole {
+export function toMembershipRole(role: string | null | undefined): MembershipRole {
   return (SESSION_ROLES as readonly string[]).includes(role ?? '')
     ? (role as MembershipRole)
     : 'owner'
