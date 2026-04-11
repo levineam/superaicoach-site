@@ -121,7 +121,7 @@ export async function authenticateWithPassword(email: string, password: string) 
     }
 
     // Guard against magic-link-only accounts that have no password hash.
-    const passwordHash = user.hashed_password
+    const passwordHash = user.password_hash
     if (!passwordHash) {
       return { error: 'Invalid email or password' }
     }
@@ -213,7 +213,7 @@ export async function setPasswordForUser(userId: string, password: string) {
     
     const { error } = await supabase!
       .from('users')
-      .update({ hashed_password: hashedPassword })
+      .update({ password_hash: hashedPassword })
       .eq('id', userId)
 
     if (error) {
@@ -243,7 +243,7 @@ export async function createUser(
     const mockUser = {
       id: 'mock-user-' + crypto.randomUUID(),
       email: normalizedEmail,
-      hashed_password: null,
+      password_hash: null,
       role,
       tenant_slug: tenantSlug,
       status: 'active',
@@ -260,7 +260,7 @@ export async function createUser(
       .from('users')
       .insert({
         email: normalizedEmail,
-        hashed_password: hashedPassword,
+        password_hash: hashedPassword,
         role,
         ...(tenantSlug ? { tenant_slug: tenantSlug } : {}),
         status: 'active'
@@ -412,13 +412,13 @@ export async function changePassword(userId: string, currentPassword: string, ne
       return { error: 'User not found' }
     }
 
-    // Magic-link-only accounts have no hashed_password — reject password changes
+    // Magic-link-only accounts have no password_hash, reject password changes
     // rather than passing null to bcrypt which would throw or always mismatch.
-    if (!user.hashed_password) {
+    if (!user.password_hash) {
       return { error: 'Account uses magic-link authentication; no password set' }
     }
 
-    const isCurrentPasswordValid = await compareHash(currentPassword, user.hashed_password)
+    const isCurrentPasswordValid = await compareHash(currentPassword, user.password_hash)
     if (!isCurrentPasswordValid) {
       return { error: 'Current password is incorrect' }
     }

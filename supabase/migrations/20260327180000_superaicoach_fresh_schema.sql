@@ -7,7 +7,7 @@
 create table if not exists public.users (
   id              uuid        primary key default gen_random_uuid(),
   email           text        unique not null,
-  hashed_password text,                           -- bcrypt; nullable for magic-link-only users
+  password_hash   text,                           -- bcrypt; nullable for magic-link-only users
   display_name    text,
   role            text        not null default 'user',
   status          text        not null default 'active',
