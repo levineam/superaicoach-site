@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
 import { SESSION_COOKIE_NAME } from './session-constants'
 import { verifySessionToken } from './session'
-import type { SessionPayload } from './types'
+import type { MembershipRole, SessionPayload } from './types'
 import {
   createMembership,
   ensureTenantExists,
@@ -44,7 +44,7 @@ export function createTenantSlugFromEmail(email: string): string {
   return `${slugPrefix}-${crypto.randomUUID().slice(0, 8)}`
 }
 
-function createWorkspaceNameFromEmail(email: string): string {
+export function createWorkspaceNameFromEmail(email: string): string {
   const emailLocalPart = normalizeEmail(email).split('@')[0] ?? ''
   const workspaceOwner = emailLocalPart
     .replace(/[^a-z0-9]+/gi, ' ')
@@ -448,10 +448,18 @@ export async function changePassword(userId: string, currentPassword: string, ne
   }
 }
 
+const SESSION_ROLES = ['admin', 'owner', 'team_member', 'coach'] as const
+
+function toMembershipRole(role: string | null | undefined): MembershipRole {
+  return (SESSION_ROLES as readonly string[]).includes(role ?? '')
+    ? (role as MembershipRole)
+    : 'owner'
+}
+
 export async function consumeMagicLinkAndCreateSession(token: string, email: string): Promise<{
   tenantSlug: string
   userId: string
-  role: string
+  role: MembershipRole
   email: string
 } | null> {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -553,7 +561,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
     // Resolve tenantSlug from membership when user.tenant_slug is absent
     // for migrated users who have memberships but unset tenant_slug.
     let finalTenantSlug = user.tenant_slug ?? 'default'
-    let finalRole = user.role
+    let finalRole = toMembershipRole(user.role)
 
     try {
       const membership = await getDefaultMembershipForUser(user.id)

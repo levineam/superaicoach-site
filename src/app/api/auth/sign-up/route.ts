@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { createTenantSlugFromEmail, createUser, getUserByEmail, normalizeEmail } from '@/lib/mission-control/auth'
+import { createTenantSlugFromEmail, createUser, createWorkspaceNameFromEmail, getUserByEmail, normalizeEmail } from '@/lib/mission-control/auth'
 import { ensureTenantExists } from '@/lib/mission-control/data-access'
 import { createSessionToken, SESSION_COOKIE_NAME } from '@/lib/mission-control/session'
 
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     const tenant = await ensureTenantExists({
       slug: tenantSlug,
-      name: `${email}'s Workspace`,
+      name: createWorkspaceNameFromEmail(email),
       pilotMode: false,
     })
 
