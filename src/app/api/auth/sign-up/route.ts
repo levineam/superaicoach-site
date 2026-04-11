@@ -33,9 +33,10 @@ export async function POST(request: NextRequest) {
       name: createWorkspaceNameFromEmail(email),
       pilotMode: false,
     })
+    const persistedTenantSlug = tenant.slug
 
     // Create the user — self-registered accounts own their workspace (single-tenant model).
-    const result = await createUser(email, password, 'owner', tenantSlug)
+    const result = await createUser(email, password, 'owner', persistedTenantSlug)
     if (!result.success || !result.user) {
       return NextResponse.json({ ok: false, error: result.error || 'Failed to create account' }, { status: 500 })
     }
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
     const signedToken = createSessionToken({
       userId: result.user.id,
       tenantId: tenant.id,
-      tenantSlug,
+      tenantSlug: persistedTenantSlug,
       role: toMembershipRole(result.user.role),
       email,
     })

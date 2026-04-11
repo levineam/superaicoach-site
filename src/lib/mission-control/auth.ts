@@ -245,6 +245,8 @@ export async function createUser(
   role: MembershipRole = 'owner',
   tenantSlug: string | null = null,
 ) {
+  const persistedRole = toMembershipRole(role)
+
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     // In mock mode return a synthetic user record so sign-up and magic-link flows
     // that call createUser can proceed without a real database.
@@ -256,7 +258,7 @@ export async function createUser(
       id: 'mock-user-' + crypto.randomUUID(),
       email: normalizedEmail,
       password_hash: null,
-      role,
+      role: persistedRole,
       tenant_slug: tenantSlug,
       status: 'active',
       created_at: new Date().toISOString(),
@@ -267,13 +269,13 @@ export async function createUser(
   try {
     const normalizedEmail = normalizeEmail(email)
     const hashedPassword = await createHash(password, 10)
-    
+
     const { data, error } = await supabase!
       .from('users')
       .insert({
         email: normalizedEmail,
         password_hash: hashedPassword,
-        role,
+        role: persistedRole,
         ...(tenantSlug ? { tenant_slug: tenantSlug } : {}),
         status: 'active'
       })
@@ -294,7 +296,7 @@ export async function createUser(
           await createMembership({
             userId: data.id,
             tenantId: tenant.id,
-            role: data.role,
+            role: toMembershipRole(data.role),
           })
         }
       } catch (membershipError) {
@@ -532,9 +534,9 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       // Derive a user-specific tenant slug from the email local-part so that
       // each first-time magic-link user gets their own tenant instead of
       // sharing the global 'default' workspace.
-      const userTenantSlug = createTenantSlugFromEmail(normalizedEmail)
-      await ensureTenantExists({
-        slug: userTenantSlug,
+      const requestedTenantSlug = createTenantSlugFromEmail(normalizedEmail)
+      const tenant = await ensureTenantExists({
+        slug: requestedTenantSlug,
         name: createWorkspaceNameFromEmail(normalizedEmail),
         pilotMode: false,
       })
@@ -543,7 +545,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
         normalizedEmail,
         bootstrapPassword,
         'owner',
-        userTenantSlug,
+        tenant.slug,
       )
 
       user = success && newUser ? newUser : await getUserByEmail(normalizedEmail)
