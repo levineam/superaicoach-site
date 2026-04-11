@@ -103,13 +103,14 @@ async function authenticateWithMock(email: string, password: string) {
 export async function authenticateWithPassword(email: string, password: string) {
   try {
     // Check if we have real Supabase credentials
-    const hasRealCredentials = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-    
+    const hasRealCredentials = Boolean(
+      process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY,
+    )
+
     if (!hasRealCredentials) {
-      if (!isMockAuthEnabled()) {
-        return { error: 'Authentication service not configured' }
-      }
-      return await authenticateWithMock(email, password)
+      return isMockAuthEnabled()
+        ? authenticateWithMock(email, password)
+        : { error: 'Authentication service not configured' }
     }
     
     // Normalize email before querying — sign-up lowercases, so lookups must match
@@ -536,18 +537,11 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
         'owner',
         userTenantSlug,
       )
-      if (!success || !newUser) {
-        user = await getUserByEmail(normalizedEmail)
-        if (!user) {
-          return null
-        }
-      } else {
-        user = newUser
-      }
-    }
 
-    if (!user) {
-      return null
+      user = success && newUser ? newUser : await getUserByEmail(normalizedEmail)
+      if (!user) {
+        return null
+      }
     }
 
     // Block inactive accounts — same guard as password login
@@ -558,13 +552,14 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
 
     // Resolve tenantSlug from membership when user.tenant_slug is absent
     // for migrated users who have memberships but unset tenant_slug.
-    let finalTenantSlug = user.tenant_slug || 'default'
+    let finalTenantSlug = user.tenant_slug ?? 'default'
     let finalRole = user.role
-    
+
     try {
       const membership = await getDefaultMembershipForUser(user.id)
       if (membership) {
-        finalTenantSlug = user.tenant_slug || (await getTenantById(membership.tenantId))?.slug || 'default'
+        finalTenantSlug =
+          user.tenant_slug ?? (await getTenantById(membership.tenantId))?.slug ?? 'default'
         finalRole = membership.role
       }
     } catch (membershipError) {
@@ -576,7 +571,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       tenantSlug: finalTenantSlug,
       userId: user.id,
       role: finalRole,
-      email: user.email || normalizedEmail,
+      email: user.email ?? normalizedEmail,
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
