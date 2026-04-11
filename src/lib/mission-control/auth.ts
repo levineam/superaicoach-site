@@ -44,6 +44,17 @@ export function createTenantSlugFromEmail(email: string): string {
   return `${slugPrefix}-${crypto.randomUUID().slice(0, 8)}`
 }
 
+function createWorkspaceNameFromEmail(email: string): string {
+  const emailLocalPart = normalizeEmail(email).split('@')[0] ?? ''
+  const workspaceOwner = emailLocalPart
+    .replace(/[^a-z0-9]+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 50)
+
+  return workspaceOwner ? `${workspaceOwner}'s Workspace` : 'New Workspace'
+}
+
 // Create Supabase client only when real credentials are present.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -515,7 +526,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       const userTenantSlug = createTenantSlugFromEmail(normalizedEmail)
       await ensureTenantExists({
         slug: userTenantSlug,
-        name: `${normalizedEmail}'s Workspace`,
+        name: createWorkspaceNameFromEmail(normalizedEmail),
         pilotMode: false,
       })
       const bootstrapPassword = crypto.randomUUID()
@@ -565,7 +576,7 @@ export async function consumeMagicLinkAndCreateSession(token: string, email: str
       tenantSlug: finalTenantSlug,
       userId: user.id,
       role: finalRole,
-      email: user.email,
+      email: user.email || normalizedEmail,
     }
   } catch (error) {
     console.error('Magic link consumption error:', error)
