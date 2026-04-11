@@ -5,9 +5,9 @@
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT UNIQUE NOT NULL,
-  hashed_password TEXT NOT NULL,
+  password_hash TEXT,
   role TEXT DEFAULT 'user',
-  tenant_slug TEXT DEFAULT 'default-tenant',
+  tenant_slug TEXT DEFAULT 'default',
   status TEXT DEFAULT 'active',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -37,8 +37,7 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_magic_links_email ON magic_links(email);
-CREATE INDEX IF NOT EXISTS idx_magic_links_token_hash ON magic_links(token_hash);
-CREATE INDEX IF NOT EXISTS idx_magic_links_expires_at ON magic_links(expires_at);
+CREATE INDEX IF NOT EXISTS idx_magic_links_lookup ON magic_links(email, used, expires_at) WHERE used = FALSE;
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
