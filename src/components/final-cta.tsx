@@ -9,8 +9,8 @@ export function FinalCTA() {
           Ready to save hours every week with AI?
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-          Free 15-minute consults are opening soon. Click below to see how to get
-          early access.
+          Book a free 15-minute consult and bring one real use case. You&apos;ll leave
+          with a clear next step and a live booking on the calendar.
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
