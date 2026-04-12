@@ -37,6 +37,13 @@ const resources = [
     category: 'Freelancers',
     readTime: '7 min read',
   },
+  {
+    title: 'Personal AI Assistant Setup: How to Make AI Actually Work for You',
+    description: 'Set up AI with a context brief, lightweight memory, and a few reusable workflows so it behaves more like an assistant than a blank tool.',
+    href: '/resources/personal-ai-assistant-setup',
+    category: 'Setup',
+    readTime: '8 min read',
+  },
 ]
 
 export default function ResourcesPage() {
