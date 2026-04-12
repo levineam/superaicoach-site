@@ -9,14 +9,14 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
 export const metadata: Metadata = {
   title: 'AI Productivity Resources | SuperAIcoach',
   description:
-    'Free guides and tutorials on using ChatGPT, Claude, and AI tools for productivity. Learn practical AI workflows for writing, research, automation, and business tasks.',
+    'Practical guides for using AI at work, no fluff, no "top 10 tools" lists. Real workflows for writing, meetings, research, and time management.',
   keywords: 'AI productivity guides, ChatGPT tutorials, Claude tutorials, AI automation guides, AI productivity tips, ChatGPT for business',
   alternates: {
     canonical: '/resources',
   },
   openGraph: {
     title: 'AI Productivity Resources | SuperAIcoach',
-    description: 'Free guides and tutorials on using ChatGPT, Claude, and AI tools for productivity.',
+    description: 'Practical guides for using AI at work, no fluff, no "top 10 tools" lists. Real workflows for writing, meetings, research, and time management.',
     url: `${baseUrl}/resources`,
     type: 'website',
   },

@@ -9,14 +9,14 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
 export const metadata: Metadata = {
   title: 'Getting Started with ChatGPT for Professional Writing | SuperAIcoach',
   description:
-    'Learn practical techniques for using ChatGPT to write professional emails, reports, and proposals. Step-by-step guide with examples and best practices.',
+    'How to use ChatGPT for professional writing, emails, reports, proposals. Real prompts that produce output you can actually use, not generic drafts.',
   keywords: 'ChatGPT professional writing, ChatGPT for business writing, ChatGPT email templates, AI writing assistant, professional AI writing',
   alternates: {
     canonical: '/resources/chatgpt-professional-writing',
   },
   openGraph: {
     title: 'Getting Started with ChatGPT for Professional Writing',
-    description: 'Learn practical techniques for using ChatGPT to write professional emails, reports, and proposals.',
+    description: 'How to use ChatGPT for professional writing, emails, reports, proposals. Real prompts that produce output you can actually use, not generic drafts.',
     url: `${baseUrl}/resources/chatgpt-professional-writing`,
     type: 'article',
   },

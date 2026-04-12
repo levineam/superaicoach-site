@@ -12,14 +12,14 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
 export const metadata: Metadata = {
   title: 'Personal AI Coaching in Philadelphia | SuperAIcoach',
   description:
-    'In-person personal AI coaching in Philadelphia. Expert training on ChatGPT, Claude, and AI automation for professionals. Practical workflows for writing, meetings, planning, and research.',
+    'Philadelphia-based AI productivity coaching. I help professionals and consultants in the Philly area get real results from AI tools. Free intro call.',
   keywords: 'AI coaching Philadelphia, ChatGPT training Philadelphia, Claude training, personal AI coach Philadelphia, AI productivity coaching, Philadelphia AI consultant',
   alternates: {
     canonical: '/philly',
   },
   openGraph: {
     title: 'Personal AI Coaching in Philadelphia | SuperAIcoach',
-    description: 'In-person personal AI coaching in Philadelphia. Expert training on ChatGPT, Claude, and AI automation for professionals.',
+    description: 'Philadelphia-based AI productivity coaching. I help professionals and consultants in the Philly area get real results from AI tools. Free intro call.',
     url: `${baseUrl}/philly`,
     type: 'website',
     locale: 'en_US',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Personal AI Coaching in Philadelphia | SuperAIcoach',
-    description: 'In-person personal AI coaching in Philadelphia. Expert training on ChatGPT, Claude, and AI automation for professionals.',
+    description: 'Philadelphia-based AI productivity coaching. I help professionals and consultants in the Philly area get real results from AI tools. Free intro call.',
   },
 }
 

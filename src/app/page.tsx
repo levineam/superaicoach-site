@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { UseCases } from "@/components/use-cases"
@@ -15,6 +17,22 @@ import {
   DEFAULT_FAQ_ITEMS,
   DEFAULT_HOW_TO_STEPS,
 } from "@/components/structured-data"
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com'
+
+export const metadata: Metadata = {
+  description:
+    "Struggling to make AI work for your job? I offer 1:1 AI coaching for professionals who are curious but haven't seen real results yet. Free 15-minute intro call.",
+  openGraph: {
+    description:
+      "Struggling to make AI work for your job? I offer 1:1 AI coaching for professionals who are curious but haven't seen real results yet. Free 15-minute intro call.",
+    url: baseUrl,
+  },
+  twitter: {
+    description:
+      "Struggling to make AI work for your job? I offer 1:1 AI coaching for professionals who are curious but haven't seen real results yet. Free 15-minute intro call.",
+  },
+}
 
 export default function Page() {
   return (
