@@ -59,6 +59,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
     },
     {
+      url: `${base}/blog/chatgpt-vs-claude-for-work`,
+      lastModified: now,
+      priority: 0.7,
+      changeFrequency: 'monthly',
+    },
+    {
       url: `${base}/privacy`,
       lastModified: now,
       priority: 0.3,
