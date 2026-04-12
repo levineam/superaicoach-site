@@ -47,6 +47,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
     },
     {
+      url: `${base}/resources/ai-workflow-for-freelancers`,
+      lastModified: now,
+      priority: 0.7,
+      changeFrequency: 'monthly',
+    },
+    {
       url: `${base}/privacy`,
       lastModified: now,
       priority: 0.3,

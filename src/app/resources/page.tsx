@@ -30,7 +30,13 @@ const resources = [
     category: 'ChatGPT',
     readTime: '8 min read',
   },
-  // Placeholder for future articles
+  {
+    title: 'AI Workflow for Freelancers: What to Automate First',
+    description: 'Start with proposals, client emails, and meeting prep to get fast AI ROI without overcomplicating your business.',
+    href: '/resources/ai-workflow-for-freelancers',
+    category: 'Freelancers',
+    readTime: '7 min read',
+  },
 ]
 
 export default function ResourcesPage() {
