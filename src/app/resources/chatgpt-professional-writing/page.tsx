@@ -130,6 +130,13 @@ export default function ChatGPTWritingGuide() {
               />
             </div>
           </div>
+
+          <section className="mt-12 rounded-2xl border border-border/60 bg-card/20 p-8 backdrop-blur-xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">About Andrew Levine</h2>
+            <p className="mt-4 text-muted-foreground">
+              Andrew Levine helps busy professionals turn ChatGPT and Claude into practical tools for writing, planning, research, and repetitive admin work. His coaching focuses on real workflows and usable prompts, so clients can get better output without rebuilding everything from scratch.
+            </p>
+          </section>
         </article>
       </main>
       <Footer />
