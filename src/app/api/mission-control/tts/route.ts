@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+import { getServerSession } from '@/lib/mission-control/auth'
+
 export async function POST(request: NextRequest) {
+  const session = await getServerSession()
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const apiKey = process.env.ELEVENLABS_API_KEY
   if (!apiKey) {
     return NextResponse.json({ error: 'TTS not configured' }, { status: 503 })
