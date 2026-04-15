@@ -43,7 +43,7 @@ export default function ResourcesPage() {
             Free Resources
           </div>
 
-          <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
+          <h1 className="font-display mt-6 text-balance text-4xl font-semibold leading-[1] text-foreground sm:text-5xl">
             AI Productivity <span className="text-accent">Resources</span>
           </h1>
 
@@ -68,7 +68,7 @@ export default function ResourcesPage() {
                     {resource.readTime}
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold tracking-tight text-foreground group-hover:text-accent">
+                <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-accent">
                   {resource.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">

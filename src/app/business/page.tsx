@@ -32,8 +32,8 @@ export default function BusinessPage() {
       <section className="relative flex flex-col items-center justify-center text-center px-6 py-32 md:py-48 overflow-hidden">
         {/* Background pattern — same as main site hero */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(158_60%_40%/0.06),transparent_60%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(30_20%_85%/0.5),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_18%,hsl(24_10%_18%/0.09),transparent_58%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_82%,hsl(30_20%_85%/0.55),transparent_62%)]" />
         </div>
 
         <div className="relative max-w-4xl mx-auto">
@@ -43,21 +43,21 @@ export default function BusinessPage() {
             </div>
           </ScrollReveal>
           <ScrollReveal delayMs={80}>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 text-balance text-foreground">
+            <h1 className="font-display text-4xl font-semibold leading-[0.96] mb-6 text-balance text-foreground md:text-6xl">
               Your Employees Are About to Become{" "}
-              <span className="text-accent">Superhuman</span> — or Obsolete
+              <span className="font-display-italic text-accent">Superhuman</span>, or Obsolete
             </h1>
           </ScrollReveal>
           <ScrollReveal delayMs={160}>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 text-balance">
               The companies that figure out AI adoption first will own the next decade.{" "}
-              <span className="text-foreground font-medium">Super AI Coach</span> helps you figure it out.
+              <span className="font-display text-foreground font-medium">Super AI Coach</span> helps you figure it out.
             </p>
           </ScrollReveal>
           <ScrollReveal delayMs={240}>
             <a
               href="#pilot"
-              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold transition-colors bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg shadow-accent/20"
+              className="inline-flex items-center gap-2 rounded-full border border-accent/90 px-8 py-4 text-base font-semibold transition-colors bg-accent text-accent-foreground hover:bg-accent/92 shadow-md shadow-foreground/10"
             >
               Start a Free 30-Day Pilot
             </a>
@@ -90,7 +90,7 @@ export default function BusinessPage() {
             <p className="text-sm font-semibold uppercase tracking-widest text-accent text-center mb-3">
               The Problem
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-balance text-foreground">
+            <h2 className="font-display text-3xl font-semibold text-center mb-4 text-balance text-foreground md:text-4xl">
               You Have Two Types of Employee Right Now
             </h2>
           </ScrollReveal>
@@ -142,7 +142,7 @@ export default function BusinessPage() {
             </div>
           </ScrollReveal>
           <ScrollReveal delayMs={80}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-balance text-foreground">
+            <h2 className="font-display text-3xl font-semibold mb-8 text-balance text-foreground md:text-4xl">
               Do You Know Which Is Which?
             </h2>
           </ScrollReveal>
@@ -169,7 +169,7 @@ export default function BusinessPage() {
             <p className="text-sm font-semibold uppercase tracking-widest text-accent text-center mb-3">
               What We Do
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-balance text-foreground">
+            <h2 className="font-display text-3xl font-semibold text-center mb-4 text-balance text-foreground md:text-4xl">
               We Give You Visibility — Then We Close the Gap
             </h2>
           </ScrollReveal>
@@ -184,7 +184,7 @@ export default function BusinessPage() {
                 <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
                   <Shield className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground">For Leadership</h3>
+                <h3 className="font-display text-xl font-semibold mb-3 text-foreground">For Leadership</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Real insight into who&apos;s adopting, who&apos;s not, and what to do about it.{" "}
                   <span className="font-medium text-foreground">Not surveys. Not guesswork.</span>
@@ -196,7 +196,7 @@ export default function BusinessPage() {
                 <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
                   <Users className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground">For Each Employee</h3>
+                <h3 className="font-display text-xl font-semibold mb-3 text-foreground">For Each Employee</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Personalized coaching, tool selection, and accountability — customized because{" "}
                   <span className="font-medium text-foreground">

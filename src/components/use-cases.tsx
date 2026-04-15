@@ -1,13 +1,13 @@
 import {
-  FileText,
   Brain,
-  Users,
+  FileText,
   ListChecks,
-  Search,
   RotateCcw,
-} from "lucide-react"
+  Search,
+  Users,
+} from "lucide-react";
 
-import { ScrollReveal } from "@/components/scroll-reveal"
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 const cases = [
   {
@@ -46,36 +46,42 @@ const cases = [
     description:
       "Recurring tasks, repetitive formatting, tedious follow-ups — hand the busywork to an always-on AI assistant like OpenClaw/clawdbot that works even when you're offline.",
   },
-]
+];
 
 export function UseCases() {
   return (
     <section id="use-cases" className="py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-accent/80">
             What we help you do
           </p>
-          <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Practical AI for everyday work
+          <h2 className="mt-3 text-balance font-display text-3xl tracking-tight text-foreground sm:text-4xl md:text-5xl">
+            Practical AI for{" "}
+            <span className="italic text-accent">everyday</span> work
           </h2>
-          <p className="mt-4 text-muted-foreground text-pretty leading-relaxed">
+          <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
             We coach you on specific, real-world workflows — not abstract AI
             theory. Here are a few areas where our clients see results
             immediately.
           </p>
         </ScrollReveal>
 
-        <ScrollReveal delayMs={80} className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ScrollReveal
+          delayMs={80}
+          className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {cases.map((c) => (
             <div
               key={c.title}
-              className="group rounded-2xl border border-border/60 bg-card/60 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 motion-reduce:hover:translate-y-0"
+              className="group rounded-[1.75rem] border border-border/70 bg-card/70 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-foreground/15 hover:shadow-lg hover:shadow-black/5 motion-reduce:hover:translate-y-0"
             >
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-foreground/5 text-accent">
                 <c.icon className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground">{c.title}</h3>
+              <h3 className="font-display text-[1.35rem] leading-tight text-foreground">
+                {c.title}
+              </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {c.description}
               </p>
@@ -84,5 +90,5 @@ export function UseCases() {
         </ScrollReveal>
       </div>
     </section>
-  )
+  );
 }
