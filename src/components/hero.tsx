@@ -16,7 +16,8 @@ export function Hero() {
         </p>
 
         <h1 className="mx-auto mt-8 max-w-5xl text-balance font-display text-5xl leading-[0.95] tracking-[-0.04em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-          Personal AI <span className="italic text-accent">coaching</span>
+          Personal AI{' '}
+          <span className="block italic text-accent sm:inline">coaching</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-foreground/72 md:text-xl">
