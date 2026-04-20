@@ -8,13 +8,15 @@ export function FinalCTA() {
       className="bg-primary py-24 text-primary-foreground md:py-32"
     >
       <ScrollReveal className="mx-auto max-w-3xl px-6 text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/55">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
           Start here
         </p>
-        <h2 className="mt-4 text-balance font-display text-3xl tracking-tight text-primary-foreground sm:text-4xl md:text-5xl">
+        <h2 className="mt-4 text-balance font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-primary-foreground sm:text-4xl md:text-5xl">
           Ready to save{" "}
-          <span className="italic text-primary-foreground/80">hours</span> every
-          week with AI?
+          <span className="font-display italic font-normal text-[hsl(var(--gold))]">
+            hours
+          </span>{" "}
+          every week with AI?
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-primary-foreground/72">
           Free 15-minute consults are opening soon. Click below to see how to
@@ -24,7 +26,7 @@ export function FinalCTA() {
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <ConsultationCTA
             source="final-cta"
-            buttonClassName="bg-background text-foreground hover:bg-background/90"
+            buttonClassName="bg-[hsl(var(--gold))] text-primary hover:bg-[hsl(var(--gold))]/90"
           />
         </div>
 

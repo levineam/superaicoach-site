@@ -47,12 +47,14 @@ export function FAQ() {
     >
       <div className="mx-auto max-w-3xl px-6">
         <ScrollReveal className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/55">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
             FAQ
           </p>
-          <h2 className="mt-3 text-balance font-display text-3xl tracking-tight text-primary-foreground sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 text-balance font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-primary-foreground sm:text-4xl md:text-5xl">
             Common{" "}
-            <span className="italic text-primary-foreground/80">questions</span>
+            <span className="font-display italic font-normal text-[hsl(var(--gold))]">
+              questions
+            </span>
           </h2>
         </ScrollReveal>
 

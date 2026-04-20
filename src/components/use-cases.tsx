@@ -53,12 +53,15 @@ export function UseCases() {
     <section id="use-cases" className="py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-accent/80">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
             What we help you do
           </p>
-          <h2 className="mt-3 text-balance font-display text-3xl tracking-tight text-foreground sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 text-balance font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl md:text-5xl">
             Practical AI for{" "}
-            <span className="italic text-accent">everyday</span> work
+            <span className="font-display italic font-normal text-primary">
+              everyday
+            </span>{" "}
+            work
           </h2>
           <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
             We coach you on specific, real-world workflows — not abstract AI
@@ -74,12 +77,12 @@ export function UseCases() {
           {cases.map((c) => (
             <div
               key={c.title}
-              className="group rounded-[1.75rem] border border-border/70 bg-card/70 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-foreground/15 hover:shadow-lg hover:shadow-black/5 motion-reduce:hover:translate-y-0"
+              className="group rounded-[1.5rem] border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_12px_32px_-16px_rgba(20,40,80,0.18)] motion-reduce:hover:translate-y-0"
             >
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-foreground/5 text-accent">
+              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
                 <c.icon className="h-5 w-5" />
               </div>
-              <h3 className="font-display text-[1.35rem] leading-tight text-foreground">
+              <h3 className="font-[family-name:var(--font-inter-tight)] text-[1.25rem] font-semibold leading-tight tracking-[-0.01em] text-foreground">
                 {c.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
