@@ -34,12 +34,14 @@ export function HowItWorks() {
     >
       <div className="mx-auto max-w-6xl px-6">
         <ScrollReveal className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary-foreground/55">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
             How it works
           </p>
-          <h2 className="mt-3 text-balance font-display text-3xl tracking-tight text-primary-foreground sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 text-balance font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-primary-foreground sm:text-4xl md:text-5xl">
             From curious to{" "}
-            <span className="italic text-primary-foreground/80">capable</span>{" "}
+            <span className="font-display italic font-normal text-[hsl(var(--gold))]">
+              capable
+            </span>{" "}
             in three steps
           </h2>
         </ScrollReveal>
@@ -50,13 +52,13 @@ export function HowItWorks() {
               key={step.number}
               className="relative rounded-[1.75rem] border border-primary-foreground/10 bg-primary-foreground/[0.03] p-8"
             >
-              <span className="font-display text-5xl italic text-primary-foreground/15">
+              <span className="font-display text-5xl italic text-[hsl(var(--gold))]/40">
                 {step.number}
               </span>
-              <div className="mt-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-foreground/10 text-primary-foreground">
+              <div className="mt-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-foreground/10 text-[hsl(var(--gold))]">
                 <step.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 font-display text-2xl text-primary-foreground">
+              <h3 className="mt-4 font-[family-name:var(--font-inter-tight)] text-2xl font-semibold text-primary-foreground">
                 {step.title}
               </h3>
               <p className="mt-3 leading-relaxed text-primary-foreground/72">

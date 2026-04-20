@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Fraunces, Inter, Inter_Tight } from "next/font/google";
 import Script from "next/script";
 
 import { GoogleAnalytics } from "@/components/google-analytics";
@@ -16,6 +16,12 @@ const _fraunces = Fraunces({
 const _inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const _interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://superaicoach.com";
@@ -75,7 +81,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a1917",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
 };
@@ -88,7 +94,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${_fraunces.variable} ${_inter.variable} scroll-smooth motion-reduce:scroll-auto`}
+      className={`${_fraunces.variable} ${_inter.variable} ${_interTight.variable} scroll-smooth motion-reduce:scroll-auto`}
     >
       <Script id="enable-js" strategy="beforeInteractive">
         {`document.documentElement.classList.add('js')`}

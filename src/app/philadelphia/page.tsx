@@ -1,11 +1,11 @@
 import Script from 'next/script'
-import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, ArrowRight, Sparkles, Mail, Workflow, Shield } from 'lucide-react'
 
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { HeroChat } from '@/components/hero-chat'
 import {
   buildFAQSchema,
   buildOrganizationSchema,
@@ -196,202 +196,217 @@ export default function PhiladelphiaPage() {
       />
 
       <Navbar mode="pill-on-scroll" />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-32 sm:pt-36">
-        <div className="grid items-center gap-12 md:grid-cols-5">
-          <div className="md:col-span-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-sm text-muted-foreground backdrop-blur-md">
-              <MapPin className="h-4 w-4" />
-              Philadelphia &amp; surrounding area
+      <main>
+        <section className="pt-28 sm:pt-32 md:pt-36">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 pb-20 md:grid-cols-5 md:pb-24">
+            <div className="md:col-span-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5" />
+                Philadelphia &amp; surrounding area
+              </div>
+
+              <h1 className="mt-6 text-balance font-[family-name:var(--font-inter-tight)] text-4xl font-semibold leading-[1.04] tracking-[-0.03em] text-foreground sm:text-5xl md:text-6xl">
+                Philadelphia AI personal{' '}
+                <span className="font-display italic font-normal text-primary">assistant</span>{' '}
+                setup
+              </h1>
+
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+                On-site installation of OpenClaw or Hermes Agents, customized to your life and work.
+              </p>
+
+              <p className="mt-4 text-base font-medium text-foreground">
+                Introductory pricing: <span className="text-primary">$100/hour</span>,{' '}
+                <span className="line-through text-muted-foreground">$200/hour</span>
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-4" id="book">
+                <Link
+                  href="https://calendly.com/levineam/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/15 transition-colors hover:bg-primary/90"
+                >
+                  Book a Call
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <a
+                  href="mailto:hello@superaicoach.com"
+                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                >
+                  Questions? Email us
+                </a>
+              </div>
             </div>
 
-            <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
-              Philadelphia AI Personal Assistant Setup
-            </h1>
-
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              On-site installation of OpenClaw or Hermes Agents, customized to your needs
-            </p>
-
-            <p className="mt-3 text-base font-medium text-foreground">
-              Introductory pricing: <span className="text-accent">$100/hour</span>,{' '}
-              <span className="line-through text-muted-foreground">$200/hour</span>
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4" id="book">
-              <Link
-                href="https://calendly.com/levineam/30min"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
-              >
-                Book a Call
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <p className="mt-4 text-sm text-muted-foreground">
-              Questions first?{' '}
-              <a
-                href="mailto:hello@superaicoach.com"
-                className="underline underline-offset-4 hover:text-foreground"
-              >
-                Email us
-              </a>
-            </p>
-          </div>
-
-          <div className="relative md:col-span-2">
-            <div className="rounded-[2rem] border border-border/60 bg-card/30 p-4 shadow-lg shadow-black/5 backdrop-blur-xl">
-              <Image
-                src="/philadelphia-hero.png"
-                alt="OpenClaw and Hermes Agent logos — personal AI assistant platforms"
-                width={949}
-                height={414}
-                priority
-                className="w-full"
-              />
+            <div className="md:col-span-2">
+              <HeroChat />
             </div>
           </div>
-        </div>
+        </section>
 
-        <section className="mt-20" id="how-it-works">
-          <ScrollReveal>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              How It Works
-            </p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
-              Three steps. Live within hours.
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal delayMs={60} className="mt-10 grid gap-8 md:grid-cols-3">
-            {howItWorks.map((item) => (
-              <div key={item.step} className="flex gap-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
-                  {item.step}
+        <section className="py-20 md:py-24" id="how-it-works">
+          <div className="mx-auto max-w-6xl px-6">
+            <ScrollReveal>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
+                How it works
+              </p>
+              <h2 className="mt-3 font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl">
+                Three steps. Live within hours.
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delayMs={60} className="mt-12 grid gap-8 md:grid-cols-3">
+              {howItWorks.map((item) => (
+                <div key={item.step} className="flex gap-5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary">
+                    {item.step}
+                  </div>
+                  <div>
+                    <h3 className="font-[family-name:var(--font-inter-tight)] text-lg font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.18em] text-primary">
+                      {item.subtitle}
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {item.body}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">{item.title}</h3>
-                  <p className="mt-0.5 text-xs font-medium text-accent">{item.subtitle}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {item.body}
-                  </p>
+              ))}
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="py-20 md:py-24">
+          <div className="mx-auto max-w-6xl px-6">
+            <ScrollReveal>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
+                What&apos;s possible
+              </p>
+              <h2 className="mt-3 font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl">
+                Real things real people are doing with personal AI assistants
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                These aren&apos;t testimonials — they&apos;re documented examples from the OpenClaw and
+                Hermes Agent community.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delayMs={60} className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {useCases.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-[1.5rem] border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_12px_32px_-16px_rgba(20,40,80,0.18)]"
+                >
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <h3 className="mt-3 font-[family-name:var(--font-inter-tight)] text-base font-semibold text-foreground">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
                 </div>
+              ))}
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="py-20 md:py-24">
+          <div className="mx-auto max-w-6xl px-6">
+            <ScrollReveal>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
+                Included
+              </p>
+              <h2 className="mt-3 font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl">
+                Every setup includes the full package
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delayMs={60} className="mt-10 grid gap-6 sm:grid-cols-2">
+              {included.map((item) => (
+                <div key={item.title} className="flex gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary">
+                    <item.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-[family-name:var(--font-inter-tight)] text-base font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      {item.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="py-20 md:py-24">
+          <div className="mx-auto max-w-6xl px-6">
+            <ScrollReveal className="rounded-3xl border border-primary bg-primary p-10 text-primary-foreground md:p-14">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
+                Pricing
+              </p>
+              <h2 className="mt-3 font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
+                Starting at $100/hour
+              </h2>
+              <p className="mt-4 max-w-xl leading-relaxed text-primary-foreground/75">
+                In-person, at your location in the Philadelphia area. Most sessions run 1–2 hours. No
+                subscription required — pay for the time you need.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  href="https://calendly.com/levineam/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 items-center gap-2 rounded-full bg-[hsl(var(--gold))] px-8 text-base font-semibold text-primary shadow-lg transition-colors hover:bg-[hsl(var(--gold))]/90"
+                >
+                  Book a Call
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <a
+                  href="mailto:hello@superaicoach.com"
+                  className="text-sm text-primary-foreground/75 underline underline-offset-4 hover:text-primary-foreground"
+                >
+                  Questions? Email us
+                </a>
               </div>
-            ))}
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
         </section>
 
-        <section className="mt-20">
-          <ScrollReveal>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              What&apos;s Possible
-            </p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
-              Real things real people are doing with personal AI assistants
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              These aren&apos;t testimonials — they&apos;re documented examples from the OpenClaw and
-              Hermes Agent community.
-            </p>
-          </ScrollReveal>
-          <ScrollReveal delayMs={60} className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {useCases.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur-xl"
-              >
-                <Sparkles className="h-5 w-5 text-accent" />
-                <h3 className="mt-3 text-sm font-semibold text-foreground">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-              </div>
-            ))}
-          </ScrollReveal>
+        <section className="py-20 md:py-24" id="faq">
+          <div className="mx-auto max-w-3xl px-6">
+            <ScrollReveal>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
+                FAQ
+              </p>
+              <h2 className="mt-3 font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl">
+                Common questions
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delayMs={60} className="mt-10">
+              <PhiladelphiaFAQ faqs={faqs} />
+            </ScrollReveal>
+          </div>
         </section>
 
-        <section className="mt-20">
-          <ScrollReveal>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              Included
+        <section className="bg-primary py-24 text-primary-foreground md:py-28">
+          <ScrollReveal className="mx-auto max-w-3xl px-6 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
+              Get started
             </p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
-              Every setup includes the full package
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal delayMs={60} className="mt-10 grid gap-6 sm:grid-cols-2">
-            {included.map((item) => (
-              <div key={item.title} className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10">
-                  <item.icon className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">{item.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {item.body}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </ScrollReveal>
-        </section>
-
-        <section className="mt-20">
-          <ScrollReveal className="rounded-3xl border border-border/60 bg-primary p-10 text-primary-foreground">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">Pricing</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight">Starting at $100/hour</h2>
-            <p className="mt-4 max-w-xl leading-relaxed text-primary-foreground/75">
-              In-person, at your location in the Philadelphia area. Most sessions run 1–2 hours. No
-              subscription required — pay for the time you need.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                href="https://calendly.com/levineam/30min"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
-              >
-                Book a Call
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a
-                href="mailto:hello@superaicoach.com"
-                className="text-sm text-primary-foreground/75 underline underline-offset-4 hover:text-primary-foreground"
-              >
-                Questions? Email us
-              </a>
-            </div>
-          </ScrollReveal>
-        </section>
-
-        <section className="mt-20" id="faq">
-          <ScrollReveal>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">FAQ</p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
-              Common questions
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal delayMs={60} className="mt-10 max-w-3xl">
-            <PhiladelphiaFAQ faqs={faqs} />
-          </ScrollReveal>
-        </section>
-
-        <section className="mt-20">
-          <ScrollReveal className="text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              Get Started
-            </p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
+            <h2 className="mt-4 font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-primary-foreground sm:text-4xl md:text-5xl">
               Stop losing hours to work an AI assistant can handle
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-5 max-w-xl leading-relaxed text-primary-foreground/72">
               30-minute call. No technical jargon. We&apos;ll show you exactly what an AI assistant
               can take off your plate.
             </p>
-            <div className="mt-8 flex justify-center">
+            <div className="mt-10 flex justify-center">
               <Link
                 href="https://calendly.com/levineam/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90"
+                className="inline-flex h-12 items-center gap-2 rounded-full bg-[hsl(var(--gold))] px-8 text-base font-semibold text-primary shadow-lg transition-colors hover:bg-[hsl(var(--gold))]/90"
               >
                 Book a Call
                 <ArrowRight className="h-4 w-4" />
