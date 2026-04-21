@@ -6,23 +6,26 @@ const steps = [
   {
     number: "01",
     icon: MessageSquare,
+    label: "No forms",
     title: "Answer one question",
     description:
-      "Tell us what you'd most like to use AI for. That's it — no forms, no quizzes, no commitment.",
+      "Tell us what you'd most like to use AI for. No quizzes, no long intake, no commitment.",
   },
   {
     number: "02",
     icon: Video,
+    label: "Virtual consult",
     title: "Free 15-minute consult",
     description:
-      "We'll talk through your goals and show you exactly how coaching works. No sales pitch — just clarity on what's possible.",
+      "We talk through your goals and show you exactly how coaching works. No sales pitch, just a clear path.",
   },
   {
     number: "03",
     icon: Zap,
+    label: "Same-day momentum",
     title: "Start getting results",
     description:
-      "In a paid virtual session, we build you practical AI workflows you can use the same day. Real tools, real output.",
+      "In a paid session, we build practical AI workflows you can use right away, with real tools and real output.",
   },
 ];
 
@@ -33,7 +36,7 @@ export function HowItWorks() {
       className="bg-primary py-24 text-primary-foreground md:py-32"
     >
       <div className="mx-auto max-w-6xl px-6">
-        <ScrollReveal className="mx-auto max-w-2xl text-center">
+        <ScrollReveal className="mx-auto max-w-3xl text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
             How it works
           </p>
@@ -46,26 +49,39 @@ export function HowItWorks() {
           </h2>
         </ScrollReveal>
 
-        <ScrollReveal delayMs={80} className="mt-16 grid gap-8 md:grid-cols-3">
-          {steps.map((step) => (
-            <div
-              key={step.number}
-              className="relative rounded-[1.75rem] border border-primary-foreground/10 bg-primary-foreground/[0.03] p-8"
-            >
-              <span className="font-display text-5xl italic text-[hsl(var(--gold))]/40">
-                {step.number}
-              </span>
-              <div className="mt-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-foreground/10 text-[hsl(var(--gold))]">
-                <step.icon className="h-6 w-6" />
+        <ScrollReveal delayMs={80} className="mt-14">
+          <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+            {steps.map((step, index) => (
+              <div key={step.number} className="relative">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[hsl(var(--gold))] bg-primary text-sm font-bold text-[hsl(var(--gold))]">
+                    {step.number}
+                  </div>
+                  <div
+                    className={[
+                      "h-px flex-1 bg-[hsl(var(--gold))]/35",
+                      index === steps.length - 1 ? "hidden" : "hidden md:block",
+                    ].join(" ")}
+                  />
+                </div>
+
+                <div className="mt-6 rounded-[1.75rem] border border-primary-foreground/12 bg-primary-foreground/[0.04] p-8">
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-foreground/10 text-[hsl(var(--gold))]">
+                    <step.icon className="h-5 w-5" />
+                  </div>
+                  <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[hsl(var(--gold))]">
+                    {step.label}
+                  </p>
+                  <h3 className="mt-2 font-[family-name:var(--font-inter-tight)] text-2xl font-semibold leading-tight text-primary-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="mt-3 leading-relaxed text-primary-foreground/72">
+                    {step.description}
+                  </p>
+                </div>
               </div>
-              <h3 className="mt-4 font-[family-name:var(--font-inter-tight)] text-2xl font-semibold text-primary-foreground">
-                {step.title}
-              </h3>
-              <p className="mt-3 leading-relaxed text-primary-foreground/72">
-                {step.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </ScrollReveal>
       </div>
     </section>

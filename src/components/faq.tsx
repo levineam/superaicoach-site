@@ -41,35 +41,36 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section
-      id="faq"
-      className="bg-primary py-24 text-primary-foreground md:py-32"
-    >
+    <section id="faq" className="bg-[hsl(var(--secondary))]/55 py-24 md:py-32">
       <div className="mx-auto max-w-3xl px-6">
         <ScrollReveal className="text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[hsl(var(--gold))]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary/75">
             FAQ
           </p>
-          <h2 className="mt-4 text-balance font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-primary-foreground sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 text-balance font-[family-name:var(--font-inter-tight)] text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl md:text-5xl">
             Common{" "}
-            <span className="font-display italic font-normal text-[hsl(var(--gold))]">
+            <span className="font-display italic font-normal text-primary">
               questions
             </span>
           </h2>
         </ScrollReveal>
 
         <ScrollReveal delayMs={80}>
-          <Accordion type="single" collapsible className="mt-12">
+          <Accordion
+            type="single"
+            collapsible
+            className="mt-12 rounded-[2rem] border border-border bg-background px-6 shadow-[0_18px_50px_-32px_rgba(20,40,80,0.28)]"
+          >
             {faqs.map((faq, i) => (
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="border-primary-foreground/15"
+                className="border-border/80"
               >
-                <AccordionTrigger className="py-5 text-left text-base font-medium text-primary-foreground transition-colors hover:text-primary-foreground/80 hover:no-underline">
+                <AccordionTrigger className="py-6 text-left text-base font-medium text-foreground transition-colors hover:text-primary hover:no-underline md:text-lg">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-base leading-relaxed text-primary-foreground/68">
+                <AccordionContent className="pb-6 text-base leading-relaxed text-muted-foreground">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
