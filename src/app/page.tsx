@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { UseCases } from "@/components/use-cases"
 import { HowItWorks } from "@/components/how-it-works"
+import { WhatIsCoaching } from "@/components/what-is-coaching"
 import { FAQ } from "@/components/faq"
 import { FinalCTA } from "@/components/final-cta"
 import { Footer } from "@/components/footer"
@@ -35,11 +36,12 @@ export default function Page() {
         totalTime="PT15M"
         steps={DEFAULT_HOW_TO_STEPS}
       />
-      <Navbar />
+      <Navbar mode="pill-on-scroll" />
       <main>
         <Hero />
         <UseCases />
         <HowItWorks />
+        <WhatIsCoaching />
         <FAQ />
         <FinalCTA />
       </main>
