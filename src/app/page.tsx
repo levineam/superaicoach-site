@@ -36,7 +36,7 @@ export default function Page() {
         totalTime="PT15M"
         steps={DEFAULT_HOW_TO_STEPS}
       />
-      <Navbar />
+      <Navbar mode="pill-on-scroll" />
       <main>
         <Hero />
         <UseCases />

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import { ConsultationCTA } from "@/components/consultation-cta";
@@ -27,7 +28,13 @@ export function Hero() {
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <ConsultationCTA source="hero" />
+            <ConsultationCTA source="hero" label="Book a Call" />
+            <Link
+              href="/#use-cases"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-background px-6 text-base font-medium text-foreground transition-colors hover:bg-secondary"
+            >
+              See what&apos;s possible
+            </Link>
           </div>
 
           <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
