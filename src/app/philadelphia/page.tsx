@@ -30,7 +30,34 @@ const howItWorks = [
   },
 ]
 
-const useCases = [
+const businessUseCases = [
+  {
+    title: 'Saved $10M with AI agents',
+    body: 'Large enterprises are already using AI agents to remove manual workflows and accelerate revenue operations. Documented example from Fiserv + UiPath deployment.',
+  },
+  {
+    title: 'Handled 65% of support, projected +$40M profit',
+    body: 'AI customer service system replaced the work of 700 full-time agents and was on track for an extra $40M in profit. Documented example from Klarna.',
+  },
+  {
+    title: 'Saved $290k annually on marketing ops',
+    body: '40% of customer support now runs on AI. Millions in incremental revenue from AI-optimized pricing. $290k saved annually on SEM optimization.',
+  },
+  {
+    title: 'Saved $2M by replacing legacy software',
+    body: 'Internal AI system replaced an entire enterprise software layer and cut operating costs. Documented example from Klarna replacing Salesforce.',
+  },
+  {
+    title: 'Saved $420k annually from recovered engineering time',
+    body: 'AI tooling and automation recovered hundreds of hours of engineering time per year across a software team.',
+  },
+  {
+    title: 'A lawyer\'s 24/7 research assistant',
+    body: 'Real law firm uses OpenClaw for case research, document management, and client intake — all on their own hardware.',
+  },
+]
+
+const personalUseCases = [
   {
     title: 'Family meal planning on autopilot',
     body: 'Plans weekly meals, generates grocery lists sorted by store aisle, checks weather for grill nights. Saves ~1 hour every week.',
@@ -50,10 +77,6 @@ const useCases = [
   {
     title: 'Custom meditations based on your body',
     body: 'Reads WHOOP or Oura recovery data, writes meditation scripts tailored to that day\'s strain, and generates audio.',
-  },
-  {
-    title: 'A lawyer\'s 24/7 research assistant',
-    body: 'Real law firm uses OpenClaw for case research, document management, and client intake — all on their own hardware.',
   },
 ]
 
@@ -324,8 +347,34 @@ export default function PhiladelphiaPage() {
               Hermes Agent community.
             </p>
           </ScrollReveal>
-          <ScrollReveal delayMs={60} className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {useCases.map((item) => (
+
+          {/* Business row */}
+          <ScrollReveal delayMs={40} className="mt-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Business
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delayMs={60} className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {businessUseCases.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur-xl"
+              >
+                <Sparkles className="h-5 w-5 text-accent" />
+                <h3 className="mt-3 text-sm font-semibold text-foreground">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+              </div>
+            ))}
+          </ScrollReveal>
+
+          {/* Personal row */}
+          <ScrollReveal delayMs={40} className="mt-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Personal
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delayMs={60} className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {personalUseCases.map((item) => (
               <div
                 key={item.title}
                 className="rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur-xl"
