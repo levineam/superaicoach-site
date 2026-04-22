@@ -14,18 +14,7 @@ import {
 } from 'lucide-react'
 import { ConnectorSidepanel, ConnectorToggleButton } from '@/components/mission-control/connector-sidepanel'
 
-type Priority = 'High' | 'Medium' | 'Low'
-type ColumnId = 'active' | 'in-review' | 'needs-you' | 'done'
-type LaneId = 'queue' | 'needs-you' | 'done'
-
-type Card = {
-  id: string
-  project: string
-  status: string
-  description: string
-  priority: Priority
-  column: ColumnId
-}
+import { cardLane, ALL_PROJECTS as _ALL_PROJECTS, type Card, type ColumnId, type LaneId, type Priority } from '@/lib/project-board'
 
 type ApiResponse = {
   cards: Card[]
@@ -46,12 +35,6 @@ type ApiResponse = {
   }
 }
 
-/** Map the 4-column DB model → 3-lane AI-first view */
-function cardLane(column: ColumnId): LaneId {
-  if (column === 'needs-you') return 'needs-you'
-  if (column === 'done') return 'done'
-  return 'queue' // active + in-review both go to Queue
-}
 
 const laneConfig = [
   {
@@ -92,7 +75,7 @@ const priorityStyles: Record<Priority, string> = {
   Low: 'bg-sky-400/10 text-sky-400 ring-1 ring-inset ring-sky-400/20',
 }
 
-const ALL_PROJECTS = '__all__'
+const ALL_PROJECTS = _ALL_PROJECTS
 
 function TaskModal({
   card,
