@@ -34,8 +34,9 @@ export function Navbar() {
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="text-xl font-bold tracking-tight text-foreground">
-          SuperAI<span className="text-accent">coach</span>
+        <Link href="/" className="text-xl tracking-tight text-foreground">
+          <span className="font-display text-[1.15rem] font-semibold">SuperAI</span>
+          <span className="font-display-italic text-[1.15rem] text-accent">coach</span>
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">

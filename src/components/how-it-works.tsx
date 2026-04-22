@@ -34,7 +34,7 @@ export function HowItWorks() {
           <p className="text-sm font-semibold uppercase tracking-widest text-accent">
             How it works
           </p>
-          <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">
+          <h2 className="font-display mt-3 text-balance text-3xl font-semibold text-primary-foreground sm:text-4xl">
             From curious to capable in three steps
           </h2>
         </ScrollReveal>
@@ -42,13 +42,13 @@ export function HowItWorks() {
         <ScrollReveal delayMs={80} className="mt-16 grid gap-8 md:grid-cols-3">
           {steps.map((step) => (
             <div key={step.number} className="relative">
-              <span className="text-5xl font-bold text-primary-foreground/10">
+              <span className="font-display-italic text-5xl font-semibold text-primary-foreground/10">
                 {step.number}
               </span>
               <div className="mt-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-accent">
                 <step.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-primary-foreground">
+              <h3 className="font-display mt-4 text-xl font-semibold text-primary-foreground">
                 {step.title}
               </h3>
               <p className="mt-3 leading-relaxed text-primary-foreground/70">

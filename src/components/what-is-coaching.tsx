@@ -4,7 +4,7 @@ export function WhatIsCoaching() {
   return (
     <section className="py-24 md:py-32">
       <ScrollReveal className="mx-auto max-w-3xl px-6 text-center">
-        <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h2 className="font-display text-balance text-3xl font-semibold text-foreground sm:text-4xl">
           What is personal AI coaching?
         </h2>
         <div className="mt-6 space-y-4 text-pretty text-lg leading-relaxed text-muted-foreground">

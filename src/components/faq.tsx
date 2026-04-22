@@ -46,7 +46,7 @@ export function FAQ() {
       <div className="mx-auto max-w-3xl px-6">
         <ScrollReveal className="text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-accent">FAQ</p>
-          <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="font-display mt-3 text-balance text-3xl font-semibold text-foreground sm:text-4xl">
             Common questions
           </h2>
         </ScrollReveal>
@@ -55,7 +55,7 @@ export function FAQ() {
           <Accordion type="single" collapsible className="mt-12">
             {faqs.map((faq, i) => (
               <AccordionItem key={i} value={`item-${i}`} className="border-border/60">
-                <AccordionTrigger className="py-5 text-left text-base font-medium text-foreground transition-colors hover:text-accent hover:no-underline">
+                <AccordionTrigger className="font-display py-5 text-left text-lg font-medium text-foreground transition-colors hover:text-accent hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-base leading-relaxed text-muted-foreground">

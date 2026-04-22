@@ -1,15 +1,16 @@
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
-import { DM_Sans, Inter } from 'next/font/google'
+import { Fraunces, Inter } from 'next/font/google'
 
 import { PageViewTracker } from '@/components/page-view-tracker'
 import { GoogleAnalytics } from '@/components/google-analytics'
 
 import './globals.css'
 
-const _dmSans = DM_Sans({
+const _fraunces = Fraunces({
   subsets: ['latin'],
-  variable: '--font-dm-sans',
+  style: ['normal', 'italic'],
+  variable: '--font-fraunces',
 })
 
 const _inter = Inter({
@@ -84,7 +85,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${_dmSans.variable} ${_inter.variable} scroll-smooth motion-reduce:scroll-auto`}
+      className={`${_fraunces.variable} ${_inter.variable} scroll-smooth motion-reduce:scroll-auto`}
     >
       <Script id="enable-js" strategy="beforeInteractive">
         {`document.documentElement.classList.add('js')`}

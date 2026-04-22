@@ -37,8 +37,8 @@ export default function WhyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <ScrollReveal>
                 <div>
-                  <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6 text-foreground text-balance">
-                    This is an incredible opportunity.
+                  <h1 className="font-display text-4xl font-semibold leading-[0.98] mb-6 text-foreground text-balance md:text-5xl">
+                    This is an <span className="font-display-italic text-accent">incredible</span> opportunity.
                   </h1>
                   <p className="text-muted-foreground text-lg leading-relaxed">
                     The biggest labs on earth just handed you a set of tools that would have
@@ -65,7 +65,7 @@ export default function WhyPage() {
         <section className="px-6 py-24 md:py-32 bg-card">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollReveal>
-              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-balance text-foreground">
+              <h2 className="font-display text-3xl font-semibold mb-8 text-balance text-foreground md:text-4xl">
                 Most people will use AI to produce more of the same. You don&apos;t have to.
               </h2>
             </ScrollReveal>
@@ -84,7 +84,7 @@ export default function WhyPage() {
         <section className="px-6 py-24 md:py-32">
           <div className="max-w-5xl mx-auto">
             <ScrollReveal>
-              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-balance text-foreground">
+              <h2 className="font-display text-3xl font-semibold text-center mb-12 text-balance text-foreground md:text-4xl">
                 Your expertise becomes your superpower.
               </h2>
             </ScrollReveal>
@@ -94,7 +94,7 @@ export default function WhyPage() {
                   <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-600 mb-4">
                     <Shield className="h-5 w-5" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-foreground">Your moat</h3>
+                  <h3 className="font-display text-xl font-semibold mb-3 text-foreground">Your moat</h3>
                   <p className="text-muted-foreground leading-relaxed">
                     Your expertise, your judgment, your relationships. AI amplifies the human at
                     the center. It doesn&apos;t replace the person who earns the trust — it
@@ -104,7 +104,7 @@ export default function WhyPage() {
               </ScrollReveal>
               <ScrollReveal delayMs={160}>
                 <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-8 h-full">
-                  <h3 className="text-xl font-bold mb-3 text-foreground">The opportunity</h3>
+                  <h3 className="font-display text-xl font-semibold mb-3 text-foreground">The opportunity</h3>
                   <p className="text-muted-foreground leading-relaxed">
                     The people who figure out how to pair deep domain knowledge with AI capability
                     will do more in a day than entire teams used to. That edge compounds fast —
@@ -120,7 +120,7 @@ export default function WhyPage() {
         <section className="px-6 py-24 md:py-32 bg-card">
           <div className="max-w-5xl mx-auto">
             <ScrollReveal>
-              <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-balance text-foreground">
+              <h2 className="font-display text-3xl font-semibold text-center mb-4 text-balance text-foreground md:text-4xl">
                 The world&apos;s best AI labs are building for you.
               </h2>
             </ScrollReveal>
@@ -156,7 +156,7 @@ export default function WhyPage() {
               ].map(({ name, desc, delay }) => (
                 <ScrollReveal key={name} delayMs={delay}>
                   <div className="rounded-2xl border border-border/60 bg-background p-6 h-full transition-all duration-500 hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5">
-                    <h3 className="text-base font-bold mb-2 text-foreground">{name}</h3>
+                    <h3 className="font-display text-base font-semibold mb-2 text-foreground">{name}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
                   </div>
                 </ScrollReveal>

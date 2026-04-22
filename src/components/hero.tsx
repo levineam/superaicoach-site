@@ -6,16 +6,16 @@ export function Hero() {
     <section className="relative flex items-start justify-center overflow-hidden pt-16 sm:pt-20">
       {/* Background pattern */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(158_60%_40%/0.06),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(30_20%_85%/0.5),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_18%,hsl(24_10%_18%/0.09),transparent_58%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_82%,hsl(30_20%_85%/0.55),transparent_62%)]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-6 pb-10 pt-8 text-center sm:pt-10 md:pt-14">
-        <h1 className="mx-auto max-w-4xl text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-          Personal AI Coaching
+        <h1 className="font-display mx-auto max-w-4xl text-balance text-4xl font-semibold leading-[0.95] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+          Personal AI <span className="font-display-italic text-accent">Coaching</span>
         </h1>
 
-        <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-foreground/75 md:text-xl">
+        <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-foreground/80 md:text-xl">
           Automate the tedious. Amplify the meaningful.
           <br className="hidden sm:inline" />{' '}
           Practical AI coaching that gives you back time for what actually matters.

@@ -57,7 +57,7 @@ export default function CoworkPage() {
             Cowork Starter Packs
           </div>
 
-          <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
+          <h1 className="font-display mt-6 text-balance text-4xl font-semibold leading-[1] text-foreground sm:text-5xl">
             Claude Cowork, set up for{' '}
             <span className="text-accent">your profession</span>
           </h1>
@@ -82,7 +82,7 @@ export default function CoworkPage() {
               </p>
               <h2
                 id="how-it-works-heading"
-                className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+                className="font-display mt-3 text-balance text-3xl font-semibold text-foreground sm:text-4xl"
               >
                 Three steps to a ready-to-use AI workspace
               </h2>
@@ -106,7 +106,7 @@ export default function CoworkPage() {
                       Step {step}
                     </span>
                   </div>
-                  <h3 className="text-base font-semibold text-foreground">{title}</h3>
+                  <h3 className="font-display text-base font-semibold text-foreground">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
                 </div>
               ))}

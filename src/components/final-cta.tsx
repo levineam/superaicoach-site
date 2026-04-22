@@ -5,8 +5,8 @@ export function FinalCTA() {
   return (
     <section id="cta" className="py-24 md:py-32">
       <ScrollReveal className="mx-auto max-w-3xl px-6 text-center">
-        <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-          Ready to save hours every week with AI?
+        <h2 className="font-display text-balance text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
+          Ready to save <span className="text-accent">hours every week</span> with AI?
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
           Book a free 15-minute consult and bring one real use case. You&apos;ll leave

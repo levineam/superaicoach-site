@@ -36,7 +36,7 @@ export function ConsultationCTA({
           })
         }}
         className={cn(
-          'inline-flex h-12 items-center gap-2 rounded-full bg-accent px-8 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90',
+          'inline-flex h-12 items-center gap-2 rounded-full border border-accent/90 bg-accent px-8 text-base font-semibold text-accent-foreground shadow-md shadow-foreground/10 transition-colors hover:bg-accent/92',
           buttonClassName,
         )}
       >

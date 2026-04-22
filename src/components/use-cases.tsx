@@ -56,7 +56,7 @@ export function UseCases() {
           <p className="text-sm font-semibold uppercase tracking-widest text-accent">
             What we help you do
           </p>
-          <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="font-display mt-3 text-balance text-3xl font-semibold text-foreground sm:text-4xl">
             Practical AI for everyday work
           </h2>
           <p className="mt-4 text-muted-foreground text-pretty leading-relaxed">
@@ -75,7 +75,7 @@ export function UseCases() {
               <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
                 <c.icon className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground">{c.title}</h3>
+              <h3 className="font-display text-lg font-semibold text-foreground">{c.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {c.description}
               </p>
