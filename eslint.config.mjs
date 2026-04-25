@@ -21,6 +21,9 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Repo-local scratch copies from PR autopilot should not affect baseline lint.
     "tmp/pr-autopilot/**",
+    // Diagnostic logs and review artifacts are not source code.
+    "logs/**",
+    "reviews/**",
   ]),
 ]);
 
