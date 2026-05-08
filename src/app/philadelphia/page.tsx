@@ -37,30 +37,57 @@ const howItWorks = [
   },
 ]
 
-const useCases = [
+const businessUseCases = [
   {
-    title: 'Family meal planning on autopilot',
-    body: 'Plans weekly meals, generates grocery lists sorted by store aisle, checks weather for grill nights. Saves ~1 hour every week.',
+    title: 'Saved $10M with AI agents',
+    body: 'Documented examples show AI agents removing manual workflows and preventing costly SLA misses at enterprise scale.',
   },
   {
-    title: 'Travel that manages itself',
-    body: 'Calendar-aware assistant checks in for flights 24 hours before departure, handles boarding without any prompting.',
+    title: 'Handled 65% of support, projected +$40M profit',
+    body: 'Some teams report AI assistants taking a majority of support volume while improving speed and unit economics.',
+  },
+  {
+    title: 'Saved ~$2M by replacing a legacy CRM layer',
+    body: 'Instead of living in a dozen SaaS tools, companies are consolidating customer data into internal AI-powered systems.',
+  },
+  {
+    title: 'Saved $290k/year on marketing ops',
+    body: 'AI is being used for SEM and ad optimization with measurable annual savings (and faster iteration).',
+  },
+  {
+    title: 'Saved $420k/year in recovered engineering time',
+    body: 'Assistants can turn scattered context into shipping-ready work: summaries, diffs, and next actions—without meetings.',
   },
   {
     title: '15,000 emails cleared on day one',
-    body: 'Inbox zero on autopilot — categorizes, unsubscribes, archives spam, drafts replies. Saves 2-3 hours every day.',
+    body: 'Inbox triage at scale: categorize, unsubscribe, draft replies, and keep follow-ups moving without dropping the ball.',
+  },
+]
+
+const personalUseCases = [
+  {
+    title: 'Family meal planning on autopilot',
+    body: 'Plans weekly meals, generates grocery lists sorted by aisle, and checks weather for grill nights. Saves ~1 hour/week.',
+  },
+  {
+    title: 'Travel that manages itself',
+    body: 'Calendar-aware assistant checks in for flights 24 hours before departure and keeps your itinerary in sync automatically.',
   },
   {
     title: 'Control your house by text',
-    body: '"Set living room to evening mode" — lights, thermostat, and music all adjust. Built on a Raspberry Pi in 20 minutes.',
+    body: '"Set living room to evening mode"—lights, thermostat, and music adjust instantly. Built on a small local device.',
   },
   {
     title: 'Custom meditations based on your body',
-    body: 'Reads WHOOP or Oura recovery data, writes meditation scripts tailored to that day\'s strain, and generates audio.',
+    body: 'Reads recovery data, writes a tailored meditation for today’s strain, and generates an audio version you can play.',
   },
   {
-    title: 'A lawyer\'s 24/7 research assistant',
-    body: 'Real law firm uses OpenClaw for case research, document management, and client intake — all on their own hardware.',
+    title: 'A lawyer’s 24/7 research assistant',
+    body: 'Real firms use local assistants for research, document management, and intake workflows—on their own hardware.',
+  },
+  {
+    title: 'Weekly planning that never slips',
+    body: 'Turns messy notes into a clean plan: priorities, calendar blocks, reminders, and a short next-actions list.',
   },
 ]
 
@@ -289,22 +316,45 @@ export default function PhiladelphiaPage() {
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 These aren&apos;t testimonials — they&apos;re documented examples from the OpenClaw and
-                Hermes Agent community.
+                Hermes Agent community. Business outcomes first, then personal.
               </p>
             </ScrollReveal>
-            <ScrollReveal delayMs={60} className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {useCases.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-[1.5rem] border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_12px_32px_-16px_rgba(20,40,80,0.18)]"
-                >
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  <h3 className="mt-3 font-[family-name:var(--font-inter-tight)] text-base font-semibold text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-                </div>
-              ))}
+            <ScrollReveal delayMs={60} className="mt-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                Business
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {businessUseCases.map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-[1.5rem] border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_12px_32px_-16px_rgba(20,40,80,0.18)]"
+                  >
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h3 className="mt-3 font-[family-name:var(--font-inter-tight)] text-base font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                Personal
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {personalUseCases.map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-[1.5rem] border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_12px_32px_-16px_rgba(20,40,80,0.18)]"
+                  >
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h3 className="mt-3 font-[family-name:var(--font-inter-tight)] text-base font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                  </div>
+                ))}
+              </div>
             </ScrollReveal>
           </div>
         </section>
