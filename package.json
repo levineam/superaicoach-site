@@ -9,7 +9,9 @@
     "lint": "eslint",
     "mission-control:bootstrap": "node scripts/mission-control-bootstrap.mjs",
     "mission-control:smoke": "node scripts/mission-control-smoke.mjs",
-    "mission-control:endpoint-handshake": "node scripts/mission-control-endpoint-handshake.mjs"
+    "mission-control:endpoint-handshake": "node scripts/mission-control-endpoint-handshake.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.46",
@@ -46,6 +48,7 @@
     "eslint-config-next": "16.1.6",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.5"
   }
 }
