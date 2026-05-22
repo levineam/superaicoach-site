@@ -10,6 +10,8 @@
     "mission-control:bootstrap": "node scripts/mission-control-bootstrap.mjs",
     "mission-control:smoke": "node scripts/mission-control-smoke.mjs",
     "mission-control:endpoint-handshake": "node scripts/mission-control-endpoint-handshake.mjs",
+    "release:preview": "node scripts/release-gate.mjs --stage=preview --maturity=release-candidate",
+    "release:production": "node scripts/release-gate.mjs --stage=production",
     "test": "vitest run",
     "test:watch": "vitest"
   },

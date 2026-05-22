@@ -21,6 +21,28 @@ For auth + tenant-shell smoke checks, keep the app on `npm run dev` (HTTP-local 
 
 ---
 
+## Release lane
+
+Release/version management lives in:
+
+- `CHANGELOG.md`
+- `docs/release-management.md`
+- `docs/releases/2026-05-release-lane-checklist.md`
+
+Before a PR is promoted beyond preview, run:
+
+```bash
+npm run release:preview
+```
+
+Before production promotion, run the production gate with the release parent and public-stable maturity:
+
+```bash
+npm run release:production -- --release-parent SUP-XXXX --maturity public-stable
+```
+
+---
+
 ## Customer Mission Control (MVP)
 
 ### Routes
