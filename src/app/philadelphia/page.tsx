@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, ArrowRight, ChevronDown, Sparkles, Mail, Calendar, Workflow, Shield } from 'lucide-react'
+import { MapPin, ArrowRight, ChevronDown, Sparkles, Mail, Workflow, Shield } from 'lucide-react'
 
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'

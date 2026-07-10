@@ -6,8 +6,11 @@
  */
 'use strict';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js');
 
 // ─── Tool definitions ──────────────────────────────────────────────────────

@@ -197,10 +197,7 @@ interface JarvisGatewayChatProps {
 
 export function JarvisGatewayChat({
   tenantSlug,
-  tenantName: _tenantName,
-  userEmail: _userEmail,
   hasEndpoint,
-  endpointLabel: _endpointLabel,
 }: JarvisGatewayChatProps) {
   const transport = useMemo(
     () =>
