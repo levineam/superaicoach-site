@@ -28,9 +28,7 @@ interface MissionControlStore {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __sacMissionControlStore: MissionControlStore | undefined
-  // eslint-disable-next-line no-var
   var __sacMissionControlDbBootstrapPromise: Promise<void> | undefined
 }
 

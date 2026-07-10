@@ -71,7 +71,7 @@ type AnimState = 'active' | 'exiting' | 'entering'
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export function StarterGuide({ userName: _userName }: { userName: string }) {
+export function StarterGuide({}: { userName: string }) {
   const [step, setStep] = useState<WizardStep>(1)
   const [animState, setAnimState] = useState<AnimState>('active')
   const [platform, setPlatform] = useState<PlatformKey | null>(null)

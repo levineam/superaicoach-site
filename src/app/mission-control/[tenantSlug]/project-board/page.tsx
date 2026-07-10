@@ -195,34 +195,6 @@ export default function ProjectBoardPage() {
     fetchBoard()
   }, [fetchBoard])
 
-  const markDone = async (id: string) => {
-    const previousColumn = allCards.find((c) => c.id === id)?.column
-    if (!previousColumn || previousColumn === 'done') return
-
-    setAllCards((cards) => cards.map((c) => (c.id === id ? { ...c, column: 'done' } : c)))
-    try {
-      const res = await fetch('/api/mission-control/projects', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-tenant-slug': tenantSlug,
-        },
-        body: JSON.stringify({ id, column: 'done' }),
-      })
-      if (!res.ok) {
-        console.error('Failed to persist markDone:', await res.text())
-        setAllCards((cards) =>
-          cards.map((c) => (c.id === id ? { ...c, column: previousColumn } : c))
-        )
-      }
-    } catch (err) {
-      console.error('Error persisting markDone:', err)
-      setAllCards((cards) =>
-        cards.map((c) => (c.id === id ? { ...c, column: previousColumn } : c))
-      )
-    }
-  }
-
   // Client-side project filter
   const visibleCards = useMemo(() => {
     return selectedProject === ALL_PROJECTS

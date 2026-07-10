@@ -5,18 +5,12 @@ import {
   BarChart2,
   BookOpen,
   CalendarCheck,
-  CheckSquare,
   ClipboardList,
   FileText,
   Folders,
-  Inbox,
-  LayoutList,
   Mail,
-  MessageSquare,
-  Search,
   Target,
   TrendingUp,
-  Users,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
