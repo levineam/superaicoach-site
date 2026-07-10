@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 
-import { CustomerMissionControlShell } from '@/components/mission-control/customer-shell'
 import { getServerSession } from '@/lib/mission-control/auth'
 import {
   getMissionControlSnapshot,

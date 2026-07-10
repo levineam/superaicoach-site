@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import {
-  ArrowRight,
   Briefcase,
   CheckCircle2,
   ChevronRight,
@@ -13,7 +12,6 @@ import {
   ShieldCheck,
   Sparkles,
   User2,
-  X,
   Zap,
 } from 'lucide-react'
 
