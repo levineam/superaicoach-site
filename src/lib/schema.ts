@@ -1,4 +1,4 @@
-import { AREA_SERVED, FAQS, INTRO, PLANS, SITE, type FAQ } from '@/config/site'
+import { AREA_SERVED, BOOKING, FAQS, INTRO, PLANS, SITE, type FAQ } from '@/config/site'
 
 const num = (price: string) => price.replace(/[^0-9.]/g, '')
 
@@ -13,7 +13,7 @@ export function localBusinessSchema() {
       'AI consultant in Philadelphia. An ongoing AI partner for small and medium firms: regular on-site sessions to demo what is new, listen to the team, and set up the tools with them.',
     url: SITE.url,
     email: SITE.email,
-    priceRange: '$500–$6,875',
+    priceRange: 'Free consult; plans $1,500–$6,875/mo',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Philadelphia',
@@ -32,7 +32,16 @@ export function localBusinessSchema() {
       'Microsoft Copilot',
       'Google Workspace',
     ],
-    makesOffer: [INTRO, ...PLANS].map((p) => ({
+    makesOffer: [
+      {
+        '@type': 'Offer',
+        name: `Free ${BOOKING.duration} AI consult`,
+        description: `A free ${BOOKING.duration} consult to see whether working together makes sense.`,
+        price: '0',
+        priceCurrency: 'USD',
+        url: BOOKING.url,
+      },
+      ...[INTRO, ...PLANS].map((p) => ({
       '@type': 'Offer',
       name: `${p.name}${p.id === 'intro' ? '' : ' AI Partnership'}`,
       description: p.cadence,
@@ -49,7 +58,8 @@ export function localBusinessSchema() {
             },
           }),
       url: `${SITE.url}/#plans`,
-    })),
+      })),
+    ],
   }
 }
 

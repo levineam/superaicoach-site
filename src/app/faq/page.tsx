@@ -9,7 +9,7 @@ import { faqSchema } from '@/lib/schema'
 export const metadata: Metadata = {
   title: 'FAQ: Working with a Philadelphia AI Consultant',
   description:
-    'Answers about the Intro Session, client data, pricing, cancelling, and how an ongoing AI partnership works for Philadelphia firms.',
+    'Answers about the free consult, the Intro Session, client data, pricing, cancelling, and how an ongoing AI partnership works for Philadelphia firms.',
   alternates: { canonical: '/faq' },
 }
 

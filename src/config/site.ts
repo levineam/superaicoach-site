@@ -1,8 +1,8 @@
 /**
  * Single source of truth for the site's offer, prices, and booking link.
  *
- * To go live with paid booking, change BOOKING.url only. Every
- * "Book" button on the site reads from it.
+ * Every "Book" button on the site reads BOOKING. To change the consult
+ * link or its length, edit BOOKING.url and CONSULT_MINUTES here only.
  */
 
 export const SITE = {
@@ -17,16 +17,16 @@ export const SITE = {
   region: 'PA',
 } as const
 
+/** Length of the free consult in minutes. Keep in sync with the Calendly event. */
+export const CONSULT_MINUTES = 30
+
 export const BOOKING = {
-  /**
-   * PLACEHOLDER. This is Andrew's free 30-minute Calendly event.
-   * Replace with the paid Intro Session booking link (Calendly event with
-   * Stripe payment turned on, or a Stripe Payment Link) before launch.
-   */
+  /** Andrew's free consult on Calendly. */
   url: 'https://calendly.com/levineam/30min',
-  label: 'Book an Intro Session',
-  price: '$500',
-  summary: 'Two hours at your office. Paid when you book, credited to your first month.',
+  /** "30-minute", used in copy such as "a free 30-minute consult". */
+  duration: `${CONSULT_MINUTES}-minute`,
+  label: `Book a free ${CONSULT_MINUTES}-minute consult`,
+  summary: 'No cost, no card, no commitment.',
 } as const
 
 export type Plan = {
@@ -45,9 +45,9 @@ export const INTRO: Plan = {
   name: 'Intro Session',
   price: '$500',
   unit: 'one time',
-  cadence: 'Two hours at your office',
+  cadence: 'Two hours at your office, after the consult',
   summary:
-    'Live demos on your own work, time spent listening to your team, and one useful thing set up before I leave.',
+    'If the free consult shows there’s a fit, this is our first working session: live demos on your own work, time spent listening to your team, and one useful thing set up before I leave. Invoiced afterward, never charged at booking.',
   includes: [
     'About 45 minutes of demos on your real material',
     'About 45 minutes of listening: where the week goes, what is frustrating, any data concerns',
@@ -120,12 +120,16 @@ export type FAQ = { q: string; a: string }
 
 export const FAQS: FAQ[] = [
   {
+    q: 'What happens on the free consult?',
+    a: `It’s a free ${BOOKING.duration} consult. Tell me about your firm, what you’ve tried with AI (nothing counts), and what’s eating your team’s week. I’ll tell you honestly whether working together makes sense, and if so, what I’d suggest first. No cost, no card, no obligation.`,
+  },
+  {
     q: 'We don’t know what we’d use AI for. Is that a problem?',
     a: 'No. That’s where most firms start, and it’s the reason this service exists. The first session is me showing you what’s possible on your own work, then listening. You decide what’s worth pursuing after you’ve seen it.',
   },
   {
-    q: 'What happens in the Intro Session?',
-    a: 'Two hours at your office. About 45 minutes of live demos on your team’s real material, 45 minutes of listening, and 30 minutes setting up one thing you can use the next day. You get a short written plan within two business days. The $500 is credited to your first month if you start within 30 days.',
+    q: 'What comes after the consult?',
+    a: 'If it’s a fit, an Intro Session: two hours at your office. About 45 minutes of live demos on your team’s real material, 45 minutes of listening, and 30 minutes setting up one thing you can use the next day. You get a short written plan within two business days. The $500 is credited to your first month if you start within 30 days.',
   },
   {
     q: 'Is our client data safe?',
@@ -152,8 +156,8 @@ export const FAQS: FAQ[] = [
     a: 'On site across Philadelphia (Center City, University City, Fairmount, Fishtown, Northern Liberties, and the rest of the city), the Main Line, Montgomery, Delaware, and Bucks Counties, and South Jersey. Video sessions work anywhere.',
   },
   {
-    q: 'How do I pay?',
-    a: 'The Intro Session is paid by card when you book it online. Monthly plans are invoiced at the start of each month.',
+    q: 'Does the consult cost anything?',
+    a: 'No. Booking the consult is free and doesn’t ask for a card. Nothing is billed unless you decide to go ahead; the Intro Session and monthly plans are invoiced.',
   },
 ]
 

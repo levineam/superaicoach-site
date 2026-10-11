@@ -14,9 +14,8 @@ npm run build
 
 ## Where things live
 
-- `src/config/site.ts`: prices, plans, FAQ, contact email, and **the booking link**
-  (`BOOKING.url`). Every "Book" button reads from it, so going live with paid booking is a
-  one-line change.
+- `src/config/site.ts`: prices, plans, FAQ, contact email, and **the free-consult booking
+  link and length** (`BOOKING.url`, `CONSULT_MINUTES`). Every "Book" button reads from it.
 - `src/lib/schema.ts`: LocalBusiness / ProfessionalService and FAQPage JSON-LD.
 - `next.config.ts`: permanent redirects for routes from the old coaching/membership site.
 - Optional analytics: set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel. Book clicks send a

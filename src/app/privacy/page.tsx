@@ -29,12 +29,11 @@ export default function Privacy() {
           <h2>What is collected</h2>
           <ul>
             <li>
-              <strong>Booking and payment.</strong> When you book a session, you leave this site for
-              our scheduling provider (Calendly) and, for paid sessions, our payment processor
-              (Stripe). They collect your name, email, appointment details, and payment details under
-              their own privacy policies. Card numbers are handled by Stripe and are never seen or
-              stored by us. We receive your name, email, the time you booked, and anything you write
-              in the booking form.
+              <strong>Booking.</strong> When you book a consult, you leave this site for our
+              scheduling provider (Calendly), which collects your name, email, and appointment
+              details under its own privacy policy. We receive your name, email, the time you
+              booked, and anything you write in the booking form. We don’t take payments on this
+              site.
             </li>
             <li>
               <strong>Email.</strong> If you email us, we keep the message and your address to reply

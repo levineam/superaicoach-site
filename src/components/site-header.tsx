@@ -34,7 +34,7 @@ export function SiteHeader() {
         ))}
       </nav>
       <div className="header-cta">
-        <BookButton withPrice={false} label="Book" />
+        <BookButton label="Book" />
       </div>
     </header>
   )

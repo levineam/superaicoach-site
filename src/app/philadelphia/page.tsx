@@ -3,13 +3,13 @@ import type { Metadata } from 'next'
 import { BookButton } from '@/components/book-button'
 import { TextLink } from '@/components/button'
 import { JsonLd } from '@/components/json-ld'
-import { INTRO, PLANS } from '@/config/site'
+import { BOOKING, INTRO, PLANS } from '@/config/site'
 import { localBusinessSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'AI Consultant in Philadelphia for Small Businesses',
   description:
-    'A Philadelphia AI consultant for small and medium firms in Center City, University City, the Main Line, and the suburbs. Regular on-site sessions, from a $500 Intro Session.',
+    'A Philadelphia AI consultant for small and medium firms in Center City, University City, the Main Line, and the suburbs. Regular on-site sessions. Start with a free consult.',
   alternates: { canonical: '/philadelphia' },
 }
 
@@ -54,8 +54,9 @@ export default function Philadelphia() {
             </p>
             <h2>How it works</h2>
             <p>
-              Start with a two-hour {INTRO.name} ({INTRO.price}, credited to your first month). Then
-              pick how often we meet:{' '}
+              Start with a free {BOOKING.duration} consult. If it’s a fit, we do a two-hour{' '}
+              {INTRO.name} ({INTRO.price}, credited to your first month), then pick how often we
+              meet:{' '}
               {PLANS.map((p) => `${p.name} at ${p.price}${p.unit}`).join(', ')}. Month to month.
             </p>
           </div>

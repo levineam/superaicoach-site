@@ -154,16 +154,17 @@ export default function Home() {
           <b>04</b> / Plans and pricing
         </p>
         <h2 id="plans-title">
-          Start with one session. Then pick <em>how often we meet.</em>
+          Start with a free consult. Then pick <em>how often we meet.</em>
         </h2>
         <p className="lede">
-          Every plan includes demos of what’s new, time spent listening to your team, and hands-on
-          setup in your tools. Month to month.
+          First, a free {BOOKING.duration} consult to see whether it’s a fit. After that, every plan
+          includes demos of what’s new, time spent listening to your team, and hands-on setup in
+          your tools. Month to month.
         </p>
 
         <div className="intro-offer" id="intro">
           <div>
-            <span className="tag">Start here</span>
+            <span className="tag">After the free consult</span>
             <h3 style={{ marginTop: 18 }}>{INTRO.name}</h3>
             <p className="price">
               {INTRO.price}
@@ -287,7 +288,8 @@ export default function Home() {
           Not sure where to start? <em>Good. That’s the job.</em>
         </h2>
         <p className="lede">
-          Book an Intro Session. {BOOKING.summary} If it’s not a fit afterward, that’s the end of it.
+          Book a free {BOOKING.duration} consult. Tell me about your firm and I’ll tell you honestly
+          whether working together makes sense. If it’s not a fit, that’s the end of it.
         </p>
         <div className="actions">
           <BookButton />

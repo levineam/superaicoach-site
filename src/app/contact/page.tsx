@@ -5,9 +5,9 @@ import { TextLink } from '@/components/button'
 import { BOOKING, SITE } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: 'Book an Intro Session | AI Consultant Philadelphia',
+  title: 'Book a Free Consult | AI Consultant Philadelphia',
   description:
-    'Book a paid two-hour AI Intro Session at your Philadelphia office, or email Andrew Levine with questions.',
+    'Book a free consult with Andrew Levine, a Philadelphia AI consultant, or email with questions. No cost and no commitment.',
   alternates: { canonical: '/contact' },
 }
 
@@ -23,8 +23,7 @@ export default function Contact() {
           Let’s get you <em>started.</em>
         </h1>
         <p className="lede">
-          The way in is a single Intro Session: {BOOKING.price}, two hours at your office, credited to
-          your first month if you keep going.
+          The way in is a free {BOOKING.duration} consult. No cost, no card, no commitment.
         </p>
       </section>
       <section className="page-body">
@@ -32,19 +31,19 @@ export default function Contact() {
           <div>
             <ol className="contact-steps">
               <li>
-                <strong>Pick a time and pay online.</strong> It takes about two minutes.
+                <strong>Pick a time.</strong> It’s free and takes about a minute.
               </li>
               <li>
                 <strong>Tell me a little about the firm.</strong> Size, what you’ve tried with AI
                 (nothing counts), and what’s eating your team’s week.
               </li>
               <li>
-                <strong>I come to you.</strong> Demos on your work, listening, and one thing set up
-                before I leave.
+                <strong>We talk.</strong> I’ll tell you honestly whether working together makes
+                sense, and what I’d suggest first.
               </li>
               <li>
-                <strong>You get a short written plan</strong> within two business days. Then you
-                decide.
+                <strong>If it’s a fit,</strong> the next step is an Intro Session at your office. If
+                not, that’s the end of it.
               </li>
             </ol>
             <BookButton />
