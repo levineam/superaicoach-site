@@ -1,52 +1,40 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
+
+/** Old routes from the coaching/membership site. All permanent (308). */
+const toHome = [
+  '/sign-in',
+  '/sign-up',
+  '/auth/:path*',
+  '/member',
+  '/member/:path*',
+  '/mission-control',
+  '/mission-control/:path*',
+  '/dashboard',
+  '/ai-team',
+  '/jarvis',
+  '/project-board',
+  '/meet-jarvis',
+  '/cowork',
+  '/resources',
+  '/resources/:path*',
+  '/extensions/:path*',
+  '/install/:path*',
+]
 
 const nextConfig: NextConfig = {
-  async headers() {
-    return [
-      {
-        source: '/extensions/:file*.mcpb',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/vnd.anthropic.mcpb',
-          },
-          {
-            key: 'Content-Disposition',
-            value: 'attachment',
-          },
-        ],
-      },
-    ];
-  },
+  poweredByHeader: false,
   async redirects() {
     return [
-      {
-        source: '/ai-team',
-        destination: '/mission-control/andrew/ai-team',
-        permanent: false,
-      },
-      {
-        source: '/jarvis',
-        destination: '/mission-control/andrew/jarvis',
-        permanent: false,
-      },
-      {
-        source: '/project-board',
-        destination: '/mission-control/andrew/project-board',
-        permanent: false,
-      },
-      {
-        source: '/dashboard',
-        destination: '/mission-control/andrew/dashboard',
-        permanent: false,
-      },
-      {
-        source: '/mission-control',
-        destination: '/mission-control/andrew/dashboard',
-        permanent: false,
-      },
-    ];
+      ...toHome.map((source) => ({ source, destination: '/', permanent: true })),
+      { source: '/membership', destination: '/#plans', permanent: true },
+      { source: '/business', destination: '/#plans', permanent: true },
+      { source: '/services', destination: '/#plans', permanent: true },
+      { source: '/pricing', destination: '/#plans', permanent: true },
+      { source: '/philly', destination: '/philadelphia', permanent: true },
+      { source: '/why', destination: '/about', permanent: true },
+      { source: '/book', destination: '/contact', permanent: true },
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
