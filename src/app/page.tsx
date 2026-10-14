@@ -3,8 +3,10 @@ import type { Metadata } from 'next'
 import { BookButton } from '@/components/book-button'
 import { Button, TextLink } from '@/components/button'
 import { HeroLoop } from '@/components/hero-loop'
+import { UseCaseCard } from '@/components/use-cases/use-case-card'
 import { JsonLd } from '@/components/json-ld'
 import { BOOKING, EVERY_PLAN, FAQS, INTRO, PLANS, TERMS } from '@/config/site'
+import { USE_CASES, FEATURED_USE_CASES } from '@/content/use-cases'
 import { faqSchema, localBusinessSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
@@ -124,6 +126,32 @@ export default function Home() {
           Then we repeat: monthly, every other week, or weekly. You choose. Built for Philly firms of 5
           to 50 people: law, accounting, wealth management, property management, and other
           professional services.
+        </p>
+      </section>
+
+      <section className="section" id="use-cases" aria-labelledby="uc-title">
+        <p className="section-label">
+          <b>Free</b> / AI use case library
+        </p>
+        <div className="split">
+          <h2 id="uc-title">
+            What could AI actually do <em>at a firm like yours?</em>
+          </h2>
+          <div className="prose">
+            <p>
+              {USE_CASES.length} concrete use cases for law, accounting, wealth management, property
+              management, agencies, and the office. Real tools, how hard each one is to set up, and
+              what to watch out for.
+            </p>
+          </div>
+        </div>
+        <div className="uc-grid" style={{ marginTop: 34 }}>
+          {FEATURED_USE_CASES.slice(0, 6).map((u) => (
+            <UseCaseCard key={u.slug} useCase={u} />
+          ))}
+        </div>
+        <p style={{ marginTop: 26 }}>
+          <TextLink href="/use-cases">Browse all use cases</TextLink>
         </p>
       </section>
 
