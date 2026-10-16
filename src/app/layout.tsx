@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 
 import { ButtonsMotion } from '@/components/buttons-motion'
 import { GoogleAnalytics } from '@/components/google-analytics'
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
+        <Script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "13e9ac77a67a4d57aec0f2759ae61422"}' strategy="afterInteractive" />
       </body>
     </html>
   )
