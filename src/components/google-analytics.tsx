@@ -30,14 +30,3 @@ export function GoogleAnalytics() {
   )
 }
 
-// Helper function for custom event tracking
-export function trackGA(eventName: string, parameters?: Record<string, unknown>) {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined') return
-
-  try {
-    // @ts-expect-error - gtag is loaded dynamically
-    window.gtag?.('event', eventName, parameters)
-  } catch (error) {
-    console.warn('GA tracking error:', error)
-  }
-}

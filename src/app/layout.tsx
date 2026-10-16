@@ -1,109 +1,60 @@
-import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, Inter_Tight } from "next/font/google";
-import Script from "next/script";
+import type { Metadata, Viewport } from 'next'
 
-import { GoogleAnalytics } from "@/components/google-analytics";
-import { PageViewTracker } from "@/components/page-view-tracker";
+import { ButtonsMotion } from '@/components/buttons-motion'
+import { GoogleAnalytics } from '@/components/google-analytics'
+import { SiteFooter } from '@/components/site-footer'
+import { SiteHeader } from '@/components/site-header'
+import { SITE } from '@/config/site'
 
-import "./globals.css";
+import './globals.css'
 
-const _fraunces = Fraunces({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-fraunces",
-});
-
-const _inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const _interTight = Inter_Tight({
-  subsets: ["latin"],
-  variable: "--font-inter-tight",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://superaicoach.com";
+const title = 'AI Consultant in Philadelphia | AI Consulting Services | SuperAICoach'
+const description =
+  'AI consulting services for Philadelphia small and medium businesses. An ongoing AI partner who knows the tools, meets with your team on a regular schedule, demos what is new, and sets it up with you. Month to month.'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
-  title: "SuperAIcoach — Personal AI Assistant Coaching",
-  description:
-    "SuperAIcoach helps busy professionals use ChatGPT and Claude as a practical virtual AI assistant for writing, planning, and repetitive admin work through 1:1 coaching.",
-  keywords:
-    "personal ai assistant, virtual ai assistant, ai coach, personal ai coach, chatgpt coach, claude coach, ai productivity coaching",
-  authors: [{ name: "Andrew Levine", url: "https://superaicoach.com" }],
-  creator: "SuperAIcoach",
-  publisher: "SuperAIcoach",
-  alternates: {
-    canonical: "/",
-  },
+  metadataBase: new URL(SITE.url),
+  title: { default: title, template: '%s | SuperAICoach' },
+  description,
+  applicationName: SITE.name,
+  authors: [{ name: SITE.founder, url: SITE.personalSite }],
+  creator: SITE.founder,
+  publisher: SITE.legalName,
+  alternates: { canonical: '/' },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: baseUrl,
-    title: "SuperAIcoach — Personal AI Assistant Coaching",
-    description:
-      "SuperAIcoach helps busy professionals use ChatGPT and Claude as a practical virtual AI assistant for writing, planning, and repetitive admin work.",
-    siteName: "SuperAIcoach",
+    type: 'website',
+    locale: 'en_US',
+    url: SITE.url,
+    siteName: SITE.name,
+    title,
+    description,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "SuperAIcoach — Personal AI Assistant Coaching",
-    description:
-      "SuperAIcoach helps busy professionals use ChatGPT and Claude as a practical virtual AI assistant for writing, planning, and repetitive admin work.",
-    creator: "@andrewlevine",
-  },
+  twitter: { card: 'summary_large_image', title, description },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  icons: {
-    icon: [
-      {
-        url: "/favicon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: {
-      url: "/favicon.svg",
-      type: "image/svg+xml",
-    },
-  },
-};
+  icons: { icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }], apple: '/favicon.svg' },
+  other: { 'geo.region': 'US-PA', 'geo.placename': 'Philadelphia' },
+}
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
-  width: "device-width",
+  themeColor: '#11120f',
+  width: 'device-width',
   initialScale: 1,
-};
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${_fraunces.variable} ${_inter.variable} ${_interTight.variable} scroll-smooth motion-reduce:scroll-auto`}
-    >
-      <Script id="enable-js" strategy="beforeInteractive">
-        {`document.documentElement.classList.add('js')`}
-      </Script>
-      <body className="bg-background font-sans text-foreground antialiased">
+    <html lang="en">
+      <body>
         <GoogleAnalytics />
-        <PageViewTracker />
-        {children}
+        <ButtonsMotion />
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter />
       </body>
     </html>
-  );
+  )
 }
