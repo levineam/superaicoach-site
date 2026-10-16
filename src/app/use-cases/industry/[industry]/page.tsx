@@ -28,6 +28,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: industry.metaTitle,
     description: industry.metaDescription,
     alternates: { canonical: `/use-cases/industry/${industry.id}` },
+    openGraph: {
+      title: industry.metaTitle,
+      description: industry.metaDescription,
+      url: `/use-cases/industry/${industry.id}`,
+      type: 'website',
+    },
   }
 }
 

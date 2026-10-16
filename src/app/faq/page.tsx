@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   description:
     'Answers about the free consult, the Intro Session, client data, pricing, cancelling, and how an ongoing AI partnership works for Philadelphia firms.',
   alternates: { canonical: '/faq' },
+  openGraph: {
+    title: 'FAQ: Working with a Philadelphia AI Consultant',
+    description: 'Answers about the free consult, the Intro Session, client data, pricing, cancelling, and how an ongoing AI partnership works for Philadelphia firms.',
+    url: '/faq',
+    type: 'website',
+  },
 }
 
 export default function Faq() {

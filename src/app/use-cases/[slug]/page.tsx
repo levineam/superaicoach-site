@@ -26,12 +26,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const u = getUseCase(slug)
   if (!u) return {}
   const industry = getIndustry(u.industry)
-  const title = `${u.title}: AI for ${industry?.name ?? 'small businesses'}`
+  const title = u.metaTitle ?? `${u.title}: AI for ${industry?.name ?? 'small businesses'}`
+  const description =
+    u.metaDescription ?? `${u.summary} Tools, setup difficulty, and what to watch out for.`
   return {
     title,
-    description: `${u.summary} Tools, setup difficulty, and what to watch out for.`,
+    description,
     alternates: { canonical: `/use-cases/${u.slug}` },
-    openGraph: { title, description: u.summary, type: 'article', url: `/use-cases/${u.slug}` },
+    openGraph: { title, description, type: 'article', url: `/use-cases/${u.slug}` },
   }
 }
 

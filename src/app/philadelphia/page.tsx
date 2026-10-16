@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   description:
     'A Philadelphia AI consultant for small and medium firms in Center City, University City, the Main Line, and the suburbs. Regular on-site sessions. Start with a free consult.',
   alternates: { canonical: '/philadelphia' },
+  openGraph: {
+    title: 'AI Consultant in Philadelphia for Small Businesses',
+    description: 'A Philadelphia AI consultant for small and medium firms in Center City, University City, the Main Line, and the suburbs. Regular on-site sessions. Start with a free consult.',
+    url: '/philadelphia',
+    type: 'website',
+  },
 }
 
 export default function Philadelphia() {

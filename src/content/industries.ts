@@ -91,6 +91,71 @@ export const INDUSTRIES: Industry[] = [
       'Start here if you’re not sure where to start.',
     ],
   },
+  {
+    id: 'health',
+    name: 'Dental and medical practices',
+    short: 'Dental & medical',
+    headline: 'AI for dental and medical practices in Philadelphia',
+    metaTitle: 'AI for Dental Offices and Medical Practices in Philadelphia',
+    metaDescription:
+      'Practical AI for small Philadelphia dental offices and medical practices: answering phones after hours and drafting visit notes, with HIPAA and BAA questions spelled out.',
+    intro: [
+      'Small practices lose hours to the phone and to charting after the last patient leaves. Those are the two places AI is most useful today.',
+      'Patient information is protected health information. Every entry here assumes a vendor that signs a Business Associate Agreement (BAA) and a clinician who reviews the output.',
+    ],
+  },
+  {
+    id: 'restaurants',
+    name: 'Restaurants and cafes',
+    short: 'Restaurants',
+    headline: 'AI for restaurants in Philadelphia',
+    metaTitle: 'AI for Restaurants in Philadelphia: Practical Use Cases',
+    metaDescription:
+      'Low-cost AI use cases for independent Philadelphia restaurants and cafes, starting with replying to Google reviews in your own voice.',
+    intro: [
+      'Independent restaurants run on thin margins and thinner time. The useful AI work is small: replies, posts, and the admin nobody has time for.',
+      'Your voice is the brand. Everything here keeps a person approving what goes out.',
+    ],
+  },
+  {
+    id: 'homeservices',
+    name: 'Contractors and home services',
+    short: 'Home services',
+    headline: 'AI for contractors and home service businesses in Philadelphia',
+    metaTitle: 'AI for Contractors and Home Services in Philadelphia',
+    metaDescription:
+      'AI use cases for Philadelphia plumbers, HVAC, electricians, cleaners, and contractors: answer every call, capture leads, and book jobs while you’re on site.',
+    intro: [
+      'When you’re on a ladder, the phone goes to voicemail, and the customer calls the next company on the list. That’s the first problem AI solves for trades.',
+      'Emergencies still need a human. Each entry says how to route them.',
+    ],
+  },
+  {
+    id: 'realestate',
+    name: 'Real estate agents and brokerages',
+    short: 'Real estate',
+    headline: 'AI for real estate agents in Philadelphia',
+    metaTitle: 'AI for Real Estate Agents in Philadelphia: Use Cases',
+    metaDescription:
+      'Practical AI use cases for Philadelphia real estate agents and small brokerages: listing descriptions and marketing, with fair-housing rules spelled out.',
+    intro: [
+      'Agents write a lot: listings, emails, social posts, market updates. AI is good at the first draft.',
+      'Fair-housing law applies to every word you publish, so each entry says what to check.',
+    ],
+  },
+  {
+    id: 'nonprofits',
+    name: 'Nonprofits',
+    short: 'Nonprofits',
+    headline: 'AI for nonprofits in Philadelphia',
+    metaTitle: 'AI for Nonprofits in Philadelphia: Grant Writing and More',
+    metaDescription:
+      'Practical AI use cases for small Philadelphia nonprofits: grant proposal first drafts, finding funders, and reporting, without inventing facts.',
+    intro: [
+      'Small nonprofits do a lot with a few people, and grant writing eats a big share of that time.',
+      'Funders want your real numbers and stories. AI drafts from what you give it; it should never fill in the facts.',
+    ],
+  },
 ]
 
 export function getIndustry(id: string) {

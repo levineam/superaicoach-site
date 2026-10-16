@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   description:
     'Book a free consult with Andrew Levine, a Philadelphia AI consultant, or email with questions. No cost and no commitment.',
   alternates: { canonical: '/contact' },
+  openGraph: {
+    title: 'Book a Free Consult | AI Consultant Philadelphia',
+    description: 'Book a free consult with Andrew Levine, a Philadelphia AI consultant, or email with questions. No cost and no commitment.',
+    url: '/contact',
+    type: 'website',
+  },
 }
 
 export default function Contact() {

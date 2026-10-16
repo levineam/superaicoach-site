@@ -32,6 +32,12 @@ export const TOOLS: Record<string, Tool> = {
   'notion-ai': { id: 'notion-ai', name: 'Notion AI', url: 'https://www.notion.com/product/ai', affiliateUrl: '', badge: 'NO' },
   zapier: { id: 'zapier', name: 'Zapier', url: 'https://zapier.com/', affiliateUrl: '', badge: 'ZP' },
   make: { id: 'make', name: 'Make', url: 'https://www.make.com/', affiliateUrl: '', badge: 'MK' },
+  'weave-ai-receptionist': { id: 'weave-ai-receptionist', name: 'Weave AI Receptionist', url: 'https://www.getweave.com/ai-receptionist/', affiliateUrl: '', badge: 'WV' },
+  freed: { id: 'freed', name: 'Freed (AI scribe)', url: 'https://www.getfreed.ai/', affiliateUrl: '', badge: 'FR' },
+  heidi: { id: 'heidi', name: 'Heidi Health', url: 'https://www.heidihealth.com/', affiliateUrl: '', badge: 'HD' },
+  'jobber-receptionist': { id: 'jobber-receptionist', name: 'Jobber Receptionist', url: 'https://www.getjobber.com/features/ai-receptionist/', affiliateUrl: '', badge: 'JB' },
+  'google-business-profile': { id: 'google-business-profile', name: 'Google Business Profile', url: 'https://www.google.com/business/', affiliateUrl: '', badge: 'GB' },
+  instrumentl: { id: 'instrumentl', name: 'Instrumentl', url: 'https://www.instrumentl.com/', affiliateUrl: '', badge: 'IN' },
 }
 
 export function getTool(id: string): Tool {

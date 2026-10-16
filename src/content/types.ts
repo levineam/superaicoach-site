@@ -1,4 +1,15 @@
-export type IndustryId = 'law' | 'accounting' | 'wealth' | 'property' | 'agencies' | 'office'
+export type IndustryId =
+  | 'law'
+  | 'accounting'
+  | 'wealth'
+  | 'property'
+  | 'agencies'
+  | 'office'
+  | 'health'
+  | 'restaurants'
+  | 'homeservices'
+  | 'realestate'
+  | 'nonprofits'
 
 export type Difficulty = 'Easy' | 'Moderate' | 'Involved'
 
@@ -34,4 +45,8 @@ export type UseCase = {
   /** Optional, always phrased as a typical/estimated effect, never a measured result. */
   typicalEffect?: string
   featured?: boolean
+  /** Optional search-tuned <title>. Falls back to the default pattern. */
+  metaTitle?: string
+  /** Optional search-tuned meta description. */
+  metaDescription?: string
 }

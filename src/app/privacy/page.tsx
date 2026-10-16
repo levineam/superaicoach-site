@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: 'Privacy',
   description: 'How SuperAICoach handles information collected through this website.',
   alternates: { canonical: '/privacy' },
+  openGraph: {
+    title: 'Privacy',
+    description: 'How SuperAICoach handles information collected through this website.',
+    url: '/privacy',
+    type: 'website',
+  },
 }
 
 export default function Privacy() {

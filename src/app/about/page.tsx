@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   description:
     'Andrew Levine is a Philadelphia AI consultant who works hands-on with small and medium firms: regular sessions, live demos, and setup in your own tools.',
   alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About Andrew Levine, AI Consultant in Philadelphia',
+    description: 'Andrew Levine is a Philadelphia AI consultant who works hands-on with small and medium firms: regular sessions, live demos, and setup in your own tools.',
+    url: '/about',
+    type: 'website',
+  },
 }
 
 export default function About() {

@@ -13,8 +13,14 @@ import { breadcrumbSchema } from '@/lib/schema'
 export const metadata: Metadata = {
   title: 'AI Use Cases for Small Businesses in Philadelphia',
   description:
-    'A free library of practical AI use cases for Philadelphia small and medium businesses: law, accounting, wealth management, property management, agencies, and office operations. Real tools, honest caveats.',
+    'A free library of practical AI use cases for Philadelphia small and medium businesses: law, accounting, wealth management, property management, agencies, dental and medical, restaurants, contractors, real estate, nonprofits, and office operations. Real tools, honest caveats.',
   alternates: { canonical: '/use-cases' },
+  openGraph: {
+    title: 'AI Use Cases for Small Businesses in Philadelphia',
+    description: 'A free library of practical AI use cases for Philadelphia small and medium businesses: law, accounting, wealth management, property management, agencies, dental and medical, restaurants, contractors, real estate, nonprofits, and office operations. Real tools, honest caveats.',
+    url: '/use-cases',
+    type: 'website',
+  },
 }
 
 export default function UseCasesPage() {

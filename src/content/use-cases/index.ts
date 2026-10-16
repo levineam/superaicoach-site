@@ -1,5 +1,4 @@
 import type { IndustryId, UseCase } from '../types'
-
 import lawIntakeCallToMatterSummary from './law-intake-call-to-matter-summary'
 import lawDeadlinesFromCourtDocuments from './law-deadlines-from-court-documents'
 import lawClientStatusUpdates from './law-client-status-updates'
@@ -23,6 +22,12 @@ import officeSharedInboxTriage from './office-shared-inbox-triage'
 import officeConnectAppsNoRetyping from './office-connect-apps-no-retyping'
 import officeSearchYourOwnFiles from './office-search-your-own-files'
 import officeWriteAiUsePolicy from './office-write-ai-use-policy'
+import dentalOfficeAiReceptionist from './dental-office-ai-receptionist'
+import medicalAiScribeVisitNotes from './medical-ai-scribe-visit-notes'
+import restaurantReplyToGoogleReviews from './restaurant-reply-to-google-reviews'
+import contractorAiReceptionistMissedCalls from './contractor-ai-receptionist-missed-calls'
+import nonprofitGrantProposalFirstDrafts from './nonprofit-grant-proposal-first-drafts'
+import realEstateListingDescriptions from './real-estate-listing-descriptions'
 
 /** All use cases, in display order. Add a new file in this folder and list it here. */
 export const USE_CASES: UseCase[] = [
@@ -49,6 +54,12 @@ export const USE_CASES: UseCase[] = [
   officeConnectAppsNoRetyping,
   officeSearchYourOwnFiles,
   officeWriteAiUsePolicy,
+  realEstateListingDescriptions,
+  nonprofitGrantProposalFirstDrafts,
+  contractorAiReceptionistMissedCalls,
+  restaurantReplyToGoogleReviews,
+  medicalAiScribeVisitNotes,
+  dentalOfficeAiReceptionist,
 ]
 
 export function getUseCase(slug: string) {
