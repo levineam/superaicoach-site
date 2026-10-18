@@ -14,6 +14,19 @@ export type Industry = {
 
 export const INDUSTRIES: Industry[] = [
   {
+    id: 'personal',
+    name: 'Personal life',
+    short: 'Personal',
+    headline: 'AI for your personal life',
+    metaTitle: 'AI for Busy Professionals: Personal Playbooks That Actually Help',
+    metaDescription:
+      'Practical personal AI playbooks for busy professionals: inbox and calendar help, travel planning, family admin, learning faster, and health and finance paperwork. Real tools, honest caveats, no hype.',
+    intro: [
+      'Start with your own life, not your business. Inbox, calendar, travel, family admin, and paperwork are things you can improve this week — no approval, no compliance review, no boss needed.',
+      'Every playbook uses your own accounts, keeps you approving what goes out, and says plainly what not to paste into an AI tool.',
+    ],
+  },
+  {
     id: 'law',
     name: 'Law firms',
     short: 'Law',

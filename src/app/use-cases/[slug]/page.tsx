@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { TextLink } from '@/components/button'
+import { Button, TextLink } from '@/components/button'
 import { JsonLd } from '@/components/json-ld'
 import { ConsultCta } from '@/components/use-cases/consult-cta'
 import { AffiliateDisclosure, LibraryFooter } from '@/components/use-cases/library-footer'
@@ -123,7 +123,20 @@ export default async function UseCasePage({ params }: { params: Promise<Params> 
             </div>
           </div>
         </div>
-        <ConsultCta />
+        {u.industry === 'personal' ? (
+          <aside className="uc-cta" aria-label="Join the membership">
+            <h2>Want one of these <em>every week?</em></h2>
+            <p>
+              The SuperAICoach Membership sends a personal playbook like this every week, keeps the
+              library current, and includes a monthly live demo. Founding 50 pricing is open now.
+            </p>
+            <Button href="/membership" light>
+              See the membership
+            </Button>
+          </aside>
+        ) : (
+          <ConsultCta />
+        )}
         {related.length > 0 && (
           <div className="uc-related">
             <p className="section-label">More for {industry.name.toLowerCase()}</p>

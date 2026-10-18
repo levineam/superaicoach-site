@@ -20,6 +20,33 @@ export const SITE = {
 /** Length of the free consult in minutes. Keep in sync with the Calendly event. */
 export const CONSULT_MINUTES = 30
 
+/**
+ * MEMBERSHIP (Founding 50 validation — business-model-v2.md §5)
+ * PLACEHOLDER: Andrew pastes the real Stripe Payment Links here after
+ * following /workspace/superaicoach/stripe-checklist.md. Never invent a link.
+ * While a URL is empty, /membership shows the "opens soon — join the free
+ * list" state (a mailto to SITE.email), not a fake checkout or form.
+ */
+export const STRIPE_FOUNDING_URL = '' // Stripe Payment Link: $19/mo Founding
+export const STRIPE_FOUNDING_ANNUAL_URL = '' // Stripe Payment Link: $149/yr Founding
+
+export const MEMBERSHIP = {
+  name: 'SuperAICoach Membership',
+  foundingMonthly: '$19',
+  foundingAnnual: '$149',
+  regularMonthly: '$29',
+  regularAnnual: '$249',
+  foundingSpots: 50,
+  includes: [
+    'A weekly personal playbook: one useful thing to set up with AI in your own life, step by step, with copy-paste prompts',
+    'The full maintained library: personal playbooks plus the AI-at-work library, re-tested and re-dated as tools change',
+    'A monthly live demo and Q&A with Andrew (recorded, so you can watch later)',
+    'A monthly “what changed in AI that matters to you” briefing — no news feed to follow',
+    'Member requests: vote on the next playbooks we write',
+    'Plain “what not to paste” safety notes in every playbook',
+  ],
+} as const
+
 export const BOOKING = {
   /** Andrew's free consult on Calendly. */
   url: 'https://calendly.com/levineam/30min',

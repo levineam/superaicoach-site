@@ -1,4 +1,5 @@
 export type IndustryId =
+  | 'personal'
   | 'law'
   | 'accounting'
   | 'wealth'

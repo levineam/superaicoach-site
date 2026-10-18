@@ -28,9 +28,19 @@ import restaurantReplyToGoogleReviews from './restaurant-reply-to-google-reviews
 import contractorAiReceptionistMissedCalls from './contractor-ai-receptionist-missed-calls'
 import nonprofitGrantProposalFirstDrafts from './nonprofit-grant-proposal-first-drafts'
 import realEstateListingDescriptions from './real-estate-listing-descriptions'
+import personalChiefOfStaffInboxCalendar from './personal-chief-of-staff-inbox-calendar'
+import personalAiTravelPlanning from './personal-ai-travel-planning'
+import personalFamilyAdminAi from './personal-family-admin-ai'
+import personalResearchLearningAi from './personal-research-learning-ai'
+import personalHealthFinancePaperworkAi from './personal-health-finance-paperwork-ai'
 
 /** All use cases, in display order. Add a new file in this folder and list it here. */
 export const USE_CASES: UseCase[] = [
+  personalChiefOfStaffInboxCalendar,
+  personalAiTravelPlanning,
+  personalFamilyAdminAi,
+  personalResearchLearningAi,
+  personalHealthFinancePaperworkAi,
   lawIntakeCallToMatterSummary,
   lawDeadlinesFromCourtDocuments,
   lawClientStatusUpdates,

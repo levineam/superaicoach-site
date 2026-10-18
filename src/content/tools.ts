@@ -37,6 +37,9 @@ export const TOOLS: Record<string, Tool> = {
   heidi: { id: 'heidi', name: 'Heidi Health', url: 'https://www.heidihealth.com/', affiliateUrl: '', badge: 'HD' },
   'jobber-receptionist': { id: 'jobber-receptionist', name: 'Jobber Receptionist', url: 'https://www.getjobber.com/features/ai-receptionist/', affiliateUrl: '', badge: 'JB' },
   'google-business-profile': { id: 'google-business-profile', name: 'Google Business Profile', url: 'https://www.google.com/business/', affiliateUrl: '', badge: 'GB' },
+  perplexity: { id: 'perplexity', name: 'Perplexity', url: 'https://www.perplexity.ai/', affiliateUrl: '', badge: 'PX' },
+  notebooklm: { id: 'notebooklm', name: 'NotebookLM', url: 'https://notebooklm.google.com/', affiliateUrl: '', badge: 'NB' },
+  tripit: { id: 'tripit', name: 'TripIt', url: 'https://www.tripit.com/', affiliateUrl: '', badge: 'TR' },
   instrumentl: { id: 'instrumentl', name: 'Instrumentl', url: 'https://www.instrumentl.com/', affiliateUrl: '', badge: 'IN' },
 }
 
