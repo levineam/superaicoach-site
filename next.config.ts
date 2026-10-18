@@ -26,7 +26,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...toHome.map((source) => ({ source, destination: '/', permanent: true })),
-      { source: '/membership', destination: '/#plans', permanent: true },
       { source: '/business', destination: '/#plans', permanent: true },
       { source: '/services', destination: '/#plans', permanent: true },
       { source: '/pricing', destination: '/#plans', permanent: true },
