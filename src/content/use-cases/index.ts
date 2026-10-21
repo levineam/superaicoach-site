@@ -33,6 +33,8 @@ import personalAiTravelPlanning from './personal-ai-travel-planning'
 import personalFamilyAdminAi from './personal-family-admin-ai'
 import personalResearchLearningAi from './personal-research-learning-ai'
 import personalHealthFinancePaperworkAi from './personal-health-finance-paperwork-ai'
+import personalWeeklyMealPlanGroceryList from './personal-weekly-meal-plan-grocery-list'
+import officeJobPostAndInterviewKit from './office-job-post-and-interview-kit'
 
 /** All use cases, in display order. Add a new file in this folder and list it here. */
 export const USE_CASES: UseCase[] = [
@@ -41,6 +43,7 @@ export const USE_CASES: UseCase[] = [
   personalFamilyAdminAi,
   personalResearchLearningAi,
   personalHealthFinancePaperworkAi,
+  personalWeeklyMealPlanGroceryList,
   lawIntakeCallToMatterSummary,
   lawDeadlinesFromCourtDocuments,
   lawClientStatusUpdates,
@@ -64,6 +67,7 @@ export const USE_CASES: UseCase[] = [
   officeConnectAppsNoRetyping,
   officeSearchYourOwnFiles,
   officeWriteAiUsePolicy,
+  officeJobPostAndInterviewKit,
   realEstateListingDescriptions,
   nonprofitGrantProposalFirstDrafts,
   contractorAiReceptionistMissedCalls,

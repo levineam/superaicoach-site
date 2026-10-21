@@ -5,7 +5,7 @@ import { INDUSTRIES } from '@/content/industries'
 import { USE_CASES } from '@/content/use-cases'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date('2026-10-18')
+  const lastModified = new Date('2026-10-21')
   const pages: Array<[string, number, MetadataRoute.Sitemap[number]['changeFrequency']]> = [
     ['/', 1.0, 'monthly'],
     ['/philadelphia', 0.9, 'monthly'],
