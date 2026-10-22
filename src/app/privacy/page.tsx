@@ -35,7 +35,7 @@ export default function Privacy() {
           <h2>What is collected</h2>
           <ul>
             <li>
-              <strong>Booking.</strong> When you book a consult, you leave this site for our
+              <strong>Booking.</strong> When you book a call, you leave this site for our
               scheduling provider (Calendly), which collects your name, email, and appointment
               details under its own privacy policy. We receive your name, email, the time you
               booked, and anything you write in the booking form. We don’t take payments on this

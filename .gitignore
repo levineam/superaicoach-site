@@ -42,3 +42,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# skill downloads, generated from /skills by scripts/build-skills.mjs
+/public/skills/*.zip

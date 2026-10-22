@@ -1,4 +1,4 @@
-import { AREA_SERVED, BOOKING, FAQS, INTRO, PLANS, SITE, type FAQ } from '@/config/site'
+import { AREA_SERVED, BOOKING, FAQS, FIRST_SESSION, SITE, type FAQ } from '@/config/site'
 
 const num = (price: string) => price.replace(/[^0-9.]/g, '')
 
@@ -10,10 +10,10 @@ export function localBusinessSchema() {
     name: SITE.name,
     legalName: SITE.legalName,
     description:
-      'AI consultant in Philadelphia. An ongoing AI partner for small and medium firms: regular on-site sessions to demo what is new, listen to the team, and set up the tools with them.',
+      'One-on-one AI coaching for business owners and executives in Philadelphia. In-person or video sessions that set up AI in your own accounts and daily work.',
     url: SITE.url,
     email: SITE.email,
-    priceRange: 'Free consult; plans $1,500–$6,875/mo',
+    priceRange: `Free call; first session ${FIRST_SESSION.price}`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Philadelphia',
@@ -22,10 +22,8 @@ export function localBusinessSchema() {
     },
     geo: { '@type': 'GeoCoordinates', latitude: 39.9526, longitude: -75.1652 },
     areaServed: AREA_SERVED.map((name) => ({ '@type': 'AdministrativeArea', name })),
-    founder: { '@type': 'Person', name: SITE.founder, url: SITE.personalSite },
-    sameAs: [SITE.personalSite],
     knowsAbout: [
-      'AI consulting',
+      'AI coaching',
       'Generative AI adoption',
       'ChatGPT',
       'Claude',
@@ -35,30 +33,20 @@ export function localBusinessSchema() {
     makesOffer: [
       {
         '@type': 'Offer',
-        name: `Free ${BOOKING.duration} AI consult`,
-        description: `A free ${BOOKING.duration} consult to see whether working together makes sense.`,
+        name: `Free ${BOOKING.duration} AI call`,
+        description: `A free ${BOOKING.duration} call to talk through your work and the first thing worth setting up.`,
         price: '0',
         priceCurrency: 'USD',
         url: BOOKING.url,
       },
-      ...[INTRO, ...PLANS].map((p) => ({
-      '@type': 'Offer',
-      name: `${p.name}${p.id === 'intro' ? '' : ' AI Partnership'}`,
-      description: p.cadence,
-      price: num(p.price),
-      priceCurrency: 'USD',
-      ...(p.id === 'intro'
-        ? {}
-        : {
-            priceSpecification: {
-              '@type': 'UnitPriceSpecification',
-              price: num(p.price),
-              priceCurrency: 'USD',
-              unitCode: 'MON',
-            },
-          }),
-      url: `${SITE.url}/#plans`,
-      })),
+      {
+        '@type': 'Offer',
+        name: 'First AI coaching session',
+        description: `${FIRST_SESSION.hours} hours, in person or on video, setting up AI in your own accounts.`,
+        price: num(FIRST_SESSION.price),
+        priceCurrency: 'USD',
+        url: `${SITE.url}/#how`,
+      },
     ],
   }
 }

@@ -8,6 +8,8 @@ type Props = {
   light?: boolean
   block?: boolean
   track?: string
+  /** Same-origin file download (e.g. a skill ZIP). */
+  download?: boolean
   className?: string
 }
 
@@ -20,6 +22,7 @@ export function Button({
   light = false,
   block = false,
   track,
+  download = false,
   className = '',
 }: Props) {
   const external = /^https?:\/\//.test(href)
@@ -40,6 +43,7 @@ export function Button({
       href={href}
       data-track={track}
       {...(external ? { target: '_blank', rel: 'noopener' } : {})}
+      {...(download ? { download: '' } : {})}
     >
       <span className="ab-label">{children}</span>
       <span className="ab-arrow" aria-hidden="true">

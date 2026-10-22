@@ -6,12 +6,8 @@ import { BookButton } from './book-button'
 
 const NAV = [
   { href: '/#how', label: 'How it works' },
-  { href: '/use-cases', label: 'Use cases' },
-  { href: '/membership', label: 'Membership' },
-  { href: '/#plans', label: 'Plans' },
-  { href: '/about', label: 'About' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/skills', label: 'Free skills' },
+  { href: '/#questions', label: 'Questions' },
 ]
 
 export function SiteHeader() {
@@ -24,9 +20,7 @@ export function SiteHeader() {
         <Link className="wordmark" href="/" aria-label={`${SITE.name} home`}>
           superaicoach
         </Link>
-        <a className="by-line mono" href={SITE.personalSite}>
-          by Andrew Levine ↗
-        </a>
+        <span className="by-line mono">AI coaching · Philadelphia</span>
       </div>
       <nav className="site-nav mono" aria-label="Main">
         {NAV.map((item) => (

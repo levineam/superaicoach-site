@@ -9,17 +9,15 @@ import { SITE } from '@/config/site'
 
 import './globals.css'
 
-const title = 'AI Consultant in Philadelphia | AI Consulting Services | SuperAICoach'
+const title = 'AI Coach and Consultant in Philadelphia | SuperAICoach'
 const description =
-  'AI consulting services for Philadelphia small and medium businesses. An ongoing AI partner who knows the tools, meets with your team on a regular schedule, demos what is new, and sets it up with you. Month to month.'
+  'One-on-one AI coaching for Philadelphia business owners and executives. Sit down with a local coach, set AI up in your own accounts, and leave using it on real work. Start with a free 30-minute call.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: title, template: '%s | SuperAICoach' },
   description,
   applicationName: SITE.name,
-  authors: [{ name: SITE.founder, url: SITE.personalSite }],
-  creator: SITE.founder,
   publisher: SITE.legalName,
   alternates: { canonical: '/' },
   openGraph: {

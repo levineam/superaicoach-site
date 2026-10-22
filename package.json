@@ -3,7 +3,10 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
+    "skills": "node scripts/build-skills.mjs",
+    "predev": "npm run skills",
     "dev": "next dev",
+    "prebuild": "npm run skills",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
