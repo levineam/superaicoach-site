@@ -61,8 +61,9 @@ h3{font-size:clamp(22px,2.2vw,30px);letter-spacing:-.035em;line-height:1.05}
 
 /* Hero */
 .hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.9fr);gap:40px;align-items:center;padding:clamp(70px,9vw,130px) var(--pad) clamp(70px,9vw,120px);min-height:min(88svh,860px)}
-.hero-photo{width:100%;max-width:440px;justify-self:end;border:1px solid var(--line);padding:10px}
+.hero-photo{width:100%;max-width:440px;margin:0;justify-self:end;border:1px solid var(--line);padding:10px}
 .hero-photo img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;filter:saturate(.85)}
+.hero-photo figcaption{margin-top:10px;color:var(--soft);font-size:12px;line-height:1.5;letter-spacing:.06em}
 
 /* Steps (project-index style, on ink) */
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);margin:40px 0 0;padding:0;list-style:none}
@@ -116,7 +117,8 @@ h3{font-size:clamp(22px,2.2vw,30px);letter-spacing:-.035em;line-height:1.05}
   .site-footer{grid-template-columns:1fr}
   .hero{padding-top:24px;gap:24px}
   .hero-photo{max-width:none;padding:6px}
-  .hero-photo img{aspect-ratio:16/10;object-position:50% 26%}
+  .hero-photo img{aspect-ratio:16/9;object-position:50% 12%}
+  .hero-photo figcaption{margin-top:6px}
   .ab-btn{max-width:100%}
   .ab-label{padding:10px 14px}
 }

@@ -4,8 +4,8 @@
  * Every "Book" button on the site reads BOOKING. To change the call
  * link or its length, edit BOOKING.url and CALL_MINUTES here only.
  *
- * The site deliberately names no person. Keep it that way in copy,
- * metadata, and structured data.
+ * Public copy, metadata, and structured data name SITE.founder and keep
+ * his background to FOUNDER_CREDENTIAL.
  */
 
 export const SITE = {
@@ -14,10 +14,14 @@ export const SITE = {
   url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://superaicoach.com').replace(/\/$/, ''),
   tagline: 'One-on-one AI coaching in Philadelphia',
   email: 'andrew@superaicoach.com',
+  founder: 'Andrew Levine',
   personalSite: 'https://andrarchy.com',
   city: 'Philadelphia',
   region: 'PA',
 } as const
+
+/** Reads after his name: "Andrew Levine, a founder of Koinos Group and its CEO for 4 years". */
+export const FOUNDER_CREDENTIAL = 'a founder of Koinos Group and its CEO for 4 years'
 
 /** Length of the free call in minutes. Keep in sync with the Calendly event. */
 export const CALL_MINUTES = 30

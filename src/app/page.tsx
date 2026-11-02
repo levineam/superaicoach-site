@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { BookButton } from '@/components/book-button'
 import { Button, TextLink } from '@/components/button'
 import { JsonLd } from '@/components/json-ld'
-import { BOOKING, FAQS, FIRST_SESSION, SITE } from '@/config/site'
+import { BOOKING, FAQS, FIRST_SESSION, FOUNDER_CREDENTIAL, SITE } from '@/config/site'
 import { SKILLS } from '@/content/skills'
 import { faqSchema, localBusinessSchema } from '@/lib/schema'
 
@@ -42,9 +42,9 @@ export default function Home() {
             Using AI in your business <em>starts with you.</em>
           </h1>
           <p className="lede">
-            I’m an AI coach in Philadelphia. I’ll sit down with you one on one, set AI up in your own
-            accounts, and you’ll leave using it on real work. When something clicks, we bring it to
-            your team.
+            I’m {SITE.founder}, an AI coach in Philadelphia. I’ll sit down with you one on one, set AI
+            up in your own accounts, and you’ll leave using it on real work. When something clicks, we
+            bring it to your team.
           </p>
           <div className="actions">
             <BookButton />
@@ -54,16 +54,19 @@ export default function Home() {
           </div>
           <p className="fine mono">In person in Philly and nearby, or on video</p>
         </div>
-        <div className="hero-photo">
+        <figure className="hero-photo">
           <Image
             src="/portrait.jpg"
-            alt="Headshot in front of the Center City Philadelphia skyline"
+            alt={`${SITE.founder} in front of the Center City Philadelphia skyline`}
             width={1280}
             height={1280}
             priority
             sizes="(max-width: 980px) 90vw, 440px"
           />
-        </div>
+          <figcaption className="mono">
+            {SITE.founder}, {FOUNDER_CREDENTIAL}
+          </figcaption>
+        </figure>
       </section>
 
       <section className="section" id="how" aria-labelledby="how-title">
@@ -110,9 +113,13 @@ export default function Home() {
         <p className="section-label">Who you’d work with</p>
         <div className="split">
           <h2 id="about-title">
-            Local, and in these tools <em>every day.</em>
+            A founder who lives here <em>and uses AI every day.</em>
           </h2>
           <div className="prose">
+            <p>
+              I’m {SITE.founder}. I’m a founder of Koinos Group and was its CEO for 4 years. Now I sit
+              down with Philadelphia owners and executives and help them use AI in their own work.
+            </p>
             <p>
               I live in Fairmount, so meeting at your office or a coffee shop nearby is easy. I build
               with these tools daily and keep up with what changes, so you don’t have to.
@@ -146,8 +153,8 @@ export default function Home() {
           The first step is a <em>{BOOKING.duration} call.</em>
         </h2>
         <p className="lede">
-          Bring whatever is on your mind about AI. You’ll leave knowing what to try first, whether or
-          not we work together.
+          You’ll talk with me directly, so bring whatever is on your mind about AI. You’ll leave
+          knowing what to try first, whether or not we work together.
         </p>
         <div className="actions">
           <BookButton />

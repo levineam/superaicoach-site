@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'SuperAICoach: one-on-one AI coaching in Philadelphia'
+import { SITE } from '@/config/site'
+
+export const alt = `SuperAICoach: one-on-one AI coaching in Philadelphia with ${SITE.founder}`
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -31,7 +33,7 @@ export default function OgImage() {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 24, color: '#9ba078' }}>
           <span>superaicoach.com</span>
-          <span>One on one, in person or on video</span>
+          <span>With {SITE.founder}, in person or on video</span>
         </div>
       </div>
     ),

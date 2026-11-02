@@ -5,19 +5,20 @@ import { ButtonsMotion } from '@/components/buttons-motion'
 import { GoogleAnalytics } from '@/components/google-analytics'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
-import { SITE } from '@/config/site'
+import { CALL_MINUTES, FOUNDER_CREDENTIAL, SITE } from '@/config/site'
 
 import './globals.css'
 
-const title = 'AI Coach and Consultant in Philadelphia | SuperAICoach'
-const description =
-  'One-on-one AI coaching for Philadelphia business owners and executives. Sit down with a local coach, set AI up in your own accounts, and leave using it on real work. Start with a free 30-minute call.'
+const title = `AI Coach and Consultant in Philadelphia | ${SITE.founder}`
+const description = `One-on-one AI coaching for Philadelphia business owners and executives with ${SITE.founder}, ${FOUNDER_CREDENTIAL}. Set AI up in your own accounts and leave using it on real work. Start with a free ${CALL_MINUTES}-minute call.`
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: title, template: '%s | SuperAICoach' },
   description,
   applicationName: SITE.name,
+  authors: [{ name: SITE.founder, url: SITE.personalSite }],
+  creator: SITE.founder,
   publisher: SITE.legalName,
   alternates: { canonical: '/' },
   openGraph: {

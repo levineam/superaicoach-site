@@ -1,4 +1,12 @@
-import { AREA_SERVED, BOOKING, FAQS, FIRST_SESSION, SITE, type FAQ } from '@/config/site'
+import {
+  AREA_SERVED,
+  BOOKING,
+  FAQS,
+  FIRST_SESSION,
+  FOUNDER_CREDENTIAL,
+  SITE,
+  type FAQ,
+} from '@/config/site'
 
 const num = (price: string) => price.replace(/[^0-9.]/g, '')
 
@@ -9,8 +17,7 @@ export function localBusinessSchema() {
     '@id': `${SITE.url}/#business`,
     name: SITE.name,
     legalName: SITE.legalName,
-    description:
-      'One-on-one AI coaching for business owners and executives in Philadelphia. In-person or video sessions that set up AI in your own accounts and daily work.',
+    description: `One-on-one AI coaching for business owners and executives in Philadelphia with ${SITE.founder}, ${FOUNDER_CREDENTIAL}. In-person or video sessions that set up AI in your own accounts and daily work.`,
     url: SITE.url,
     email: SITE.email,
     priceRange: `Free call; first session ${FIRST_SESSION.price}`,
@@ -22,6 +29,13 @@ export function localBusinessSchema() {
     },
     geo: { '@type': 'GeoCoordinates', latitude: 39.9526, longitude: -75.1652 },
     areaServed: AREA_SERVED.map((name) => ({ '@type': 'AdministrativeArea', name })),
+    founder: {
+      '@type': 'Person',
+      name: SITE.founder,
+      url: SITE.personalSite,
+      description: `${SITE.founder}, ${FOUNDER_CREDENTIAL}.`,
+    },
+    sameAs: [SITE.personalSite],
     knowsAbout: [
       'AI coaching',
       'Generative AI adoption',

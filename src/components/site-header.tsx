@@ -20,7 +20,9 @@ export function SiteHeader() {
         <Link className="wordmark" href="/" aria-label={`${SITE.name} home`}>
           superaicoach
         </Link>
-        <span className="by-line mono">AI coaching · Philadelphia</span>
+        <a className="by-line mono" href={SITE.personalSite}>
+          by {SITE.founder} ↗
+        </a>
       </div>
       <nav className="site-nav mono" aria-label="Main">
         {NAV.map((item) => (
