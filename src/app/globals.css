@@ -47,7 +47,7 @@ h3{font-size:clamp(22px,2.2vw,30px);letter-spacing:-.035em;line-height:1.05}
 .prose ul{padding-left:20px;margin:0 0 18px}
 .prose h2{margin-top:56px}
 .prose h2:first-child{margin-top:0}
-.prose a{color:var(--lime);border-bottom:1px solid currentColor}
+.prose a:not(.ab-link){color:var(--lime);border-bottom:1px solid currentColor}
 .prose a:hover{text-decoration:none}
 
 /* Sections */
