@@ -120,14 +120,6 @@ export default function Home() {
               I’m {SITE.founder}. I’m a founder of Koinos Group and was its CEO for 4 years. Now I sit
               down with Philadelphia owners and executives and help them use AI in their own work.
             </p>
-            <p>
-              I live in Fairmount, so meeting at your office or a coffee shop nearby is easy. I build
-              with these tools daily and keep up with what changes, so you don’t have to.
-            </p>
-            <p>
-              We work on your own email, calendar, and documents, because that’s where AI starts to
-              be useful. If AI isn’t the right fix for something, I’ll tell you.
-            </p>
             <TextLink href={SITE.personalSite} arrow="↗">
               More of my work at andrarchy.com
             </TextLink>
