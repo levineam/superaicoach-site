@@ -117,8 +117,10 @@ export default function Home() {
           </h2>
           <div className="prose">
             <p>
-              I’m {SITE.founder}. I’m a founder of Koinos Group and was its CEO for 4 years. Now I sit
-              down with Philadelphia owners and executives and help them use AI in their own work.
+              I’m {SITE.founder}, one of the founders of blockchain startup Koinos Group where we
+              launched the world’s first free-to-use blockchain, Koinos. I led that company for 4 years
+              as CEO and now I want to leverage my experience to help entrepreneurs of all types
+              integrate AI into their businesses so that they don’t get left behind.
             </p>
             <TextLink href={SITE.personalSite} arrow="↗">
               More of my work at andrarchy.com
