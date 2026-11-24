@@ -9,6 +9,7 @@ export function SiteFooter() {
       </div>
       <div>
         <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <a href="/testimonials">Testimonials</a>
         <a href="/privacy">Privacy</a>
         <a href={SITE.personalSite}>andrarchy.com ↗</a>
       </div>
