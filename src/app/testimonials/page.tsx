@@ -30,10 +30,6 @@ export default function Testimonials() {
         <h1>
           In their <em>own words.</em>
         </h1>
-        <p className="lede">
-          I’m early in this, so there’s one for now. Amelia runs MentalXpace, a therapy practice in
-          Rittenhouse Square, and I built her website and the AI setup behind it.
-        </p>
       </section>
       <section className="page-body">
         <div className="split">
