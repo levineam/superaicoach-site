@@ -40,10 +40,9 @@ export default function Testimonials() {
           <figure className="testimonial-card">
             <blockquote>
               <p>
-                “Andrew built our practice website with a page for each of our therapists, a full
-                Spanish version, and booking through PracticeQ. When I need something changed, I post
-                it in our Slack channel, and his AI assistant picks it up and gets the change ready.
-                Nothing goes live until it’s been checked on a preview first.”
+                “Andrew didn’t just use AI to help me bootstrap MentalXpace 10x faster than I could
+                have on my own. He taught me to use these tools myself. Now I post a request in Slack
+                and our AI assistant gets it done, and I understand how it all works.”
               </p>
             </blockquote>
             <figcaption>
